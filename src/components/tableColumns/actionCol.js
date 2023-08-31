@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router";
 import { filterMenuKeys } from "../../helpers/aboutAuth/filterMenuKeys";
 import { setPopType } from "../../redux/action/common/action";
+import { allowClick, notAllowClick } from "../../assets/style/styleConfig";
 
-const ActionCol = ({ callApi, apiUid }) => {
+const ActionCol = ({ callApi, apiUid, openEdit, openDetail }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const editableAuth = useSelector((state) => state.agentInfo.menuEditable);
+  const editableAuth = useSelector((state) => state.agentInfo.menu_editable);
   const dispatch = useDispatch();
 
   const [editableMenu, setEditableMenu] = useState([]);
@@ -24,21 +25,31 @@ const ActionCol = ({ callApi, apiUid }) => {
 
   return (
     <section className="flex items-center gap-[10px]">
-      <p
-        className={`${
-          isEditable
-            ? "text-blue-500 cursor-pointer"
-            : "text-[#d0d0d0] cursor-not-allowed"
-        } underline`}
-        onClick={() => {
-          if (!isEditable) return;
-          callApi();
-          dispatch(setPopType("edit"));
-          navigate(`edit?uid=${apiUid}`);
-        }}
-      >
-        編輯
-      </p>
+      {openEdit && (
+        <p
+          className={`${isEditable ? allowClick : notAllowClick} underline`}
+          onClick={() => {
+            if (!isEditable) return;
+            callApi();
+            dispatch(setPopType("edit"));
+            navigate(`edit?uid=${apiUid}`);
+          }}
+        >
+          編輯
+        </p>
+      )}
+      {openDetail && (
+        <p
+          className={`${allowClick} underline`}
+          onClick={() => {
+            callApi();
+            dispatch(setPopType("detail"));
+            navigate(`detail?uid=${apiUid}`);
+          }}
+        >
+          查看
+        </p>
+      )}
     </section>
   );
 };

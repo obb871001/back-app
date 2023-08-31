@@ -8,6 +8,7 @@ import {
   ChromeFilled,
   ContactsOutlined,
   CrownFilled,
+  DatabaseOutlined,
   DollarCircleOutlined,
   DollarOutlined,
   FieldTimeOutlined,
@@ -34,7 +35,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import Home from "../../pages/Home/Home";
-import PlayerSearch from "../../pages/Admin/PlayerSearch/PlayerSearch";
+import PlayerSearch from "../../pages/Admin/PlayerSearch";
 import AgentList from "../../pages/Agent/AgentList";
 import MenuAuthSettings from "../../pages/System/MenuAuth/MenuAuthSettings";
 import MemberLevelSettings from "../../pages/System/MemberLevelSettings/MemberLevelSettings";
@@ -58,6 +59,11 @@ import GameHistory from "../../pages/Reports/GameHistory";
 import CreateAgent from "../../pages/Agent/AgentList/modal/createAgent";
 import EditAuthPage from "../EditAuthPage";
 import AgentLog from "../../pages/Agent/AgentLog";
+import CreateChild from "../../pages/Agent/ChildList/modal/createChild";
+import DetailAgent from "../../pages/Agent/AgentList/modal/detailAgent";
+import PlayerLog from "../../pages/Admin/PlayerLog";
+import PlatformSetting from "../../pages/System/PlatformSetting/PlatformSetting";
+import CreatePlayer from "../../pages/Admin/PlayerSearch/modal/createPlayer";
 
 export default {
   route: {
@@ -85,17 +91,32 @@ export default {
             path: "playersearch",
             name: "玩家一般查詢",
             icon: <SearchOutlined />,
+            controllSubmenu: 1,
             component: (
               <AuthPage>
                 <PlayerSearch />
               </AuthPage>
             ),
+            routes: [
+              {
+                path: "detail",
+                component: <DetailPlayer />,
+              },
+              {
+                path: "create",
+                component: <CreatePlayer />,
+              },
+            ],
           },
           {
             path: "memberlog",
             name: "會員操作紀錄",
             icon: <FileSearchOutlined />,
-            component: "./Welcome",
+            component: (
+              <AuthPage>
+                <PlayerLog />
+              </AuthPage>
+            ),
           },
         ],
       },
@@ -136,6 +157,10 @@ export default {
                   </EditAuthPage>
                 ),
               },
+              {
+                path: "detail",
+                component: <DetailAgent type="agent" />,
+              },
             ],
           },
           {
@@ -147,6 +172,29 @@ export default {
                 <ChildList />{" "}
               </AuthPage>
             ),
+            controllSubmenu: 1,
+            routes: [
+              {
+                path: "edit",
+                component: (
+                  <EditAuthPage>
+                    <CreateChild />
+                  </EditAuthPage>
+                ),
+              },
+              {
+                path: "create",
+                component: (
+                  <EditAuthPage>
+                    <CreateChild />
+                  </EditAuthPage>
+                ),
+              },
+              {
+                path: "detail",
+                component: <DetailAgent type="child" />,
+              },
+            ],
           },
           {
             path: "agentlog",
@@ -227,7 +275,6 @@ export default {
             path: "gamehistory",
             name: "遊戲歷史",
             icon: <FieldTimeOutlined />,
-            // component: "遊戲歷史",
             controllSubmenu: 1,
             routes: [
               {
@@ -244,10 +291,10 @@ export default {
         icon: <SettingOutlined />,
         main: true,
         routes: [
-          {
-            path: "/systemsetting",
-            redirectTo: "/systemsetting/memberlevelsettings",
-          },
+          // {
+          //   path: "/systemsetting",
+          //   redirectTo: "/systemsetting/memberlevelsettings",
+          // },
           {
             path: "memberlevelsettings",
             name: "會員等級設定",
@@ -364,6 +411,12 @@ export default {
             name: "銀行帳戶設定",
             icon: <BankOutlined />,
             component: "銀行帳戶設定",
+          },
+          {
+            path: "platformsetting",
+            name: "站台系統設置",
+            icon: <DatabaseOutlined />,
+            component: <PlatformSetting />,
           },
         ],
       },

@@ -1,4 +1,6 @@
 import axios from "axios";
+import Cookies from "js-cookie";
+import { APP_NAME } from "../../constant";
 
 const createApi = (baseUrl) => {
   const api = axios.create({
@@ -8,7 +10,8 @@ const createApi = (baseUrl) => {
     headers: {
       "Content-Type": "application/json",
       Authorization: sessionStorage.getItem("token"),
-      currency: "twd",
+      Currency: Cookies.get("currency") || "TWD",
+      webname: APP_NAME,
     },
   });
   api.interceptors.request.use((config) => {

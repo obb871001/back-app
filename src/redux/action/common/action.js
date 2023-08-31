@@ -37,3 +37,38 @@ export const globalEndLoading = () => {
     type: "globalEndLoading",
   };
 };
+export const storeTotalRecords = (paginationData) => {
+  return {
+    type: "storeTotalRecords",
+    payload: paginationData,
+  };
+};
+export const clearTotalRecords = () => {
+  return {
+    type: "clearTotalRecords",
+  };
+};
+export const apiCalling = () => {
+  return {
+    type: "apiCalling",
+  };
+};
+
+export const apiCalled = () => {
+  return {
+    type: "apiCalled",
+  };
+};
+
+export const storeNowTime = (time) => {
+  return {
+    type: "storeNowTime",
+    payload: time,
+  };
+};
+export const setCurrency = (currency) => {
+  return {
+    type: "setCurrency",
+    payload: currency,
+  };
+};

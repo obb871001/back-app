@@ -1,11 +1,15 @@
-import { ProFormGroup, ProFormText } from "@ant-design/pro-components";
+import {
+  ProFormGroup,
+  ProFormSwitch,
+  ProFormText,
+} from "@ant-design/pro-components";
 import { Divider } from "antd";
 import React from "react";
 import CustomForm from "../../../../components/form/customForm";
 import { PASSWORD_EXPRESSION, USERNAME_EXPRESSION } from "../../../../regex";
 import { useSelector } from "react-redux";
 
-const BasicInformation = ({ form }) => {
+const BasicInformation = ({ form, type }) => {
   const popType = useSelector((state) => state.popType);
   const basicInfoForm = [
     [
@@ -20,15 +24,16 @@ const BasicInformation = ({ form }) => {
         label: "類型",
         type: "text",
         readonly: true,
-        value: "代理",
+        value: type === "child" ? "子帳號" : "代理商",
       },
     ],
     [
       {
         name: "cagent",
-        label: "代理帳號",
+        label: type === "child" ? "子帳號" : "代理帳號",
         type: "text",
         required: true,
+        disabled: popType === "edit",
         ex: "agent01",
         rules: [
           {
@@ -76,6 +81,14 @@ const BasicInformation = ({ form }) => {
           </ProFormGroup>
         );
       })}
+      <ProFormSwitch
+        name="status"
+        label="帳號狀態"
+        tooltip="開啟時代理可登入後台"
+        checkedChildren="啟用"
+        unCheckedChildren="停用"
+        checked={form.getFieldValue("status") == 1}
+      />
     </>
   );
 };

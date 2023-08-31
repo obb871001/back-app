@@ -10,7 +10,7 @@ const EditAuthPage = ({ children }) => {
   const navigate = useNavigate();
   const previousPath = usePreviousPagePath();
 
-  const editableAuth = useSelector((state) => state.agentInfo.menuEditable);
+  const editableAuth = useSelector((state) => state.agentInfo.menu_editable);
 
   useEffect(() => {
     const filterKeys = filterMenuKeys(editableAuth);

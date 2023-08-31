@@ -1,47 +1,51 @@
+import { useNavigate, Outlet, useLocation } from "react-router";
 import {
-  Routes,
-  Route,
-  useNavigate,
-  Outlet,
-  useParams,
-  useLocation,
-} from "react-router";
-import {
+  LockOutlined,
   LogoutOutlined,
-  PlusCircleFilled,
-  SearchOutlined,
+  ProfileOutlined,
 } from "@ant-design/icons";
 import { PageContainer, ProCard, ProLayout } from "@ant-design/pro-components";
-import { Button, Input, notification } from "antd";
-import { useEffect, useState } from "react";
+import { Button, Dropdown, Input, Select, Skeleton, notification } from "antd";
+import { useEffect, useMemo, useState } from "react";
 
 import routesProps from "../../utils/layoutConfig/routes";
 import locationProps from "../../utils/layoutConfig/location";
 import {
   API_RELOAD,
   APP_NAME,
+  VERSION,
   YEAR,
   fakeGameArray,
   fakeMenu,
 } from "../../constant";
-import Permission from "../../utils/Permission";
 import LoginNameSetting from "../../pages/Home/modal/loginNameSetting";
-import SearchTool from "../searchTool/searchTool";
 import { useDispatch, useSelector } from "react-redux";
 import { updateDataPeriodically } from "../../api/updateDataPeriodically";
-import AuthPage from "../../utils/AuthPage";
+import LanguageSelect from "./LanguageSelect";
+import TimeInformation from "./TimeInformation";
+import Profile from "./components/profile";
+import { setPopType } from "../../redux/action/common/action";
+import Password from "./components/password";
+import { filterMenuKeys } from "../../helpers/aboutAuth/filterMenuKeys";
+import motion from "framer-motion";
+import CurrencySelect from "./currencySelect";
 
 const CommonLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const agentInfo = useSelector((state) => state.agentInfo);
   const gamePlatform = useSelector(
     (state) => state.gameList.gamePlatform || fakeGameArray
   );
-  const agentInfo = useSelector((state) => state.agentInfo);
   const systemMenu = useSelector(
     (state) => state.basicConfig?.menu || fakeMenu
   );
+  const agentMenu = useSelector((state) =>
+    filterMenuKeys(state.agentInfo.menu_permission)
+  );
+  const globalLoading = useSelector((state) => state.globalLoading);
+  const apiCalling = useSelector((state) => state.apiCalling);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -58,10 +62,10 @@ const CommonLayout = () => {
   }, [location.pathname]);
 
   useEffect(() => {
-    updateDataPeriodically(dispatch)();
+    updateDataPeriodically(dispatch, navigate)();
 
     const apiInterval = setInterval(() => {
-      updateDataPeriodically(dispatch)();
+      updateDataPeriodically(dispatch, navigate)();
     }, API_RELOAD);
 
     return () => clearInterval(apiInterval);
@@ -71,9 +75,12 @@ const CommonLayout = () => {
     fixSiderbar: true,
     layout: "mix",
     splitMenus: true,
+    // layout: "top",
   };
 
   const [pathname, setPathname] = useState(location.pathname);
+  const [openProfile, setOpenProfile] = useState(false);
+  const [openResetPassword, setOpenResetPassword] = useState(false);
 
   const menuDataRender = (menuList) =>
     menuList.map((item) => {
@@ -93,13 +100,9 @@ const CommonLayout = () => {
         newRoute.routes = newRoute.routes.filter((route) =>
           systemArray.includes(route.path)
         );
-
-        if (route.path === "/reports/gamehistory") {
-          newRoute.routes = gamePlatform.map((gameId) => ({
-            path: gameId,
-            name: gameId,
-          }));
-        }
+        newRoute.routes = newRoute.routes.filter((route) =>
+          agentMenu.includes(route.path)
+        );
         if (newRoute.routes.length === 0) {
           return filtered;
         }
@@ -107,6 +110,20 @@ const CommonLayout = () => {
 
       if (route.routes && route.routes.length === 0) {
         return filtered;
+      }
+      if (route.path === "gamehistory") {
+        newRoute.routes = gamePlatform.map((gameId) => ({
+          path: gameId,
+          name: (
+            <div className="flex items-center gap-[10px]">
+              <img
+                className="w-[25px] object-contain"
+                src={`https://cityofwins.com/images-webp/logo/${gameId}.png`}
+              />
+              {gameId}
+            </div>
+          ),
+        }));
       }
 
       filtered.push(newRoute);
@@ -119,38 +136,8 @@ const CommonLayout = () => {
       routes: filterRoutes(routesProps.route.routes, systemMenu),
     },
   };
+  console.log(filteredRoutes);
 
-  function addNewRoutes(routesProps) {
-    const newRoutesProps = { ...routesProps };
-
-    // 找gameHistory路由
-    const gameHistoryRoute = newRoutesProps.route.routes.find(
-      (route) => route.path === "/reports"
-    );
-
-    // 找到了就在它的子路由中添加新的路由
-    if (gameHistoryRoute) {
-      gameHistoryRoute.routes.find((route) => {
-        if (route.path === "gamehistory") {
-          route.routes = gamePlatform.map((gameId) => ({
-            path: gameId,
-            name: (
-              <div className="flex items-center gap-[10px]">
-                <img
-                  className="w-[25px] object-contain"
-                  src={`https://cityofwins.com/images-webp/logo/${gameId}.png`}
-                />
-                {gameId}
-              </div>
-            ),
-          }));
-        }
-      });
-    }
-    return newRoutesProps;
-  }
-
-  const newRoutesProps = addNewRoutes(routesProps);
   return (
     <>
       <div
@@ -195,12 +182,51 @@ const CommonLayout = () => {
           avatarProps={{
             src: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
             size: "small",
-            title: agentInfo?.cagent,
+            title: `Hello! ${agentInfo?.cagent}(Lv.${agentInfo?.level})`,
+            render: (props, dom) => {
+              return (
+                <Dropdown
+                  menu={{
+                    items: [
+                      {
+                        key: "profile",
+                        icon: <ProfileOutlined />,
+                        label: "個人資料",
+                        onClick: () => {
+                          dispatch(setPopType("detail"));
+                          setOpenProfile(true);
+                        },
+                      },
+                      {
+                        key: "password",
+                        icon: <LockOutlined />,
+                        label: "重設密碼",
+                        onClick: () => {
+                          setOpenResetPassword(true);
+                        },
+                      },
+
+                      {
+                        key: "logout",
+                        icon: <LogoutOutlined />,
+                        label: "退出登录",
+                        onClick: () => {
+                          sessionStorage.removeItem("token");
+                          navigate("/signin");
+                        },
+                      },
+                    ],
+                  }}
+                >
+                  {dom}
+                </Dropdown>
+              );
+            },
           }}
           actionsRender={(props) => {
             if (props.isMobile) return [];
             return [
-              props.layout !== "side" && document.body.clientWidth > 1400 ? (
+              props.layout !== "side" ? (
                 <div
                   key="SearchOutlined"
                   aria-hidden
@@ -213,37 +239,12 @@ const CommonLayout = () => {
                     e.stopPropagation();
                     e.preventDefault();
                   }}
+                  className="gap-[10px]"
                 >
-                  <Input
-                    style={{
-                      borderRadius: 4,
-                      marginInlineEnd: 12,
-                      backgroundColor: "rgba(0,0,0,0.03)",
-                    }}
-                    prefix={
-                      <SearchOutlined
-                        style={{
-                          color: "rgba(0, 0, 0, 0.15)",
-                        }}
-                      />
-                    }
-                    placeholder="搜索方案"
-                    bordered={false}
-                  />
-                  <PlusCircleFilled
-                    style={{
-                      color: "var(--ant-primary-color)",
-                      fontSize: 24,
-                    }}
-                  />
+                  <LanguageSelect />
+                  <CurrencySelect />
                 </div>
               ) : undefined,
-              <LogoutOutlined
-                onClick={() => {
-                  sessionStorage.removeItem("token");
-                  navigate("/signin");
-                }}
-              />,
             ];
           }}
           menuFooterRender={(props) => {
@@ -257,25 +258,88 @@ const CommonLayout = () => {
               >
                 <div>© {YEAR} Made</div>
                 <div>by {APP_NAME}</div>
+                <div>Version {VERSION}</div>
               </div>
             );
           }}
+          footerRender={(props) => {
+            if (props.isMobile)
+              return (
+                <div
+                  key="SearchOutlined"
+                  aria-hidden
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginInlineEnd: 24,
+                  }}
+                  onMouseDown={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                  }}
+                  className="gap-[10px] px-[20px]"
+                >
+                  <LanguageSelect />
+                  <CurrencySelect />
+                </div>
+              );
+          }}
           onMenuHeaderClick={(e) => console.log(e)}
-          menuItemRender={(item, dom) => (
-            <div
-              onClick={() => {
-                navigate(item.path || "/");
-              }}
-            >
-              {dom}
-            </div>
-          )}
+          menuItemRender={(item, dom) => {
+            return (
+              <div
+                onClick={() => {
+                  const locationPath = location.pathname;
+                  if (locationPath.includes(item.path)) {
+                    return;
+                  }
+                  navigate(item.path || "/");
+                }}
+              >
+                {dom}
+              </div>
+            );
+          }}
           {...settings}
         >
-          <PageContainer>
+          <PageContainer
+            header={{
+              style: {
+                maxWidth: "90vw",
+                margin: "auto",
+              },
+              title: "",
+              breadcrumbRender: (props, originBreadcrumb) => {
+                if (location.pathname.includes("home")) {
+                  return "";
+                }
+                if (apiCalling || globalLoading) {
+                  return [
+                    <Skeleton.Input
+                      className="!w-[200px] h-[20px]"
+                      active
+                      size="small"
+                    />,
+                  ];
+                }
+                return (
+                  originBreadcrumb || (
+                    <Skeleton.Input
+                      className="!w-[200px] h-[20px]"
+                      active
+                      size="small"
+                    />
+                  )
+                );
+              },
+              extra: [<TimeInformation />],
+            }}
+          >
             <ProCard
               style={{
                 minHeight: 800,
+                maxWidth: "90vw",
+                margin: "auto",
               }}
             >
               <Outlet />
@@ -284,6 +348,15 @@ const CommonLayout = () => {
         </ProLayout>
       </div>
       {agentInfo.loginname == 0 && <LoginNameSetting />}
+      {openProfile && (
+        <Profile isModalOpen={openProfile} setIsModalOpen={setOpenProfile} />
+      )}
+      {openResetPassword && (
+        <Password
+          isModalOpen={openResetPassword}
+          setIsModalOpen={setOpenResetPassword}
+        />
+      )}
     </>
   );
 };

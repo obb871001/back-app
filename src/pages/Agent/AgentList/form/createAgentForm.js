@@ -21,9 +21,9 @@ const CreateAgentForm = ({ form }) => {
     if (agentDetail) {
       form.setFieldsValue({
         ...agentDetail,
-        gamePermission: filterMenuKeys(agentDetail.gamePermission),
-        menuPermission: filterMenuKeys(agentDetail.menuPermission),
-        menuEditable: filterMenuKeys(agentDetail.menuEditable),
+        game_permission: filterMenuKeys(agentDetail.game_permission),
+        menu_permission: filterMenuKeys(agentDetail.menu_permission),
+        menu_editable: filterMenuKeys(agentDetail.menu_editable),
       });
     }
   }, [agentDetail]);

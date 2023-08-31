@@ -61,7 +61,7 @@ const GamePermission = ({ form, hiddenTitle }) => {
   return (
     <Form.Item
       name="game_permission"
-      label={hiddenTitle || <CommonTitle title="遊戲權限" />}
+      label={hiddenTitle ? "" : <CommonTitle title="遊戲權限" />}
       valuePropName="checked"
     >
       <Checkbox
@@ -69,6 +69,7 @@ const GamePermission = ({ form, hiddenTitle }) => {
         onChange={handleCheckAllChange}
         checked={checkAll}
         className="mb-[10px]"
+        disabled={popType === "detail"}
       >
         全選
       </Checkbox>
@@ -80,7 +81,7 @@ const GamePermission = ({ form, hiddenTitle }) => {
       >
         {gameList?.map((item) => {
           return (
-            <Checkbox key={item} value={item}>
+            <Checkbox disabled={popType === "detail"} key={item} value={item}>
               {item}
             </Checkbox>
           );

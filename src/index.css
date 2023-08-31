@@ -39,3 +39,9 @@ code {
 .ant-form-item-explain-error {
   max-width: 200px;
 }
+.absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

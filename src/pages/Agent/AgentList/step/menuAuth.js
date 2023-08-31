@@ -15,7 +15,7 @@ const MenuAuth = ({ form }) => {
           <ProFormGroup>
             {customSetting ? (
               <ProFormSelect
-                name="menuPermission"
+                name="menu_permission"
                 options={[
                   { label: "一般會員", value: "member" },
                   { label: "未解决", value: "open" },
@@ -33,7 +33,7 @@ const MenuAuth = ({ form }) => {
             )}
           </ProFormGroup>
           <Typography.Text
-            className="cursor-pointer text-blue-500"
+            className="cursor-pointer text-blue-500 ml-[20px]"
             onClick={() => setCustomSetting((prev) => !prev)}
             underline
           >

@@ -2,7 +2,6 @@ import { ProFormGroup, ProFormText } from "@ant-design/pro-components";
 import { useSelector } from "react-redux";
 import { Descriptions, Form, InputNumber, Typography } from "antd";
 
-import { CURRENCY } from "../../../../constant";
 import CustomForm from "../../../../components/form/customForm";
 import CustomDescription from "../../../../components/form/customDescription";
 import CustomInputNumber from "../../../../components/form/customInputNumber";
@@ -11,6 +10,7 @@ import CommonTitle from "../../../../components/form/commonTitle";
 
 const MemberLevelForm = () => {
   const formDetail = useSelector((state) => state.formReducers);
+  const CURRENCY = useSelector((state) => state.CURRENCY);
 
   const basicForm = [
     [

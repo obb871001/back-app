@@ -62,6 +62,13 @@ const PlayerPassword = () => {
         console.log(values);
         onFinish(values);
       }}
+      layout="horizontal"
+      labelCol={{
+        span: 5,
+      }}
+      wrapperCol={{
+        span: 19,
+      }}
       submitter={{
         render: (props, doms) => {
           return [
@@ -82,21 +89,15 @@ const PlayerPassword = () => {
         console.log(values);
       }}
     >
-      <ProFormGroup>
-        <ProForm.Item label="玩家名稱">
-          <ProFormText value={playerDetail?.memId} readonly />
-        </ProForm.Item>
-      </ProFormGroup>{" "}
-      <ProFormGroup>
-        <ProForm.Item name="password" label="新密碼">
-          <ProFormText.Password />
-        </ProForm.Item>
-      </ProFormGroup>{" "}
-      <ProFormGroup>
-        <ProForm.Item name="confirmPassword" label="確認新密碼">
-          <ProFormText.Password />
-        </ProForm.Item>
-      </ProFormGroup>
+      <ProForm.Item label="玩家名稱">
+        <ProFormText value={playerDetail?.memId} readonly />
+      </ProForm.Item>
+      <ProForm.Item name="password" label="新密碼">
+        <ProFormText.Password />
+      </ProForm.Item>
+      <ProForm.Item name="confirmPassword" label="確認新密碼">
+        <ProFormText.Password />
+      </ProForm.Item>
     </ProForm>
   );
 };

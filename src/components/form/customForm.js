@@ -1,5 +1,6 @@
 import {
   ProFormDatePicker,
+  ProFormDateRangePicker,
   ProFormDigit,
   ProFormRadio,
   ProFormSelect,
@@ -9,6 +10,7 @@ import {
 } from "@ant-design/pro-components";
 
 const CustomForm = ({ type, ...props }) => {
+  const { selectProps = {} } = props;
   const baseRules = props?.rules || [];
   const requiredRule = props?.required
     ? [
@@ -49,7 +51,7 @@ const CustomForm = ({ type, ...props }) => {
       );
     case "date":
       return (
-        <ProFormDatePicker
+        <ProFormDateRangePicker
           tooltip={
             props.name === "std"
               ? "開始為00:00:00"
@@ -64,13 +66,18 @@ const CustomForm = ({ type, ...props }) => {
     case "switch":
       return <ProFormSwitch {...props} />;
     case "select":
-      return <ProFormSelect {...props} />;
+      return <ProFormSelect {...selectProps} {...props} />;
     case "radio":
       return <ProFormRadio.Group {...props} />;
     case "textarea":
       return <ProFormTextArea {...props} />;
     case "password":
-      return <ProFormText.Password {...props} />;
+      return (
+        <ProFormText.Password
+          rules={[...baseRules, ...requiredRule]}
+          {...props}
+        />
+      );
     default:
       return (
         <ProFormText

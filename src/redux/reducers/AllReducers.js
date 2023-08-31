@@ -9,6 +9,13 @@ import CommonDetailReducers from "./common/commonDetail";
 import PopTypeReducers from "./common/popType";
 import triggerReducers from "./common/trigger";
 import GlobalLoadingReducers from "./common/globalLoading";
+import PageTotalRecordsReducers from "./common/tableTotalRecords";
+import ApiCallingReducers from "./common/apiCalling";
+import StoreHomePageReport from "./reports/homepageReports";
+import ReportDetailReducers from "./game/reportDetail";
+import ReportDetailPopReducers from "./game/openReportDetail";
+import NowTimeReducers from "./common/nowTime";
+import CurrencyReducers from "./common/currency";
 
 const AllReducers = combineReducers({
   formReducers: StoreFormReducers,
@@ -21,6 +28,13 @@ const AllReducers = combineReducers({
   popType: PopTypeReducers,
   trigger: triggerReducers,
   globalLoading: GlobalLoadingReducers,
+  totalDataRecords: PageTotalRecordsReducers,
+  apiCalling: ApiCallingReducers,
+  homepageReports: StoreHomePageReport,
+  reportDetail: ReportDetailReducers,
+  reportDetailPop: ReportDetailPopReducers,
+  nowTime: NowTimeReducers,
+  CURRENCY: CurrencyReducers,
 });
 
 export default AllReducers;

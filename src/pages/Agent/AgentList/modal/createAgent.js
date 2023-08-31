@@ -15,6 +15,8 @@ const CreateAgent = ({ setTrigger }) => {
       await createAgent({
         data: {
           ...formData,
+          menu_editable: formData.menu_permission || [],
+          menu_permission: formData.menu_permission || [],
           uid: popType === "edit" ? agentDetail.uid : null,
           passwd: CryptoJS.MD5(formData.password).toString(),
           type: "cagent",

@@ -11,46 +11,6 @@ const SkeletonPageLoading = () => {
         return <Skeleton.Input className="!w-full" active size="small" />;
       },
     },
-    // {
-    //   title: "",
-    //   dataIndex: "",
-    //   key: "",
-    //   render: () => {
-    //     return <Skeleton.Input active size="small" />;
-    //   },
-    // },
-    // {
-    //   title: "",
-    //   dataIndex: "",
-    //   key: "",
-    //   render: () => {
-    //     return <Skeleton.Input active size="small" />;
-    //   },
-    // },
-    // {
-    //   title: "",
-    //   dataIndex: "",
-    //   key: "",
-    //   render: () => {
-    //     return <Skeleton.Input active size="small" />;
-    //   },
-    // },
-    // {
-    //   title: "",
-    //   dataIndex: "",
-    //   key: "",
-    //   render: () => {
-    //     return <Skeleton.Input active size="small" />;
-    //   },
-    // },
-    // {
-    //   title: "",
-    //   dataIndex: "",
-    //   key: "",
-    //   render: () => {
-    //     return <Skeleton.Input active size="small" />;
-    //   },
-    // },
   ];
 
   return (

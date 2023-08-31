@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 import AllReducers from "./redux/reducers/AllReducers";
 import reportWebVitals from "./reportWebVitals";
+import { ConfigProvider } from "antd";
 
 const store = createStore(
   AllReducers,

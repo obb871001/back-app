@@ -1,7 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import CommonTitle from "../../../../components/form/commonTitle";
-import { CURRENCY } from "../../../../constant";
 import { ProForm, ProFormGroup, ProFormList } from "@ant-design/pro-components";
 import { Descriptions, Divider, Input, Typography } from "antd";
 import CustomForm from "../../../../components/form/customForm";
@@ -11,6 +10,8 @@ import CustomDescription from "../../../../components/form/customDescription";
 
 const RouletteForm = ({ form }) => {
   const formReducers = useSelector((state) => state.formReducers);
+  const CURRENCY = useSelector((state) => state.CURRENCY);
+
   const basicForm = [
     [
       {

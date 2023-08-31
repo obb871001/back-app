@@ -7,8 +7,9 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { storeForm } from "../../redux/action/form/action";
 import { filterMenuKeys } from "../../helpers/aboutAuth/filterMenuKeys";
+import CommonTooltip from "../hint/commonTooltip";
 
-const MenuPermissions = ({ form, hiddenTitle }) => {
+const MenuPermissions = ({ form, hiddenTitle, type }) => {
   const dispatch = useDispatch();
   const formDetail = useSelector((state) => state.formReducers);
   const agentDetail = useSelector((state) => state.commonDetail);
@@ -23,6 +24,7 @@ const MenuPermissions = ({ form, hiddenTitle }) => {
       label: "編輯",
       prefix: "editable",
       notTitle: true,
+      hint: "需勾選檢視權限",
     },
   ];
 
@@ -132,7 +134,9 @@ const MenuPermissions = ({ form, hiddenTitle }) => {
             key={config.label}
             name={`menu_${config.prefix}`}
             label={
-              hiddenTitle || (
+              hiddenTitle ? (
+                ""
+              ) : (
                 <CommonTitle
                   className={config.notTitle && "h-[28px]"}
                   title={!config.notTitle && "選單權限"}
@@ -141,13 +145,22 @@ const MenuPermissions = ({ form, hiddenTitle }) => {
             }
             valuePropName="checked"
           >
-            <section className="flex justify-end">
+            <section className="flex justify-end relative">
               <p>{config.label}</p>
+              <section className="absolute-center !left-[40px]">
+                {config.hint && <CommonTooltip tooltip={config.hint} />}
+              </section>
             </section>
             <Checkbox
               indeterminate={indeterminate?.[`menu_${config.prefix}`]}
               onChange={(e) => handleCheckAllChange(e, config.prefix)}
               checked={checkAll?.[`menu_${config.prefix}`]}
+              disabled={
+                (config.prefix === "editable" &&
+                  menuPermission.menu_permission.length !==
+                    filteredMenuLength) ||
+                type === "detail"
+              }
               className="mb-[10px] flex flex-row-reverse"
             >
               {!config.notTitle && <span className="w-[150px] flex">全選</span>}
@@ -185,6 +198,13 @@ const MenuPermissions = ({ form, hiddenTitle }) => {
                         className="flex flex-row-reverse"
                         value={`${item.path}`}
                         key={`${item.path}`}
+                        disabled={
+                          (config.prefix === "editable" &&
+                            !menuPermission.menu_permission.includes(
+                              item.path
+                            )) ||
+                          type === "detail"
+                        }
                       >
                         {!config.notTitle && (
                           <span className="w-[150px] flex">{item.name}</span>

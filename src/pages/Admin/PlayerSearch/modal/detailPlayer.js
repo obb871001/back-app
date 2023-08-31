@@ -9,26 +9,27 @@ import PlayerBasic from "../detail/playerBasic";
 import UseMergeableSearchParams from "../../../../hooks/useMergeableSearchParams";
 import PlayerPassword from "../detail/playerPassword";
 import PlayerBetLimit from "../detail/playerBetLimit";
+import { useNavigate, useParams } from "react-router";
 
 const DetailPlayer = ({ setIsModalOpen, isModalOpen }) => {
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
-  const { playeruid, tabKey = "1" } = searchParams;
+  const { tabKey = "1" } = searchParams;
+  const { uid } = useParams();
 
   const dispatch = useDispatch();
+  const trigger = useSelector((state) => state.trigger);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setSearchParams({ tabKey: "1" });
-    getMemberList({
-      uid: playeruid,
-    })
-      .then((res) => {
+    if (uid || searchParams.uid) {
+      getMemberList({
+        paramsData: { uid: uid || searchParams.uid },
+      }).then((res) => {
         dispatch(storeDetail(res.data.list[0]));
-      })
-      .catch((err) => {
-        const data = err.response.data;
-      })
-      .finally(() => {});
-  }, [playeruid]);
+      });
+    }
+  }, [trigger]);
 
   const handleTabChange = (key) => {
     setSearchParams({ tabKey: key });
@@ -52,11 +53,7 @@ const DetailPlayer = ({ setIsModalOpen, isModalOpen }) => {
     },
   ];
   return (
-    <CustomModal
-      isModalOpen={isModalOpen}
-      setIsModalOpen={setIsModalOpen}
-      modalProps={{ title: "玩家詳細資料" }}
-    >
+    <CustomModal modalProps={{ title: "玩家詳細資料" }}>
       <Tabs
         defaultActiveKey={tabKey}
         activeKey={tabKey}

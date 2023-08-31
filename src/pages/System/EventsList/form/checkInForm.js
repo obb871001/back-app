@@ -10,13 +10,14 @@ import {
 import CustomForm from "../../../../components/form/customForm";
 import CustomDescription from "../../../../components/form/customDescription";
 import CustomInputNumber from "../../../../components/form/customInputNumber";
-import { CURRENCY } from "../../../../constant";
 import { useSelector } from "react-redux";
 import BetGametypeLimit from "../components/betGametypeLimit";
 import React from "react";
 
 const CheckInForm = ({ form }) => {
   const formReducers = useSelector((state) => state.formReducers);
+  const CURRENCY = useSelector((state) => state.CURRENCY);
+
   const basicForm = [
     [
       {

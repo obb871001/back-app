@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import SearchTool from "../../components/searchTool/searchTool";
 import CommonTable from "../../components/table/commonTable";
@@ -8,12 +8,22 @@ import {
   getAgentReport,
   getPlayerFromAgentReport,
 } from "../../api/methods/getApi";
-import { Divider } from "antd";
+import { Divider, Space, Tabs } from "antd";
 import { ProTable } from "@ant-design/pro-components";
+import Wrapper from "../../components/layout/Wrapper";
+import TableWrapper from "../../components/layout/TableWrapper";
+import Typography from "antd/es/typography/Typography";
+import StatisticWrapper from "../Home/components/StatisticWrapper";
+import AgentTable from "./AgentReports/AgentTable";
+import TotalTable from "./AgentReports/TotalTable";
+import PlayerTable from "./AgentReports/PlayerTable";
+import { CheckCircleOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
+import { allowClick } from "../../assets/style/styleConfig";
 
 const AgentReport = () => {
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
-  const { std = getToday(), etd = getToday() } = searchParams;
+  const { create_ts } = searchParams;
 
   const [agentList, setAgentList] = useState([]); //api回傳的data第二項為代理列表 ex:cagentReportTotal[1]
   const [agentTotal, setAgentTotal] = useState({}); //此代理的總計算(第一個為總計) ex:cagentReportTotal[0]
@@ -21,8 +31,9 @@ const AgentReport = () => {
 
   useEffect(() => {
     getAgentReport({
-      std: std,
-      etd: etd,
+      paramsData: {
+        create_ts,
+      },
     })
       .then((res) => {
         console.log(res);
@@ -35,8 +46,9 @@ const AgentReport = () => {
       .finally(() => {});
 
     getPlayerFromAgentReport({
-      std: std,
-      etd: etd,
+      paramsData: {
+        create_ts,
+      },
     })
       .then((res) => {
         console.log(res);
@@ -48,116 +60,72 @@ const AgentReport = () => {
       .finally(() => {});
   }, []);
 
-  const agentColumns = [
+  const tabs = [
     {
-      title: "編號",
-      dataIndex: "uid",
+      label: "代理詳細資料",
+      key: "1",
+      children: <AgentTable agentList={agentList} agentTotal={agentTotal} />,
     },
     {
-      title: "代理名稱/暱稱",
-      render: (row) => {
-        return `${row.cagent}/${row.nickname}`;
-      },
-    },
-    {
-      title: "登入名稱",
-      dataIndex: "loginname",
-    },
-    {
-      title: "有效投注額",
-      dataIndex: "validTurnover",
-      align: "right",
-    },
-    {
-      title: "玩家輸贏",
-      dataIndex: "member",
-      align: "right",
-    },
-    {
-      title: "下線代理輸贏",
-      dataIndex: "downline",
-      align: "right",
-    },
-    {
-      title: "自身輸贏",
-      dataIndex: "self",
-      align: "right",
-    },
-    {
-      title: "公司抽成",
-      dataIndex: "company",
-      align: "right",
+      label: "玩家詳細資料",
+      key: "2",
+      children: <PlayerTable directPlayer={directPlayer} />,
     },
   ];
 
-  const playerColumns = [
-    {
-      title: "編號",
-      dataIndex: "uid",
-    },
-    {
-      title: "玩家名稱",
-      dataIndex: "memId",
-    },
-    {
-      title: "有效投注額",
-      dataIndex: "validTurnover",
-      align: "right",
-    },
-    {
-      title: "玩家輸贏",
-      dataIndex: "member",
-      align: "right",
-    },
-    {
-      title: "Jackpot輸贏",
-      dataIndex: "jackpot",
-      align: "right",
-    },
-  ];
+  const searchDate = useMemo(() => {
+    if (!create_ts) return "";
+    return create_ts.split(",").map((item, index) => {
+      return `${dayjs.unix(item).format("YYYY-MM-DD")} ${
+        index === 0 ? "-" : ""
+      }`;
+    });
+  }, [create_ts]);
 
   return (
-    <>
+    <Wrapper>
       <SearchTool />
-      <CommonTable
-        dataSource={agentList}
-        columns={agentColumns}
-        tableProps={{ title: "代理報表" }}
-        summary={(pageData) => {
-          const { validTurnover, member, downline, self, company } = agentTotal;
-          return (
-            <>
-              <ProTable.Summary.Row>
-                <ProTable.Summary.Cell index={0}>總計</ProTable.Summary.Cell>
-                <ProTable.Summary.Cell index={1}></ProTable.Summary.Cell>
-                <ProTable.Summary.Cell index={2}></ProTable.Summary.Cell>
-                <ProTable.Summary.Cell align="right" index={3}>
-                  {validTurnover}
-                </ProTable.Summary.Cell>
-                <ProTable.Summary.Cell align="right" index={4}>
-                  {member}
-                </ProTable.Summary.Cell>
-                <ProTable.Summary.Cell align="right" index={5}>
-                  {downline}
-                </ProTable.Summary.Cell>
-                <ProTable.Summary.Cell align="right" index={6}>
-                  {self}
-                </ProTable.Summary.Cell>
-                <ProTable.Summary.Cell align="right" index={7}>
-                  {company}
-                </ProTable.Summary.Cell>
-              </ProTable.Summary.Row>
-            </>
-          );
-        }}
-      />
-      <Divider />
-      <CommonTable
-        dataSource={directPlayer}
-        columns={playerColumns}
-        tableProps={{ title: "代理玩家報表" }}
-      />
-    </>
+      <TableWrapper>
+        <Space>
+          <Typography.Title level={3}>代理</Typography.Title>
+          <Typography.Title className="!text-blue-500" underline level={4}>
+            gi_admin
+          </Typography.Title>
+          <Typography.Title level={5} type="secondary">
+            <Space>({searchDate})</Space>
+          </Typography.Title>
+        </Space>
+        <Divider />
+        <StatisticWrapper
+          textClassName="!text-blue-900"
+          title={
+            <Space>
+              <CheckCircleOutlined />
+              統計資料
+            </Space>
+          }
+        >
+          <section className="flex justify-end">
+            <p className={`${allowClick} underline  `} level={5}>
+              返回上層
+            </p>
+          </section>
+          <TotalTable />
+        </StatisticWrapper>
+        <Divider />
+        <StatisticWrapper
+          textClassName="!text-blue-900"
+          title={
+            <Space>
+              <CheckCircleOutlined />
+              詳細資料
+            </Space>
+          }
+        >
+          <Tabs defaultActiveKey="1" type="card" size={`small`} items={tabs} />
+        </StatisticWrapper>
+      </TableWrapper>
+    </Wrapper>
   );
 };
 

@@ -13,25 +13,26 @@ export const createAgent = ({ data } = {}) => {
   });
 };
 
+export const switchAgentStatus = ({ uid } = {}) => {
+  return agentApi.post("/switch", {
+    uid: uid,
+  });
+};
+
 export const setFirstLoginName = ({ data } = {}) => {
   return agentApi.post("/first", {
     ...data,
   });
 };
 
-export const depositToPlayer = ({ vpoint, washCheck, uid, useBank }) => {
+export const depositToPlayer = ({ paramsData } = {}) => {
   return memberApi.post("/deposit", {
-    vpoint: vpoint,
-    washCheck: washCheck,
-    uid: uid,
-    useBank: useBank,
+    ...paramsData,
   });
 };
-export const withdrawToPlayer = ({ vpoint, uid, useBank }) => {
+export const withdrawToPlayer = ({ paramsData } = {}) => {
   return memberApi.post("/withdraw", {
-    vpoint: vpoint,
-    uid: uid,
-    useBank: useBank,
+    ...paramsData,
   });
 };
 
@@ -39,6 +40,12 @@ export const resetPlayerPassword = ({ uid, passwd }) => {
   return memberApi.post("/password", {
     uid: uid,
     passwd: passwd,
+  });
+};
+
+export const createPlayer = ({ postData } = {}) => {
+  return memberApi.post("", {
+    ...postData,
   });
 };
 

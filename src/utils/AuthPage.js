@@ -5,14 +5,17 @@ import { fakeMenu } from "../constant";
 import ErrorPage from "../components/hint/ErrorPage";
 import { filterMenuKeys } from "../helpers/aboutAuth/filterMenuKeys";
 import SkeletonPageLoading from "../components/skeleton/skeletonPageLoading";
+import SkeletonPageLoadingHorizontal from "../components/skeleton/SkeletonPageLoadingHorizontal";
+import { motion } from "framer-motion";
 
 const AuthPage = ({ children, controllIndex }) => {
   const location = useLocation();
 
   const systemMenu = useSelector(
-    (state) => state.agentInfo.menuPermission || fakeMenu
+    (state) => state.agentInfo.menu_permission || fakeMenu
   );
   const globalLoading = useSelector((state) => state.globalLoading);
+  const apiCalling = useSelector((state) => state.apiCalling);
 
   const [editableMenu, setEditableMenu] = useState([]);
   const [preLoading, setPreLoading] = useState(true);
@@ -29,14 +32,24 @@ const AuthPage = ({ children, controllIndex }) => {
       location.pathname.includes(menuItem)
     );
   }, [editableMenu]);
-  console.log(isAuthorized);
 
   return (
     <>
-      {preLoading || globalLoading ? (
-        <SkeletonPageLoading />
+      {globalLoading || preLoading ? (
+        <main className="relative">
+          <SkeletonPageLoadingHorizontal absolute />
+        </main>
       ) : isAuthorized ? (
-        children
+        <main className="relative ">
+          {apiCalling && <SkeletonPageLoadingHorizontal absolute />}
+          <motion.section
+            initial={{ opacity: 0 }}
+            animate={{ opacity: apiCalling ? 0 : 1 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            {children}
+          </motion.section>
+        </main>
       ) : (
         <ErrorPage />
       )}

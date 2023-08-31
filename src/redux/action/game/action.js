@@ -1,7 +1,10 @@
 export const storeGame = (game) => {
-  const games = game.game;
+  const games = game;
   const sortByPlatform = Object.keys(games);
 
+  const platform = sortByPlatform.map((item) => {
+    return games[item]?.[`frontName`];
+  });
   const sortTypeFunction = () => {
     let output = {};
     Object.keys(games).forEach((key) => {
@@ -28,7 +31,7 @@ export const storeGame = (game) => {
   return {
     type: "storeGame",
     payload: {
-      gamePlatform: sortByPlatform,
+      gamePlatform: platform,
       gameType: sortByGameType,
       gameTypeAndPlatform: sortByGameTypeAndPlatform,
     },
@@ -39,5 +42,11 @@ export const storeBetLimit = (betLimit) => {
   return {
     type: "storeBetLimit",
     payload: betLimit,
+  };
+};
+export const storeReportDetail = (detail) => {
+  return {
+    type: "storeReportDetail",
+    payload: detail,
   };
 };

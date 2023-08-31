@@ -1,13 +1,13 @@
 import { ProFormGroup, ProFormText } from "@ant-design/pro-components";
 import { Divider } from "antd";
 import React from "react";
-import { CURRENCY } from "../../../../constant";
 import CommonTitle from "../../../../components/form/commonTitle";
 import CustomForm from "../../../../components/form/customForm";
 import { useSelector } from "react-redux";
 
 const ReferalForm = () => {
   const formDetail = useSelector((state) => state.formReducers);
+  const CURRENCY = useSelector((state) => state.CURRENCY);
 
   const basicForm = [
     [

@@ -1,11 +1,13 @@
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 const weekday = require("dayjs/plugin/weekday");
 dayjs.extend(weekday);
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.extend(relativeTime);
 
 dayjs.tz.setDefault("Asia/Manila");
 
@@ -38,4 +40,16 @@ export const getTomorrow = () => {
 export const getYesterday = () => {
   const yesterday = dayjs().add(-1, "day").format("YYYY-MM-DD");
   return yesterday;
+};
+
+export const relativeFromTime = (timeStr) => {
+  if (!timeStr || timeStr === "-") return "-";
+  const time = dayjs(timeStr);
+  const now = dayjs();
+  return (
+    <p className="my-0">
+      {time.format("YYYY-MM-DD (dddd) HH:mm:ss")}
+      <span className="text-xs text-gray-500"> - {time.fromNow()}</span>
+    </p>
+  );
 };

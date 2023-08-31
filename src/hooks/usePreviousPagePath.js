@@ -9,6 +9,13 @@ export function usePreviousPagePath() {
   if (pathSegments.length === 2) {
     return "/";
   }
+  if (
+    pathSegments.some(
+      (item) => item.includes("memberdetail") || item.includes("reportdetail")
+    )
+  ) {
+    return pathSegments.slice(0, -2).join("/");
+  }
   const newPathSegments = pathSegments.slice(0, -1);
   const newPath = newPathSegments.join("/");
 

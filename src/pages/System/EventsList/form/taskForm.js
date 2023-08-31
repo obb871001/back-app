@@ -10,7 +10,6 @@ import CustomForm from "../../../../components/form/customForm";
 import CommonTooltip from "../../../../components/hint/commonTooltip";
 import { Descriptions, Divider, Input, Typography } from "antd";
 import CustomInputNumber from "../../../../components/form/customInputNumber";
-import { CURRENCY } from "../../../../constant";
 import BetGametypeLimit from "../components/betGametypeLimit";
 import CustomDescription from "../../../../components/form/customDescription";
 import React from "react";
@@ -18,6 +17,7 @@ import { CopyTwoTone, DeleteTwoTone } from "@ant-design/icons";
 
 const TaskForm = ({ form }) => {
   const formReducers = useSelector((state) => state.formReducers);
+  const CURRENCY = useSelector((state) => state.CURRENCY);
 
   const basicForm = [
     [

@@ -16,12 +16,13 @@ import {
   getYesterday,
 } from "../../utils/getDay";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { QueryFilter } from "@ant-design/pro-components";
 import { toTimeStamp } from "../../utils/toTimeStamp";
 import { SearchOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { trigger } from "../../redux/action/common/action";
+import AdvanceComponents from "./advanceComponents";
 
 const buttons = [
   {
@@ -58,71 +59,82 @@ const buttons = [
   },
 ];
 
-const sectionClass =
-  "lg:flex-row flex-col flex items-start md:items-center gap-[10px] md:gap-[20px]";
-const divClass =
-  "flex items-start gap-[10px] md:items-center flex-col md:flex-row ";
-
-const SearchTool = ({ advanceSearch }) => {
+const SearchTool = ({ columns = [] }) => {
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
-
+  const { create_ts } = searchParams;
   const dispatch = useDispatch();
 
+  const create_ts_base = useMemo(() => {
+    const createTsArray = create_ts?.split(",");
+
+    if (!createTsArray) return;
+
+    const date1 = dayjs.unix(createTsArray[0]).format(dateFormat);
+    const date2 = dayjs.unix(createTsArray[1]).format(dateFormat);
+    const time1 = dayjs.unix(createTsArray[0]).format("HH:mm:ss");
+    const time2 = dayjs.unix(createTsArray[1]).format("HH:mm:ss");
+
+    return [date1, date2, time1, time2];
+  }, [create_ts]);
+
   const [timeConfig, setTimeConfig] = useState({
-    std: getToday(),
-    etd: getToday(),
-    stt: "00:00:00",
-    ett: "23:59:59",
+    std: create_ts_base ? create_ts_base[0] : getToday(),
+    etd: create_ts_base ? create_ts_base[1] : getToday(),
+    stt: create_ts_base ? create_ts_base[2] : "00:00:00",
+    ett: create_ts_base ? create_ts_base[3] : "23:59:59",
   });
   const { std, etd, stt, ett } = timeConfig;
 
   useEffect(() => {
     setSearchParams({
-      createTs: `${toTimeStamp(`${std} ${stt}`)} ${toTimeStamp(
+      create_ts: `${toTimeStamp(`${std} ${stt}`)},${toTimeStamp(
         `${etd} ${ett}`
       )}`,
     });
-  }, [std, etd, stt, ett]);
-
-  const handleSearch = (e) => {
-    setSearchParams({ [e.target.name]: e.target.value });
-  };
+  }, [std, etd, stt, ett, create_ts]);
 
   const onRangeChange = (dates, dateStrings) => {
+    // setSearchParams({
+    //   std: dateStrings[0],
+    //   etd: dateStrings[1],
+    // });
     if (dates) {
-      setSearchParams({
+      setTimeConfig({
+        ...timeConfig,
         std: dateStrings[0],
         etd: dateStrings[1],
+      });
+    } else {
+      setTimeConfig({
+        ...timeConfig,
+        std: getToday(),
+        etd: getToday(),
       });
     }
   };
 
   const handleTimeRangeChange = (times, timeStrings) => {
-    setSearchParams({
-      stt: timeStrings[0],
-      ett: timeStrings[1],
-    });
+    // setSearchParams({
+    //   stt: timeStrings[0],
+    //   ett: timeStrings[1],
+    // });
+    if (times) {
+      setTimeConfig({
+        ...timeConfig,
+        stt: timeStrings[0],
+        ett: timeStrings[1],
+      });
+    } else {
+      setTimeConfig({
+        ...timeConfig,
+        stt: "00:00:00",
+        ett: "23:59:59",
+      });
+    }
   };
 
-  const handleRadio = (e) => {
-    setSearchParams({
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSelect = (value) => {
-    setSearchParams({
-      searchKeys: value,
-    });
-  };
-
-  const radioOptions = [
-    { label: "all", value: -1, name: "ispay", title: "狀態搜尋" },
-    { label: "ispay", value: 1 },
-    { label: "isnotpay", value: 0 },
-  ];
   return (
-    <section className="flex flex-col md:gap-[20px] gap-[10px] items-start mb-[20px] rounded-lg border">
+    <section className="flex flex-col md:gap-[20px] gap-[10px] items-start mb-[20px] rounded-lg border min-w-[300px]">
       {/* <section className={sectionClass}>
         <div className={divClass}>
           <p>搜尋選項：</p>
@@ -137,40 +149,46 @@ const SearchTool = ({ advanceSearch }) => {
           />
         </div>
       </section> */}
-      <section className={sectionClass}>
-        <div className={divClass}>
-          <p>時間範圍：</p>
-          <DatePicker.RangePicker
-            onChange={onRangeChange}
-            value={[dayjs(std, dateFormat), dayjs(etd, dateFormat)]}
-          />
-          <TimePicker.RangePicker
-            format="HH:mm:ss"
-            onChange={handleTimeRangeChange}
-            value={[dayjs(stt, "HH:mm:ss"), dayjs(ett, "HH:mm:ss")]}
-          />
-        </div>
-        <div className="md:flex items-center grid grid-cols-3 gap-[10px] md:w-[unset] w-full">
-          {buttons.map((button) => (
-            <Button
-              key={button.label}
-              onClick={() => {
-                const time = button.timeFunc();
-                setTimeConfig({
-                  ...timeConfig,
-                  std: time.start,
-                  etd: time.end,
-                });
-              }}
-              type="primary"
-            >
-              {button.label}
-            </Button>
-          ))}{" "}
-        </div>
-      </section>
+      {/* <section className={sectionClass}> */}
+      <div className={`flex flex-col gap-[10px] w-full`}>
+        <span>時間範圍：</span>
+        <DatePicker.RangePicker
+          onChange={onRangeChange}
+          value={[dayjs(std, dateFormat), dayjs(etd, dateFormat)]}
+        />
+        <TimePicker.RangePicker
+          format="HH:mm:ss"
+          onChange={handleTimeRangeChange}
+          value={[dayjs(stt, "HH:mm:ss"), dayjs(ett, "HH:mm:ss")]}
+        />
+      </div>
+      <div className=" items-center lg:w-full lg:grid grid-cols-3 gap-[10px] md:w-[unset] md:flex grid w-full">
+        {buttons.map((button) => (
+          <Button
+            key={button.label}
+            onClick={() => {
+              const time = button.timeFunc();
+              setTimeConfig({
+                ...timeConfig,
+                std: time.start,
+                etd: time.end,
+              });
+            }}
+            type="primary"
+          >
+            {button.label}
+          </Button>
+        ))}{" "}
+      </div>
+      {/* </section> */}
 
-      <section className={``}>{advanceSearch}</section>
+      <section className={`w-full`}>
+        {columns
+          .filter((item) => item.search)
+          .map((item) => {
+            return <AdvanceComponents props={item} />;
+          })}
+      </section>
       <Button
         onClick={() => {
           dispatch(trigger());

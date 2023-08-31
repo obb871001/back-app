@@ -4,10 +4,10 @@ import { ProFormGroup } from "@ant-design/pro-components";
 import CustomForm from "../../../../components/form/customForm";
 import { Divider } from "antd";
 import { useSelector } from "react-redux";
-import { CURRENCY } from "../../../../constant";
 
 const GiftForm = () => {
   const formDetail = useSelector((state) => state.formReducers);
+  const CURRENCY = useSelector((state) => state.CURRENCY);
 
   const basicForm = [
     [

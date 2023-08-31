@@ -121,7 +121,6 @@ const CommonModal = ({
       initialValues={initialValues}
       onValuesChange={(changedValues, allValues) => {
         dispatch(storeForm(allValues));
-        console.log(changedValues, allValues);
       }}
     >
       {propsChildren}

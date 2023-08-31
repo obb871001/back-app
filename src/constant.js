@@ -1,8 +1,9 @@
 export const CURRENCY = "₱";
 export const YEAR = "2023";
-export const APP_NAME = window.getbaseconfig?.web_name;
+export const APP_NAME = window.getbaseconfig?.web_name || "WEBNAME";
 export const COMMON_PAGE = 30;
 export const API_RELOAD = 20000;
+export const VERSION = "0.0.3";
 
 export const fakeGameArray = [
   "MWSlot",
@@ -20,6 +21,82 @@ export const fakeGameArray = [
   "DG",
   "SEXYBCRT",
   "EVO",
+];
+export const fakeCurrency = [
+  {
+    iso_code: "CNY",
+    iso_num: 156,
+    prefix: "cny_",
+    status_front: 0,
+    status_backend: 1,
+    symbol: "¥",
+    decimal: 4,
+  },
+  {
+    iso_code: "ETH",
+    iso_num: null,
+    prefix: "eth_",
+    status_front: 0,
+    status_backend: 1,
+    symbol: "Ξ",
+    decimal: 4,
+    is_crypto: 1,
+  },
+  {
+    iso_code: "JPY",
+    iso_num: 392,
+    prefix: "jpy_",
+    status_front: 0,
+    status_backend: 1,
+    symbol: "¥",
+    decimal: 4,
+  },
+  {
+    iso_code: "PHP",
+    iso_num: 608,
+    prefix: "php_",
+    status_front: 0,
+    status_backend: 1,
+    symbol: "₱",
+    decimal: 4,
+  },
+  {
+    iso_code: "TWD",
+    iso_num: 158,
+    prefix: "twd_",
+    status_front: 1,
+    status_backend: 1,
+    symbol: "$",
+    decimal: 4,
+  },
+  {
+    iso_code: "USD",
+    iso_num: 840,
+    prefix: "usd_",
+    status_front: 0,
+    status_backend: 1,
+    symbol: "$",
+    decimal: 4,
+  },
+  {
+    iso_code: "USDT",
+    iso_num: null,
+    prefix: "usdt_",
+    status_front: 0,
+    status_backend: 1,
+    symbol: "$",
+    decimal: 4,
+    is_crypto: 1,
+  },
+  {
+    iso_code: "VND",
+    iso_num: 704,
+    prefix: "vnd_",
+    status_front: 0,
+    status_backend: 1,
+    symbol: "₫",
+    decimal: 4,
+  },
 ];
 export const fakeGameType = {
   EGAME: ["MWSlot", "FC", "FTG", "CQ9", "KA", "MW", "DCS", "JDB"],
@@ -571,4 +648,5 @@ export const fakeMenu = [
   "menupermissions",
   "comission",
   "gamepermissions",
+  "platformsetting",
 ];
