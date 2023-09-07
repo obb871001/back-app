@@ -2,28 +2,48 @@ import { useNavigate } from "react-router";
 import { allowClick } from "../../../../assets/style/styleConfig";
 import NavigatePlayer from "../../../../components/table/navigatePlayer";
 import NumberColumns from "../../../../components/table/numberColumns";
-import { relativeFromTime } from "../../../../utils/getDay";
+import { relativeFromTime, unixFormat } from "../../../../utils/getDay";
 import NavigateDetail from "../../../../components/table/navigateDetail";
 import handleDetail from "../utils/paigow/handleDetail";
 import RelativeTimeCol from "../../../../components/tableColumns/relativeTimeCol";
 import dayjs from "dayjs";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 export default function PaiGowColumns() {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.reports.gamehistory.${key}`);
+
   const navigate = useNavigate();
 
   const nowTime = useSelector((state) => state.nowTime);
   const CURRENCY = useSelector((state) => state.CURRENCY);
+  const agentNameList = useSelector((state) => state.agentNameList);
 
   return [
     {
-      title: "編號",
+      title: i18n("col.number"),
       dataIndex: "uid",
       key: "uid",
     },
     {
-      title: "玩家",
+      title: i18n("col.belongAgent"),
+      dataIndex: "cagent_belong",
+      key: "cagent_belong",
+      search: true,
+      type: "autoComplete",
+      autoCompleteProps: {
+        options: agentNameList.map((item) => {
+          return { value: item };
+        }),
+      },
+
+      ex: "agent01",
+    },
+
+    {
+      title: i18n("col.playerId"),
       dataIndex: "memId",
       key: "memId",
       render: (row, value) => {
@@ -34,9 +54,9 @@ export default function PaiGowColumns() {
       ex: "player01",
     },
     {
-      title: "交易時間",
-      dataIndex: "create_time",
-      key: "create_time",
+      title: i18n("col.transactionTime"),
+      dataIndex: "betTime",
+      key: "betTime",
       render: (row) => {
         return <RelativeTimeCol now={nowTime} timeStr={row} />;
       },
@@ -45,15 +65,14 @@ export default function PaiGowColumns() {
     },
 
     {
-      title: "訂單號",
+      title: i18n("col.orderNumber"),
       dataIndex: "hash",
       key: "hash",
-      columnsHidden: true,
       search: true,
       type: "text",
     },
     {
-      title: "局號",
+      title: i18n("col.roundId"),
       dataIndex: "round_id",
       key: "round_id",
       columnsHidden: true,
@@ -62,7 +81,7 @@ export default function PaiGowColumns() {
     },
 
     {
-      title: "投注金額",
+      title: i18n("col.betAmounts"),
       dataIndex: "bet",
       key: "bet",
       render: (row) => {
@@ -75,9 +94,23 @@ export default function PaiGowColumns() {
       },
     },
     {
-      title: "贏/輸",
-      dataIndex: "net_win",
-      key: "net_win",
+      title: i18n("col.payout"),
+      dataIndex: "win",
+      key: "win",
+      render: (row) => {
+        return <NumberColumns notStyle number={row} />;
+      },
+      search: true,
+      type: "number",
+      inputProps: {
+        addonAfter: CURRENCY,
+      },
+    },
+
+    {
+      title: i18n("col.winloss"),
+      dataIndex: "netWin",
+      key: "netWin",
       render: (row) => {
         return <NumberColumns number={row} />;
       },
@@ -88,23 +121,21 @@ export default function PaiGowColumns() {
       },
     },
     {
-      title: "投注時間",
-      dataIndex: "bet_ts",
-      key: "bet_ts",
-      columnsHidden: true,
+      title: i18n("col.betTime"),
+      dataIndex: "betTime",
+      key: "betTime",
       render: (row) => {
-        return relativeFromTime(row);
+        return unixFormat(row);
       },
       search: true,
       type: "date",
     },
     {
-      title: "派彩時間",
-      dataIndex: "win_ts",
-      key: "win_ts",
-      columnsHidden: true,
+      title: i18n("col.payoutTime"),
+      dataIndex: "winTime",
+      key: "winTime",
       render: (row) => {
-        return relativeFromTime(row);
+        return unixFormat(row);
       },
       search: true,
       type: "date",
@@ -116,28 +147,44 @@ export default function PaiGowColumns() {
         const roundCode = (code) => {
           switch (code) {
             case 1:
-              return "結算";
+              return i18n("result.settled");
             case 2:
-              return "取消";
+              return i18n("result.cancel");
             default:
-              return "錯誤";
+              return i18n("result.error");
+          }
+        };
+        const betType = (code) => {
+          switch (code) {
+            case 0:
+              return i18n("result.nonGambling");
+            case 1:
+              return i18n("result.banker");
+            case 2:
+              return i18n("result.player");
+            default:
+              return i18n("result.error");
           }
         };
         return (
           <NavigateDetail
             props={{
               hash: row.hash,
-              round_id: row.round_id,
-              create_time: row.create_time,
-              bet_ts: row.bet_ts,
-              win_ts: row.win_ts,
+              round_id: row.roundId,
+              create_time: row.betTime,
+              bet_ts: row.betTime,
+              win_ts: row.winTime,
               bet: row.bet,
               win: row.win,
               net_win: row.net_win,
-              after_balance: row.after_balance,
+              before_balance: row.beforeBalance,
+              after_balance: row.afterBalance,
               memId: row.memId,
               roundcode: roundCode(row.round_code),
-              detail: handleDetail(row.extra),
+              detail: [
+                { label: i18n("col.betType"), value: betType(row.betType) },
+                ...handleDetail(row.extra),
+              ],
             }}
           />
         );

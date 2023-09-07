@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearForm, storeForm } from "../../../../redux/action/form/action";
 import { createAgent } from "../../../../api/methods/postApi";
 import CryptoJS from "crypto-js";
+import { useTranslation } from "react-i18next";
 
 const waitTime = (time = 100) => {
   return new Promise((resolve) => {
@@ -20,6 +21,9 @@ const waitTime = (time = 100) => {
   });
 };
 const CreateAgentTwo = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.agentinfomation.agentlist.modal.${key}`);
+
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
 
@@ -28,19 +32,19 @@ const CreateAgentTwo = () => {
 
   const steps = [
     {
-      title: "設定代理資料",
+      title: `${i18n("set")}${i18n("basicInfo")}`,
       content: <StepOne form={form} />,
     },
     {
-      title: "設定選單權限",
+      title: `${i18n("set")}${i18n("menuPermission")}`,
       content: <StepTwo form={form} />,
     },
     {
-      title: "設定遊戲開關",
+      title: `${i18n("set")}${i18n("gamePermission")}`,
       content: <StepThree form={form} />,
     },
     {
-      title: "設定遊戲佣金",
+      title: `${i18n("set")}${i18n("gameCommission")}`,
       content: <StepFour form={form} />,
     },
   ];
@@ -49,7 +53,7 @@ const CreateAgentTwo = () => {
     <>
       <Button type="primary" onClick={() => setVisible(true)}>
         <PlusOutlined />
-        建立代理
+        {i18n("create")}
       </Button>
       {visible && (
         <StepsForm
@@ -81,7 +85,7 @@ const CreateAgentTwo = () => {
           stepsFormRender={(dom, submitter) => {
             return (
               <Modal
-                title="建立代理"
+                title={i18n("create")}
                 width={800}
                 onCancel={() => setVisible(false)}
                 open={visible}

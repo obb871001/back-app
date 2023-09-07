@@ -4,8 +4,12 @@ import CreatePlayerForm from "../form/createPlayerForm";
 import { createPlayer } from "../../../../api/methods/postApi";
 import { useSelector } from "react-redux";
 import { MD5 } from "crypto-js";
+import { useTranslation } from "react-i18next";
 
 const CreatePlayer = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.admin.playersearch.${key}`);
+
   const baseConfig = useSelector((state) => state.basicConfig);
   const handleSubmit = async (formData) => {
     try {
@@ -22,10 +26,10 @@ const CreatePlayer = () => {
 
   return (
     <CommonModal
-      modalProps={{ title: "創建玩家" }}
+      modalProps={{ title: i18n("modal.title") }}
       modalTrigger={true}
       submitFunction={handleSubmit}
-      antdModalProps={{ okText: "創建玩家" }}
+      antdModalProps={{ okText: i18n("modal.title") }}
     >
       <CreatePlayerForm />
     </CommonModal>

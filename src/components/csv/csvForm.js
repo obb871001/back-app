@@ -5,8 +5,12 @@ import { Button, Form, Popover, Space, message } from "antd";
 import { DownloadOutlined, FileSearchOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
 import { useRef, useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const CsvForm = ({ columns, csvApi, csvParams }) => {
+  const { t } = useTranslation();
+  const i18n = (key, total) => t(`commonTable.${key}`, { total });
+
   const [form] = useForm();
 
   const csvRef = useRef();
@@ -32,8 +36,8 @@ const CsvForm = ({ columns, csvApi, csvParams }) => {
     });
 
   const basicForm = [
-    { label: "檔案名稱", name: "filename", type: "text", required: true },
-    { label: "時間範圍", name: "create_ts", type: "date" },
+    { label: i18n("fileName"), name: "filename", type: "text", required: true },
+    { label: i18n("timeRange"), name: "create_ts", type: "date" },
     ...formatColumns,
   ];
 
@@ -77,21 +81,19 @@ const CsvForm = ({ columns, csvApi, csvParams }) => {
       form={form}
       layout="horizontal"
       labelCol={{
-        span: 5,
+        span: 9,
       }}
       wrapperCol={{
         span: 15,
       }}
-      onValuesChange={(changedValues, allValues) => {
-        console.log(allValues);
-      }}
+      onValuesChange={(changedValues, allValues) => {}}
       onFinish={() => {
         handleDownloadCsv();
       }}
       submitter={{
         render: (props, doms) => {
           return (
-            <Form.Item label="操作">
+            <Form.Item label={i18n("action")}>
               <Space>
                 <Button
                   loading={buttonLoading}
@@ -99,9 +101,9 @@ const CsvForm = ({ columns, csvApi, csvParams }) => {
                   icon={<FileSearchOutlined />}
                   htmlType="submit"
                 >
-                  查詢
+                  {i18n("search")}
                 </Button>
-                <Popover content="請先查詢資料">
+                <Popover content={i18n("pleaseSearchData")}>
                   <Button
                     loading={buttonLoading}
                     disabled={!canDownload}
@@ -112,10 +114,10 @@ const CsvForm = ({ columns, csvApi, csvParams }) => {
                       csvRef.current.link.click();
                     }}
                   >
-                    下載
+                    {i18n("download")}
                   </Button>
                 </Popover>
-                <span>{`共(${pagination?.total_records})筆`}</span>
+                <span>{`${i18n("totalData", pagination?.total_records)}`}</span>
               </Space>
             </Form.Item>
           );
@@ -132,7 +134,7 @@ const CsvForm = ({ columns, csvApi, csvParams }) => {
         filename={form.getFieldValue("filename")}
         className="hidden"
       >
-        Download
+        {i18n("Download")}
       </CSVLink>
     </ProForm>
   );

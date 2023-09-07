@@ -627,6 +627,7 @@ export const fakeMenu = [
   "home",
   "playersearch",
   "memberlog",
+  "memberwalletlog",
   "agentlist",
   "sublist",
   "agentlog",

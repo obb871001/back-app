@@ -12,8 +12,13 @@ import {
   apiCalling,
   storeTotalRecords,
 } from "../../redux/action/common/action";
+import { useTranslation } from "react-i18next";
 
 const PlayerLog = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.admin.memberlog.${key}`);
+  const i18n_unit = (key) => t(`unit.${key}`);
+
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
   const { create_ts, current_page, per_page } = searchParams;
 
@@ -50,12 +55,12 @@ const PlayerLog = () => {
 
   const columns = [
     {
-      title: "編號",
+      title: i18n("col.number"),
       dataIndex: "uid",
       key: "uid",
     },
     {
-      title: "玩家ID",
+      title: i18n("col.playerId"),
       dataIndex: "memId",
       key: "memId",
       search: true,
@@ -63,7 +68,7 @@ const PlayerLog = () => {
       ex: "player001",
     },
     {
-      title: "所屬代理商",
+      title: i18n("col.belongAgent"),
       dataIndex: "cagent_belong",
       key: "cagent_belong",
       search: true,
@@ -71,16 +76,16 @@ const PlayerLog = () => {
       ex: "agent01",
     },
     {
-      title: "代理商等級",
+      title: i18n("col.agentLevel"),
       dataIndex: "cagent_level",
       key: "cagent_level",
       search: true,
       type: "number",
       ex: "1",
-      addonAfter: "級",
+      addonAfter: i18n_unit("level"),
     },
     {
-      title: "國家",
+      title: i18n("col.country"),
       dataIndex: "country",
       key: "country",
       search: true,
@@ -89,7 +94,7 @@ const PlayerLog = () => {
     },
 
     {
-      title: "使用設備",
+      title: i18n("col.device"),
       dataIndex: "device",
       key: "device",
       search: true,
@@ -97,7 +102,7 @@ const PlayerLog = () => {
       ex: "Mobile",
     },
     {
-      title: "網域",
+      title: i18n("col.domain"),
       dataIndex: "domain",
       key: "domain",
       search: true,
@@ -105,7 +110,7 @@ const PlayerLog = () => {
       ex: "https://www.google.com",
     },
     {
-      title: "IP",
+      title: i18n("col.ip"),
       dataIndex: "ip",
       key: "ip",
       search: true,
@@ -114,7 +119,7 @@ const PlayerLog = () => {
     },
 
     {
-      title: "創建時間",
+      title: i18n("col.createTime"),
       dataIndex: "create_time",
       key: "create_time",
       search: true,

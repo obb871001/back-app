@@ -26,12 +26,22 @@ import TableWrapper from "../../components/layout/TableWrapper";
 import AdvanceComponents from "../../components/searchTool/advanceComponents";
 import EditAuthColumns from "../../utils/EditAuthColumns";
 import { relativeFromTime } from "../../utils/getDay";
+import { useTranslation } from "react-i18next";
+import { Tag } from "antd";
 
 const ChildList = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.agentinfomation.sublist.${key}`);
+  const i18n_switch = (key) => t(`switch.${key}`);
+  const i18n_unit = (key) => t(`unit.${key}`);
+  const i18n_statusCode = (key) => t(`status_code.${key}`);
+
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
   const { current_page, per_page } = searchParams;
 
   const dispatch = useDispatch();
+  const basicConfig = useSelector((state) => state.basicConfig);
+  const { statusCode = [] } = basicConfig;
   const trigger = useSelector((state) => state.trigger);
 
   const [childList, setChildList] = useState([]);
@@ -64,7 +74,7 @@ const ChildList = () => {
   }, [trigger, current_page, per_page]);
   const columns = [
     {
-      title: "編號",
+      title: i18n("col.number"),
       dataIndex: "uid",
       key: "uid",
       search: true,
@@ -72,7 +82,7 @@ const ChildList = () => {
       ex: "1",
     },
     {
-      title: "代理上線",
+      title: i18n("col.agentLine"),
       key: "cagent",
       render: (row) => {
         return filterAgentLevel(row);
@@ -82,7 +92,7 @@ const ChildList = () => {
       ex: "agent01",
     },
     {
-      title: "子帳號",
+      title: i18n("col.subAccount"),
       dataIndex: "cagent",
       key: "cagent",
       search: true,
@@ -90,18 +100,18 @@ const ChildList = () => {
       ex: "child01",
     },
     {
-      title: "等級",
+      title: i18n("col.level"),
       dataIndex: "level",
       key: "level",
       search: true,
       type: "number",
       ex: "1",
       inputProps: {
-        addonAfter: "級",
+        addonAfter: i18n_unit("level"),
       },
     },
     {
-      title: "暱稱",
+      title: i18n("col.nickname"),
       dataIndex: "nick_name",
       key: "nick_name",
       search: true,
@@ -109,7 +119,7 @@ const ChildList = () => {
       ex: "Godtone",
     },
     {
-      title: "真實姓名",
+      title: i18n("col.truename"),
       dataIndex: "true_name",
       key: "true_name",
       search: true,
@@ -117,7 +127,7 @@ const ChildList = () => {
       ex: "Chang Chia-Hang",
     },
     {
-      title: "手機",
+      title: i18n("col.mobile"),
       dataIndex: "mobile",
       key: "mobile",
       search: true,
@@ -125,7 +135,7 @@ const ChildList = () => {
       ex: "0912345678",
     },
     {
-      title: "生日",
+      title: i18n("col.birthday"),
       dataIndex: "birthday",
       key: "birthday",
       search: true,
@@ -133,7 +143,7 @@ const ChildList = () => {
       ex: "1998-10-01",
     },
     {
-      title: "Email",
+      title: i18n("col.email"),
       dataIndex: "email",
       key: "email",
       search: true,
@@ -141,34 +151,56 @@ const ChildList = () => {
       ex: "abc@gmail.com",
     },
     {
-      title: "創建時間",
+      title: i18n("col.createDate"),
       dataIndex: "createDate",
       key: "createDate",
       search: true,
       type: "date",
     },
     {
-      title: "上次登入時間",
+      title: i18n("col.lastLoginTime"),
       dataIndex: "oauth",
       key: "oauth",
       render: (row) => {
-        return !row ? relativeFromTime(row) : "(尚未登入)";
+        return !row ? relativeFromTime(row) : `(${i18n("col.loginNotyet")})`;
       },
       search: true,
       type: "date",
     },
     {
-      title: "帳號狀態",
+      title: i18n("col.accountStatus"),
       dataIndex: "status",
       key: "status",
-      render: (row) => {
-        return <p>{row == 1 ? "啟用" : "停用"}</p>;
+      render: (value, row) => {
+        const color = (code) => {
+          switch (code) {
+            case 1:
+              return "green";
+            case 0:
+              return "red";
+            case 2:
+              return "blue";
+            case 3:
+              return "volcano";
+            default:
+              return "gray";
+          }
+        };
+        return <Tag color={color(value)}>{i18n_statusCode(`${value}`)}</Tag>;
       },
       search: true,
       type: "select",
+      selectProps: {
+        options: statusCode.map((code) => {
+          return {
+            label: i18n_statusCode(`${code}`),
+            value: code,
+          };
+        }),
+      },
     },
     {
-      title: "操作",
+      title: i18n("col.action"),
       key: "action",
       render: (row) => {
         return (
@@ -192,7 +224,7 @@ const ChildList = () => {
       <SearchTool columns={columns} />
       <TableWrapper>
         <EditAuthColumns>
-          <CreateButton type="子帳號" />
+          <CreateButton type={i18n("col.subAccount")} />
         </EditAuthColumns>
         <CommonTable
           tableLoading={tableLoading}

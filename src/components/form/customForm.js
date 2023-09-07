@@ -8,6 +8,7 @@ import {
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
+import { AutoComplete } from "antd";
 
 const CustomForm = ({ type, ...props }) => {
   const { selectProps = {} } = props;
@@ -69,6 +70,8 @@ const CustomForm = ({ type, ...props }) => {
       return <ProFormSelect {...selectProps} {...props} />;
     case "radio":
       return <ProFormRadio.Group {...props} />;
+    case "autoComplete":
+      return <ProFormSelect showSearch width={200} {...props} />;
     case "textarea":
       return <ProFormTextArea {...props} />;
     case "password":

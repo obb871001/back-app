@@ -8,6 +8,7 @@ import CustomModal from "../modal/customModal";
 import CsvForm from "../csv/csvForm";
 import { trigger } from "../../redux/action/common/action";
 import UseMergeableSearchParams from "../../hooks/useMergeableSearchParams";
+import { useTranslation } from "react-i18next";
 
 const CommonTable = ({
   dataSource,
@@ -19,7 +20,12 @@ const CommonTable = ({
   customPagination,
   bordered,
   csvParams,
+  expandable,
+  rowKey,
 }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`commonTable.${key}`);
+
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
   const { per_page = 20, current_page = 1 } = searchParams;
 
@@ -52,7 +58,9 @@ const CommonTable = ({
         headerTitle={title}
         cardBordered
         bordered={bordered}
+        rowKey={rowKey}
         loading={tableLoading}
+        expandable={expandable}
         scroll={{ x: "max-content" }}
         search={false}
         options={{
@@ -71,7 +79,7 @@ const CommonTable = ({
               }}
             >
               <FileAddOutlined />
-              導出
+              {i18n("export")}
             </Button>
           ),
         ]}
@@ -91,7 +99,7 @@ const CommonTable = ({
         summary={summary}
       />
       <CustomModal
-        modalProps={{ title: "導出表單", width: 500 }}
+        modalProps={{ title: i18n("export"), width: 500 }}
         isModalOpen={openCsvPop}
         setIsModalOpen={setOpenCsvPop}
       >

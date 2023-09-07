@@ -5,8 +5,12 @@ import { useEffect, useState } from "react";
 import CommonTitle from "../form/commonTitle";
 import { storeForm } from "../../redux/action/form/action";
 import { filterMenuKeys } from "../../helpers/aboutAuth/filterMenuKeys";
+import { useTranslation } from "react-i18next";
 
 const GamePermission = ({ form, hiddenTitle }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`permission.game.${key}`);
+
   const gameList = useSelector(
     (state) => state.gameList.gamePlatform || ["MWSlot", "JILI"]
   );
@@ -61,7 +65,7 @@ const GamePermission = ({ form, hiddenTitle }) => {
   return (
     <Form.Item
       name="game_permission"
-      label={hiddenTitle ? "" : <CommonTitle title="遊戲權限" />}
+      label={hiddenTitle ? "" : <CommonTitle title={i18n("title")} />}
       valuePropName="checked"
     >
       <Checkbox
@@ -71,7 +75,7 @@ const GamePermission = ({ form, hiddenTitle }) => {
         className="mb-[10px]"
         disabled={popType === "detail"}
       >
-        全選
+        {i18n("selectAll")}
       </Checkbox>
 
       <Checkbox.Group

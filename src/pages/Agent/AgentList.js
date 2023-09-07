@@ -12,7 +12,19 @@ import CreateButton from "../../components/button/createButton";
 import { useDispatch, useSelector } from "react-redux";
 import { storeDetail } from "../../redux/action/member/action";
 import CustomSearchInput from "../../components/searchTool/customSearchInput";
-import { Col, Modal, Row, Space, Switch, Typography, notification } from "antd";
+import {
+  Col,
+  Divider,
+  Input,
+  InputNumber,
+  Modal,
+  Row,
+  Space,
+  Switch,
+  Tag,
+  Typography,
+  notification,
+} from "antd";
 import Wrapper from "../../components/layout/Wrapper";
 import TableWrapper from "../../components/layout/TableWrapper";
 import EditAuthColumns from "../../utils/EditAuthColumns";
@@ -24,20 +36,40 @@ import {
 } from "../../redux/action/common/action";
 import useEditStatus from "../../utils/EditStatus";
 import { switchAgentStatus } from "../../api/methods/postApi";
+import { useTranslation } from "react-i18next";
+import { color } from "./AgentList/utils/statusCodeColor";
+import NumberColumns from "../../components/table/numberColumns";
+import { allowClick } from "../../assets/style/styleConfig";
+import { formatNumber } from "../../utils/formatNumber";
+import CustomModal from "../../components/modal/customModal";
+import AdjustBalance from "./AgentList/modal/adjustBalance";
 
 const AgentList = () => {
+  const { t } = useTranslation();
+  const i18n = (key, props) =>
+    t(`page.agentinfomation.agentlist.${key}`, { ...props });
+
+  const i18n_switch = (key) => t(`switch.${key}`);
+  const i18n_unit = (key) => t(`unit.${key}`);
+  const i18n_statusCode = (key) => t(`status_code.${key}`);
+
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
   const { current_page, per_page } = searchParams;
 
   const canEdit = useEditStatus();
 
   const dispatch = useDispatch();
+  const basicConfig = useSelector((state) => state.basicConfig);
+  const { statusCode = [], is_credit } = basicConfig;
   const trigger = useSelector((state) => state.trigger);
+  const CURRENCY = useSelector((state) => state.CURRENCY);
 
   const [confirmButtonLoading, setConfirmButtonLoading] = useState(false);
   const [agentList, setAgentList] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);
   const [initialRender, setInitialRender] = useState(true);
+  const [openBalanceModal, setOpenBalanceModal] = useState(false);
+  const [agentData, setAgentData] = useState({});
 
   useEffect(() => {
     setTableLoading(true);
@@ -64,45 +96,9 @@ const AgentList = () => {
       });
   }, [trigger, current_page, per_page]);
 
-  const editAgentStatus = (action, rowData) => {
-    const { cagent, uid } = rowData;
-    Modal.confirm({
-      title: `您確定要 ${action} ${cagent} 的帳號嗎？`,
-      content: "確認無誤",
-      okButtonProps: {
-        loading: confirmButtonLoading,
-      },
-      cancelButtonProps: {
-        disabled: confirmButtonLoading,
-      },
-      onOk() {
-        setConfirmButtonLoading(true);
-        switchAgentStatus({ uid: uid })
-          .then((data) => {
-            dispatch(trigger());
-            notification.open({
-              description: `提交成功`,
-              icon: <SmileOutlined className="text-green-500" />,
-            });
-          })
-          .catch((err) => {
-            const data = err.response.data;
-            notification.open({
-              description: `提交失敗`,
-              icon: <MehOutlined className="text-red-500" />,
-            });
-          })
-          .finally(() => {
-            setConfirmButtonLoading(false);
-          });
-      },
-      onCancel() {},
-    });
-  };
-
   const columns = [
     {
-      title: "編號",
+      title: i18n("col.number"),
       dataIndex: "uid",
       key: "uid",
       search: true,
@@ -110,7 +106,7 @@ const AgentList = () => {
       ex: "1",
     },
     {
-      title: "上層代理",
+      title: i18n("col.agentLine"),
       dataIndex: "cagent_belong",
       key: "cagent_belong",
       search: true,
@@ -119,7 +115,7 @@ const AgentList = () => {
     },
 
     {
-      title: "代理商",
+      title: i18n("col.agent"),
       dataIndex: "cagent",
       key: "cagent",
       search: true,
@@ -127,29 +123,29 @@ const AgentList = () => {
       ex: "agent01",
     },
     {
-      title: "登入名稱",
+      title: i18n("col.loginName"),
       dataIndex: "login_name",
       key: "login_name",
       render: (row) => {
-        return row || "尚未登入";
+        return row || i18n("col.loginNotyet");
       },
       search: true,
       type: "text",
       ex: "Jason Han",
     },
     {
-      title: "等級",
+      title: i18n("col.level"),
       dataIndex: "level",
       key: "level",
       search: true,
       type: "number",
       ex: "1",
       inputProps: {
-        addonAfter: "級",
+        addonAfter: i18n_unit("level"),
       },
     },
     {
-      title: "暱稱",
+      title: i18n("col.nickname"),
       dataIndex: "nick_name",
       key: "nick_name",
       search: true,
@@ -157,7 +153,7 @@ const AgentList = () => {
       ex: "Godtone",
     },
     {
-      title: "真實姓名",
+      title: i18n("col.truename"),
       dataIndex: "true_name",
       key: "true_name",
       search: true,
@@ -165,86 +161,94 @@ const AgentList = () => {
       ex: "Chang Chia-Hang",
     },
     {
-      title: "手機",
+      title: `${i18n("col.credit")}${i18n("col.balance")}`,
+      dataIndex: is_credit === 1 ? "credit" : "vpoint",
+      key: is_credit === 1 ? "credit" : "vpoint",
+      render: (value, row) => {
+        return (
+          <span
+            onClick={() => {
+              setOpenBalanceModal(true);
+              setAgentData(row);
+            }}
+            className={`${allowClick} cursor-pointer underline font-bold`}
+          >
+            {CURRENCY}
+            {formatNumber(value)}
+          </span>
+        );
+      },
+    },
+
+    {
+      title: i18n("col.mobile"),
       dataIndex: "mobile",
       key: "mobile",
       search: true,
       type: "text",
       ex: "0912345678",
+      columnsHidden: true,
     },
     {
-      title: "生日",
+      title: i18n("col.birthday"),
       dataIndex: "birthday",
       key: "birthday",
       search: true,
       type: "text",
       ex: "1998-10-01",
+      columnsHidden: true,
     },
     {
-      title: "Email",
+      title: i18n("col.email"),
       dataIndex: "email",
       key: "email",
       search: true,
       type: "text",
       ex: "abc@gmail.com",
+      columnsHidden: true,
     },
     {
-      title: "玩家數量",
+      title: i18n("col.playerNumber"),
       dataIndex: "pnum",
       key: "pnum",
     },
     {
-      title: "創建時間",
+      title: i18n("col.createTime"),
       dataIndex: "create_time",
       key: "create_time",
       search: true,
       type: "date",
     },
     {
-      title: "上次登入時間",
+      title: i18n("col.lastLoginTime"),
       dataIndex: "oauth",
       key: "oauth",
       render: (row) => {
-        return !row ? relativeFromTime(row) : "(尚未登入)";
+        return !row ? relativeFromTime(row) : `(${i18n("col.loginNotyet")})`;
       },
       search: true,
       type: "date",
     },
     {
-      title: "帳號狀態",
+      title: i18n("col.accountStatus"),
       dataIndex: "status",
       key: "status",
       render: (value, row) => {
-        return canEdit ? (
-          <Switch
-            checkedChildren="啟用"
-            unCheckedChildren="停用"
-            checked={value == 1}
-            onClick={() => {
-              editAgentStatus("關閉", row);
-            }}
-          />
-        ) : (
-          <p>{row == 1 ? "啟用" : "停用"}</p>
-        );
+        return <Tag color={color(value)}>{i18n_statusCode(`${value}`)}</Tag>;
       },
       search: true,
       type: "select",
       selectProps: {
-        options: [
-          {
-            label: "啟用",
-            value: 1,
-          },
-          {
-            label: "停用",
-            value: 0,
-          },
-        ],
+        options: statusCode.map((code) => {
+          return {
+            label: i18n_statusCode(`${code}`),
+            value: code,
+          };
+        }),
       },
     },
     {
-      title: "操作",
+      title: i18n("col.action"),
       key: "action",
       render: (row) => {
         return (
@@ -268,7 +272,7 @@ const AgentList = () => {
       {/* <CreateAgent /> */}
       <TableWrapper>
         <EditAuthColumns>
-          <CreateButton type="代理" />
+          <CreateButton type={i18n("col.agent")} />
         </EditAuthColumns>
         <CommonTable
           csvApi={getAgentList}
@@ -277,6 +281,13 @@ const AgentList = () => {
           dataSource={agentList}
         />
       </TableWrapper>
+      {openBalanceModal && (
+        <AdjustBalance
+          openBalanceModal={openBalanceModal}
+          setOpenBalanceModal={setOpenBalanceModal}
+          agentData={agentData}
+        />
+      )}
     </Wrapper>
   );
 };

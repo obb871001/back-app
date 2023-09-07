@@ -2,8 +2,12 @@ import { allowClick } from "../../assets/style/styleConfig";
 import { useDispatch } from "react-redux";
 import { storeReportDetail } from "../../redux/action/game/action";
 import { openReportDetail } from "../../redux/action/reports/action";
+import { useTranslation } from "react-i18next";
 
 const NavigateDetail = ({ props }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`actionCol.${key}`);
+
   const dispatch = useDispatch();
 
   return (
@@ -15,7 +19,7 @@ const NavigateDetail = ({ props }) => {
       }}
       className={`${allowClick} my-0`}
     >
-      詳細
+      {i18n("detail")}
     </p>
   );
 };

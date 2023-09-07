@@ -8,10 +8,10 @@ import { userLanguage } from "./detectLang";
 const defaultLang = userLanguage();
 i18n.use(initReactI18next).init({
   debug: false,
-  lng: defaultLang === "en" ? "en" : "zh-cn",
+  lng: defaultLang === "en" ? "en" : "zh_cn",
   resources: {
     en: { translation: en },
-    [`zh-cn`]: { translation: zh_chs },
+    zh_cn: { translation: zh_chs },
   },
   fallbackLng: "en",
   interpolation: {

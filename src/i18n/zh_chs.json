@@ -1,1 +1,470 @@
-{}
+{
+  "page": {
+    "home": {
+      "title": "信息看板",
+      "recentOperation": "近日营运情况",
+      "showNumber": "显示数字",
+      "validTurnover": "有效投注",
+      "totalWinLoss": "总输赢",
+      "validTurnoverOrderNumber": "有效投注单数",
+      "activePlayer": "活跃玩家",
+      "amount": "金额(万)",
+      "people": "人数(人)",
+      "validTurnoverOrderNumberUnit": "单量(单)",
+      "everyMinuteUpdate": "每分钟更新一次",
+      "focusInformation": "焦点信息",
+      "agentInformation": "代理信息",
+      "agentNumber": "代理数(人)",
+      "addAgent": "新增代理(人)",
+      "playerInformation": "玩家信息",
+      "playerTotalNumber": "玩家总人数(人)",
+      "newPlayer": "新进玩家人数(人)",
+      "activePlayerNumber": "活跃玩家人数(人)",
+      "turnoverInformation": "投注信息",
+      "turnover": "投注金额(万)",
+      "winLoss": "损益",
+      "depositInformation": "存款信息",
+      "total": "总额",
+      "firstDepositPeople": "首存人数(人)",
+      "totalPeople": "总人数(人)",
+      "withdrawInformation": "提款信息",
+      "totalRevenue": "总营收(总存款-总取款)",
+      "today": "今日",
+      "yesterday": "昨日",
+      "thisWeek": "本周",
+      "lastWeek": "上周",
+      "thisMonth": "本月",
+      "lastMonth": "上月"
+    },
+    "admin": {
+      "playerWalletLog": {
+        "col": {
+          "member": "會員",
+          "backend": "後台"
+        }
+      },
+      "playersearch": {
+        "create": "新玩家",
+        "modal": {
+          "title": "创建玩家",
+          "passwordHint": "登录预设密码为",
+          "playerAccount": "玩家账号",
+          "playerAgent": "代理",
+          "truename": "真实姓名",
+          "mobile": "手机",
+          "email": "电子邮件",
+          "birthday": "生日",
+          "submit": "提交",
+          "reset": "重置",
+          "settingTarget": "設定目標"
+        },
+        "tabs": {
+          "basicInfo": "基本资料",
+          "resetPassword": "重置密码",
+          "betLimitSettings": "限紅設定",
+          "playerDetail": "玩家詳情"
+        },
+        "col": {
+          "number": "序号",
+          "agent": "代理上线",
+          "playerId": "玩家ID",
+          "accountBalance": "账户余额",
+          "truename": "真实姓名",
+          "registerDate": "注册日期",
+          "country": "国家",
+          "action": "操作",
+          "mobile": "手机",
+          "email": "电子邮件",
+          "cryptoAddress": "加密貨幣地址",
+          "editPlayerBasic": "编辑玩家基本资料",
+          "walletInformation": "钱包资讯",
+          "editBalance": "编辑余额",
+          "playerWashNow": "該玩家目前洗码",
+          "editWashPoints": "编辑洗码量",
+          "cancel": "取消",
+          "submit": "提交",
+          "amounts": "金额",
+          "depositWashpoints": "存款洗码量",
+          "withdrawDontInputThisField": "提款不用输入此栏位",
+          "deposit": "存款",
+          "withdraw": "提款",
+          "updateWashpoints": "更新洗码量",
+          "newPassword": "新密码",
+          "confirmPassword": "确认密码",
+          "resetPassword": "重置密码",
+          "accountStatus": "帳號狀態",
+          "cagentMemo": "代理商备注",
+          "cagentMemoHint": "此字段可输入此次操作的备注及原因(供后台查询)",
+          "cagentMemoEx": "例：玩家异常投注，后台提取100",
+          "playerMemo": "玩家备注",
+          "playerMemoHint": "此字段可以让玩家看到变更余额的备注(供玩家)",
+          "playerMemoEx": "例：因操作异常，后台将取回100"
+        }
+      },
+      "memberlog": {
+        "col": {
+          "number": "序号",
+          "playerId": "玩家ID",
+          "belongAgent": "所属代理",
+          "agentLevel": "代理层级",
+          "country": "国家",
+          "device": "设备",
+          "domain": "域名",
+          "ip": "IP",
+          "createTime": "創建時間"
+        }
+      },
+      "memberwalletlog": {
+        "col": {
+          "transactionDetail": "交易明細",
+          "number": "序号",
+          "playerId": "玩家ID",
+          "transactionTime": "交易时间",
+          "type": "类型",
+          "game": "游戏",
+          "amounts": "金额",
+          "playerBalance": "玩家余额",
+          "orderNumber": "订单編号",
+          "exportFrom": "轉出方",
+          "exportTo": "轉入方",
+          "beforeTransactionBalance": "交易前餘額",
+          "afterTransactionBalance": "交易後餘額",
+          "amounts": "金额",
+          "member": "會員",
+          "backend": "後台"
+        }
+      }
+    },
+    "agentinfomation": {
+      "agentlist": {
+        "tabs": {
+          "basicInfo": "基本资料",
+          "resetPassword": "重置密码",
+          "subDetail": "子帳號詳情"
+        },
+        "modal": {
+          "create": "創建代理",
+          "agentLine": "上層代理",
+          "agent": "代理商",
+          "child": "子帳號",
+          "type": "类型",
+          "agentAccount": "代理帐号",
+          "nickname": "暱稱",
+          "password": "密码",
+          "accountStatus": "帳號狀態",
+          "truename": "真实姓名",
+          "mobile": "手机",
+          "email": "电子邮件",
+          "birthday": "生日",
+          "lastLoginDate": "最後登入時間",
+          "childName": "子帳號名稱",
+          "agentName": "代理名稱",
+          "childLevel": "子帳號層級",
+          "agentLevel": "代理层级",
+          "childNumber": "子帳號編號",
+          "agentNumber": "代理編號",
+          "childNickname": "子帳號暱稱",
+          "agentNickname": "代理暱稱",
+          "loginname": "登入名稱",
+          "createDate": "創建時間",
+          "gameCommission": "遊戲佔成",
+          "gameCommissionDetail": "遊戲佔成詳情",
+          "menuPermission": "菜单权限",
+          "menuPermissionDetail": "菜单权限详情",
+          "gamePermission": "游戏权限",
+          "gamePermissionDetail": "游戏权限详情",
+          "view": "查看",
+          "set": "設定",
+          "basicInfo": "基本资料",
+          "customize": "自訂",
+          "cancel": "取消",
+          "editAgent": "编辑代理",
+          "editChild": "编辑子帳號",
+          "createAgent": "创建代理",
+          "createChild": "创建子帳號",
+          "creditPop": {
+            "credit": "信用",
+            "title": "调整{{credit}}余额",
+            "myCredit": "我的{{credit}}余额",
+            "agent": "代理商",
+            "agentCreditNow": "代理商目前{{credit}}余额",
+            "quota": "调整额度",
+            "agentCreditAfter": "调整后代理商{{credit}}余额",
+            "yourCreditAfter": "调整后您的{{credit}}余额",
+            "submit": "提交",
+            "limitHint": "最低调整额度为100",
+            "quotaNotEnough": "自身额度不足，无法调整"
+          }
+        },
+        "col": {
+          "number": "序号",
+          "agentLine": "上層代理",
+          "agent": "代理商",
+          "loginName": "登入名稱",
+          "level": "層级",
+          "nickname": "暱稱",
+          "truename": "真实姓名",
+          "mobile": "手机",
+          "birthday": "生日",
+          "email": "电子邮件",
+          "playerNumber": "玩家数量(人)",
+          "createTime": "創建時間",
+          "lastLoginTime": "最後登入時間",
+          "accountStatus": "帳號狀態",
+          "action": "操作",
+          "loginNotyet": "未登入",
+          "confirmHint": "您確定要 {{action}} {{cagent}} 的帳號嗎？",
+          "confirm": "確認無誤",
+          "balance": "餘額",
+          "credit": "信用"
+        }
+      },
+      "sublist": {
+        "col": {
+          "number": "序号",
+          "agentLine": "上層代理",
+          "subAccount": "子帳號",
+          "level": "等級",
+          "nickname": "暱稱",
+          "truename": "真实姓名",
+          "mobile": "手机",
+          "birthday": "生日",
+          "email": "电子邮件",
+          "createDate": "創建時間",
+          "lastLoginTime": "最後登入時間",
+          "accountStatus": "帳號狀態",
+          "action": "操作",
+          "loginNotyet": "未登入"
+        }
+      },
+      "agentlog": {
+        "col": {
+          "number": "序号",
+          "agent": "代理商",
+          "nickname": "暱稱",
+          "time": "時間",
+          "level": "等級",
+          "mobile": "手机",
+          "email": "电子邮件",
+          "ip": "IP",
+          "actionType": "操作类型",
+          "memo": "备注"
+        }
+      }
+    },
+    "reports": {
+      "playerreport": {
+        "treeText": "代理層級",
+        "tabs": {
+          "agentDetailData": "代理詳細資料",
+          "playerDetailData": "玩家詳細資料"
+        },
+        "col": {
+          "number": "序号",
+          "playerId": "玩家ID",
+          "agent": "代理商",
+          "nickname": "暱稱",
+          "statisticalData": "统计数据",
+          "detailData": "详细数据",
+          "backTop": "返回上層",
+          "statisticalType": "统计类型",
+          "onlinePlayer": "在线玩家",
+          "orderNumber": "单量",
+          "turnover": "投注额",
+          "validTurnover": "有效投注",
+          "winloss": "損益",
+          "platform": "平台"
+        }
+      },
+      "winlossReports": {
+        "col": {
+          "title": "輸贏報表",
+          "gamePlatform": "游戏平台",
+          "turnover": "投注额",
+          "winloss": "損益",
+          "jackpotBet": "彩池投注",
+          "jackpotWinloss": "彩池損益"
+        }
+      },
+      "gamehistory": {
+        "hint": {
+          "pleaseOpenGameDetail": "請先展開遊戲詳情",
+          "transactionDetail": "交易明細記錄",
+          "gameDetail": "遊戲詳情",
+          "collape": "收起",
+          "expand": "展開"
+        },
+        "col": {
+          "number": "序号",
+          "belongAgent": "所属代理",
+          "playerId": "玩家ID",
+          "transactionTime": "交易时间",
+          "orderNumber": "注单号",
+          "roundId": "局号",
+          "validTurnover": "有效投注",
+          "betAmounts": "投注金额",
+          "payout": "派彩",
+          "winloss": "損益",
+          "betTime": "投注时间",
+          "payoutTime": "派彩时间",
+          "betType": "投注类型",
+          "beforeTransactionBalance": "交易前餘額",
+          "afterTransactionBalance": "交易後餘額",
+          "result": "结果"
+        },
+        "result": {
+          "settled": "已结算",
+          "cancel": "取消",
+          "error": "异常",
+          "nonGambling": "非對賭",
+          "banker": "莊家",
+          "player": "閒家"
+        }
+      }
+    }
+  },
+  "layout": {
+    "searchTool": {
+      "timeRange": "時間範圍",
+      "today": "今日",
+      "yesterday": "昨日",
+      "thisWeek": "本周",
+      "lastWeek": "上周",
+      "thisMonth": "本月",
+      "lastMonth": "上月",
+      "search": "搜索"
+    },
+    "header": {
+      "language": "语言",
+      "currency": "货币"
+    },
+    "menu": {
+      "agentlist": "代理查詢",
+      "agentlog": "代理記錄",
+      "bankaccount": "银行账户",
+      "cashflowstatus": "線上支付商戶",
+      "comission": "佣金發送",
+      "depositlist": "存款支付看板",
+      "eventlist": "活動列表",
+      "fundinout": "资金进/出",
+      "gamehistory": "游戏历史",
+      "gamepermissions": "游戏权限",
+      "gift": "礼包",
+      "home": "主页",
+      "inbox": "站內信",
+      "marquee": "跑马灯",
+      "memberlevelsettings": "会员等级设置",
+      "memberlog": "会员記錄",
+      "memberwalletlog": "会员钱包記錄",
+      "menupermissions": "菜单权限",
+      "platformsetting": "平台设置",
+      "playerreport": "統計報表",
+      "playersearch": "玩家查詢",
+      "promotion": "活動",
+      "refercode": "推荐码",
+      "sublist": "子帳號查詢",
+      "winlossreport": "输赢报表",
+      "withdrawlist": "提款申請審核",
+      "admin": "會員管理",
+      "agentinfomation": "代理管理",
+      "cashflowinfomation": "線上支付商戶",
+      "reports": "報表",
+      "systemsetting": "系統設定"
+    }
+  },
+  "action_code": {
+    "1": "创建Tag",
+    "2": "更新Tag",
+    "3": "删除Tag",
+    "4": "设置登录名称",
+    "5": "启用代理",
+    "6": "停用代理",
+    "7": "更新代理",
+    "8": "存入点数",
+    "9": "提出点数",
+    "10": "重置玩家密码",
+    "11": "启用玩家",
+    "12": "停用玩家",
+    "13": "设置限红",
+    "14": "更新玩家资料",
+    "15": "创建玩家",
+    "16": "冻结代理商",
+    "17": "关闭代理商",
+    "18": "冻结玩家",
+    "19": "关闭玩家"
+  },
+  "expressHint": {
+    "birthdayHint": "请输入正确的生日格式，例：YYYY-MM-DD",
+    "mobileHint": "请输入正确的手机格式",
+    "accountHint": "開頭必須以英文字母开头，后续字符可以是英文字母、数字或下划线",
+    "nicknameHint": "設定辨識名稱",
+    "passwordHint": "不可包含特殊符號，例：@#$%^&*(",
+    "openHint": "開啟時代理可登入後台"
+  },
+  "commonModal": {
+    "cancelText": "取消",
+    "requiredCol": "必填栏位",
+    "optionalCol": "选填栏位",
+    "close": "关闭",
+    "create": "創建",
+    "submitSuccess": "提交成功",
+    "submitFail": "提交失敗"
+  },
+  "actionCol": {
+    "view": "查看",
+    "edit": "编辑",
+    "detail": "详情"
+  },
+  "unit": {
+    "level": "级"
+  },
+  "commonTable": {
+    "export": "导出",
+    "fileName": "檔案名稱",
+    "timeRange": "時間範圍",
+    "action": "操作",
+    "search": "查詢",
+    "download": "下载",
+    "pleaseSearchData": "請先查詢資料",
+    "totalData": "共 {{total}} 筆資料"
+  },
+  "ex": {
+    "export_points": "轉出點數",
+    "ex": "例："
+  },
+  "switch": {
+    "open": "開啟",
+    "close": "關閉"
+  },
+  "permission": {
+    "commission": {
+      "title": "佣金設定",
+      "commissionHint": "請輸入佣金百分比，例：50%",
+      "limit": "最小為0,最大為100"
+    },
+    "menu": {
+      "view": "查看",
+      "edit": "编辑",
+      "editHint": "需勾選檢視權限",
+      "title": "菜單權限",
+      "selectAll": "全選"
+    },
+    "game": {
+      "title": "游戏权限",
+      "selectAll": "全選"
+    }
+  },
+  "status_code": {
+    "1": "启用",
+    "2": "冻结",
+    "0": "关闭",
+    "3": "高级关闭",
+    "1hint": "",
+    "2hint": "(冻结后，玩家将无法游玩，但仍可查帐)",
+    "0hint": "(受批次开启影响)",
+    "3hint": "(不受批次开启影响)"
+  },
+  "common": {
+    "loading": "加载中..."
+  }
+}

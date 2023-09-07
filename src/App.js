@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import {
+  BrowserRouter,
   HashRouter,
   Navigate,
   Outlet,
@@ -142,8 +143,9 @@ function App() {
   };
 
   useEffect(() => {
-    dayjs.locale(i18n.language);
+    dayjs.locale(i18n.language === "zh_cn" ? "zh-cn" : i18n.language);
   }, [i18n.language]);
+  console.log(filteredRoutes);
 
   return (
     <ConfigProvider locale={antdLocalePackage[i18n.language]}>

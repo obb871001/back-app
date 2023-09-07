@@ -8,7 +8,7 @@ import {
   getAgentReport,
   getPlayerFromAgentReport,
 } from "../../api/methods/getApi";
-import { Divider, Space, Tabs } from "antd";
+import { Divider, Space, Tabs, message } from "antd";
 import { ProTable } from "@ant-design/pro-components";
 import Wrapper from "../../components/layout/Wrapper";
 import TableWrapper from "../../components/layout/TableWrapper";
@@ -20,25 +20,46 @@ import PlayerTable from "./AgentReports/PlayerTable";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { allowClick } from "../../assets/style/styleConfig";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { storeTotalRecords } from "../../redux/action/common/action";
 
 const AgentReport = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.reports.playerreport.${key}`);
+  const i18n_common = (key) => t(`common.${key}`);
+
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
-  const { create_ts } = searchParams;
+  const { create_ts, agentUid } = searchParams;
+
+  const trigger = useSelector((state) => state.trigger);
+  const dispatch = useDispatch();
 
   const [agentList, setAgentList] = useState([]); //api回傳的data第二項為代理列表 ex:cagentReportTotal[1]
   const [agentTotal, setAgentTotal] = useState({}); //此代理的總計算(第一個為總計) ex:cagentReportTotal[0]
   const [directPlayer, setDirectPlayer] = useState([]);
+  const [agentTree, setAgentTree] = useState([]);
+  const [apiCalling, setApiCalling] = useState(false);
+  const [customPagination, setCustomPagination] = useState({
+    agent: {},
+    player: {},
+  });
 
   useEffect(() => {
+    if (apiCalling) {
+      message.loading({ content: i18n_common("loading") });
+    }
     getAgentReport({
       paramsData: {
         create_ts,
+        ...searchParams,
+        uid: agentUid,
       },
     })
       .then((res) => {
-        console.log(res);
-        setAgentList(res.cagentReportList[1]);
-        setAgentTotal(res.cagentReportList[0]);
+        setAgentList(res.list[1]);
+        setAgentTotal(res.list[0]);
+        setAgentTree(res.tree);
       })
       .catch((err) => {
         const data = err.response.data;
@@ -48,29 +69,49 @@ const AgentReport = () => {
     getPlayerFromAgentReport({
       paramsData: {
         create_ts,
+        uid: agentUid,
       },
     })
       .then((res) => {
-        console.log(res);
         setDirectPlayer(res.data.list);
+        setCustomPagination({
+          ...customPagination,
+          player: res.data.pagination,
+        });
+        // dispatch(storeTotalRecords(res.data.pagination));
       })
       .catch((err) => {
         const data = err.response.data;
       })
-      .finally(() => {});
-  }, []);
+      .finally(() => {
+        message.destroy();
+        setApiCalling(false);
+      });
+  }, [trigger, agentUid]);
 
   const tabs = [
     {
-      label: "代理詳細資料",
+      label: i18n("tabs.agentDetailData"),
       key: "1",
-      children: <AgentTable agentList={agentList} agentTotal={agentTotal} />,
+      children: (
+        <AgentTable
+          setApiCalling={setApiCalling}
+          apiCalling={apiCalling}
+          agentList={agentList}
+          agentTotal={agentTotal}
+        />
+      ),
     },
-    {
-      label: "玩家詳細資料",
-      key: "2",
-      children: <PlayerTable directPlayer={directPlayer} />,
-    },
+    // {
+    //   label: i18n("tabs.playerDetailData"),
+    //   key: "2",
+    //   children: (
+    //     <PlayerTable
+    //       customPagination={customPagination}
+    //       directPlayer={directPlayer}
+    //     />
+    //   ),
+    // },
   ];
 
   const searchDate = useMemo(() => {
@@ -84,41 +125,100 @@ const AgentReport = () => {
 
   return (
     <Wrapper>
-      <SearchTool />
+      <SearchTool
+        columns={[
+          {
+            title: i18n("col.agent"),
+            dataIndex: "cagent",
+            key: "cagent",
+            search: true,
+            ex: "agent01",
+          },
+          {
+            title: i18n("col.nickname"),
+            dataIndex: "nick_name",
+            key: "nick_name",
+            search: true,
+            ex: "派對",
+          },
+          {
+            title: i18n("col.playerId"),
+            dataIndex: "memId",
+            key: "memId",
+            search: true,
+            ex: "player01",
+          },
+        ]}
+      />
       <TableWrapper>
-        <Space>
-          <Typography.Title level={3}>代理</Typography.Title>
-          <Typography.Title className="!text-blue-500" underline level={4}>
-            gi_admin
-          </Typography.Title>
-          <Typography.Title level={5} type="secondary">
-            <Space>({searchDate})</Space>
-          </Typography.Title>
+        <Space direction="vertical">
+          <Space>
+            <Typography.Title level={3}>{i18n("col.agent")}</Typography.Title>
+            <Typography.Title className="!text-blue-500" underline level={4}>
+              {agentTotal?.cagent || "-"}
+            </Typography.Title>
+            <Typography.Title level={5} type="secondary">
+              <Space>({searchDate})</Space>
+            </Typography.Title>
+          </Space>
+          <Space>
+            <Typography.Text>{i18n("treeText")}：</Typography.Text>
+            {agentTree.length > 0 &&
+              agentTree.map((agent, index) => {
+                return (
+                  <>
+                    <Typography.Text
+                      onClick={() => {
+                        setSearchParams({ agentUid: agent.uid });
+                      }}
+                      className="!text-blue-500 cursor-pointer"
+                      underline
+                    >
+                      {agent.cagent}
+                    </Typography.Text>
+                    <Typography.Text>
+                      {agentTree.length === index + 1 || " > "}
+                    </Typography.Text>
+                  </>
+                );
+              })}
+          </Space>
         </Space>
         <Divider />
         <StatisticWrapper
           textClassName="!text-blue-900"
+          wrapperClassName="!pt-0"
           title={
             <Space>
               <CheckCircleOutlined />
-              統計資料
+              {i18n("col.statisticalData")}
             </Space>
           }
         >
           <section className="flex justify-end">
-            <p className={`${allowClick} underline  `} level={5}>
-              返回上層
-            </p>
+            {agentTree.length > 1 && (
+              <p
+                className={`${allowClick} underline`}
+                onClick={() => {
+                  const previousUid = agentTree[agentTree.length - 2]?.uid;
+                  setSearchParams({ agentUid: previousUid });
+                }}
+                level={5}
+              >
+                {i18n("col.backTop")}
+              </p>
+            )}
           </section>
-          <TotalTable />
+          <TotalTable agentTotal={agentTotal} />
         </StatisticWrapper>
         <Divider />
         <StatisticWrapper
           textClassName="!text-blue-900"
+          wrapperClassName="!pt-0"
           title={
             <Space>
               <CheckCircleOutlined />
-              詳細資料
+              {i18n("col.detailData")}
             </Space>
           }
         >

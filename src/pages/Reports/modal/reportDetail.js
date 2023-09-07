@@ -20,8 +20,13 @@ import { formatNumber } from "../../../utils/formatNumber";
 import { closeReportDetail } from "../../../redux/action/reports/action";
 import NumberColumns from "../../../components/table/numberColumns";
 import { allowClick } from "../../../assets/style/styleConfig";
+import { useTranslation } from "react-i18next";
 
 const ReportDetail = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.reports.gamehistory.${key}`);
+  const i18n_modal = (key) => t(`commonModal.${key}`);
+
   const reportDetail = useSelector((state) => state.reportDetail);
   const reportDetailPop = useSelector((state) => state.reportDetailPop);
   const dispatch = useDispatch();
@@ -32,7 +37,7 @@ const ReportDetail = () => {
 
   const handleDownload = () => {
     if (!openMore) {
-      message.warning("請展開遊戲詳情");
+      message.warning(i18n("hint.pleaseOpenGameDetail"));
       return;
     }
     html2canvas(refDetail.current).then((canvas) => {
@@ -46,45 +51,50 @@ const ReportDetail = () => {
 
   const data = [
     {
-      label: "注單號碼",
+      label: i18n("col.orderNumber"),
       value: reportDetail.hash,
     },
     {
-      label: "局號",
+      label: i18n("col.roundId"),
       value: reportDetail.round_id,
     },
     {
-      label: "玩家",
+      label: i18n("col.playerId"),
       value: reportDetail.memId,
     },
 
     {
-      label: "交易時間",
+      label: i18n("col.transactionTime"),
       value: relativeFromTime(reportDetail.create_time),
     },
 
     {
-      label: "有效投注",
+      label: i18n("col.validTurnover"),
       value: <NumberColumns notStyle number={reportDetail.bet} />,
     },
     {
-      label: "派彩",
+      label: i18n("col.payout"),
       value: <NumberColumns number={reportDetail.win} />,
     },
     {
-      label: "投注時間",
+      label: i18n("col.betTime"),
       value: relativeFromTime(reportDetail.bet_ts),
     },
     {
-      label: "派彩時間",
+      label: i18n("col.payoutTime"),
       value: relativeFromTime(reportDetail.win_ts),
     },
     {
-      label: "交易後餘額",
+      label: i18n("col.beforeTransactionBalance"),
+      value: <NumberColumns notStyle number={reportDetail.after_balance} />,
+    },
+
+    {
+      label: i18n("col.afterTransactionBalance"),
       value: <NumberColumns notStyle number={reportDetail.after_balance} />,
     },
     {
-      label: "結果",
+      label: i18n("col.result"),
       value: reportDetail.roundcode,
     },
   ];
@@ -98,7 +108,7 @@ const ReportDetail = () => {
       open={reportDetailPop}
       onOk={handleOk}
       onCancel={handleOk}
-      okText="關閉"
+      okText={i18n_modal("close")}
       cancelButtonProps={{ style: { display: "none" } }}
       destroyOnClose
     >
@@ -106,7 +116,7 @@ const ReportDetail = () => {
         wrapperClassName="!p-[0px]"
         title={
           <>
-            交易明細紀錄
+            {i18n("hint.transactionDetail")}
             <Button
               type="primary"
               className="ml-[10px]"
@@ -133,7 +143,9 @@ const ReportDetail = () => {
               );
             })}
             <Col span={6}>
-              <Typography.Text strong>遊戲詳情</Typography.Text>
+              <Typography.Text strong>
+                {i18n("hint.gameDetail")}
+              </Typography.Text>
             </Col>
             <Col span={18}>
               <Typography.Text
@@ -143,7 +155,7 @@ const ReportDetail = () => {
                 className={`${allowClick}`}
                 underline
               >
-                {openMore ? "收起" : "展開"}
+                {openMore ? i18n("hint.collape") : i18n("hint.expand")}
               </Typography.Text>
               {openMore && (
                 <Row gutter={[16, 16]}>

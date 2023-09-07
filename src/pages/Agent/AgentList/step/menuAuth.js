@@ -2,28 +2,23 @@ import { ProFormGroup, ProFormSelect } from "@ant-design/pro-components";
 import { Divider, Space, Typography } from "antd";
 import React, { useState } from "react";
 import MenuPermissions from "../../../../components/permissionComponents/menuPermissions";
+import { useTranslation } from "react-i18next";
 
 const MenuAuth = ({ form }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.agentinfomation.agentlist.modal.${key}`);
+
   const [customSetting, setCustomSetting] = useState(false);
   return (
     <>
       <div className="mb-[20px]">
         <Typography.Title italic level={4}>
-          選單權限
+          {i18n("menuPermission")}
         </Typography.Title>{" "}
         <Space align="baseline">
           <ProFormGroup>
             {customSetting ? (
-              <ProFormSelect
-                name="menu_permission"
-                options={[
-                  { label: "一般會員", value: "member" },
-                  { label: "未解决", value: "open" },
-                  { label: "已解决", value: "closed" },
-                  { label: "解决中", value: "processing" },
-                ]}
-                width={200}
-              />
+              <ProFormSelect name="menu_permission" options={[]} width={200} />
             ) : (
               <MenuPermissions
                 hiddenTitle
@@ -37,7 +32,7 @@ const MenuAuth = ({ form }) => {
             onClick={() => setCustomSetting((prev) => !prev)}
             underline
           >
-            {customSetting ? "自訂" : "取消"}
+            {customSetting ? i18n("customize") : i18n("cancel")}
           </Typography.Text>
         </Space>
       </div>

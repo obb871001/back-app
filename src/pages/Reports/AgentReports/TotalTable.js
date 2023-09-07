@@ -1,59 +1,57 @@
 import React from "react";
 import CommonTable from "../../../components/table/commonTable";
+import { useTranslation } from "react-i18next";
+import { ProTable } from "@ant-design/pro-components";
 
-const columnClass = "!bg-[#B7E3C8]";
+const columnClass = "";
 
-const TotalTable = () => {
+const TotalTable = ({ agentTotal }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.reports.playerreport.${key}`);
+
   const totalColumns = [
     {
-      title: "統計類型",
-      dataIndex: "type",
+      title: i18n("col.onlinePlayer"),
+      dataIndex: "mem_count",
       className: columnClass,
-      key: "type",
+      key: "mem_count",
     },
     {
-      title: "線上會員",
-      dataIndex: "member_count",
-      className: columnClass,
-      key: "member_count",
-    },
-    {
-      title: "單量",
+      title: i18n("col.orderNumber"),
       dataIndex: "order_count",
       className: columnClass,
       key: "order_count",
     },
     {
-      title: "投注額",
-      dataIndex: "bet",
+      title: i18n("col.turnover"),
+      dataIndex: "validTurnover",
       className: columnClass,
-      key: "bet",
+      key: "validTurnover",
     },
     {
-      title: "有效投注額",
-      dataIndex: "valid_turnover",
+      title: i18n("col.validTurnover"),
+      dataIndex: "validTurnover",
       className: columnClass,
-      key: "valid_turnover",
+      key: "validTurnover",
     },
     {
-      title: "損益",
-      dataIndex: "winloss",
+      title: i18n("col.winloss"),
+      dataIndex: "self",
       className: columnClass,
-      key: "winloss",
+      key: "self",
     },
   ];
   return (
-    <CommonTable
-      dataSource={[]}
+    <ProTable
+      dataSource={[agentTotal]}
       bordered
+      size="small"
+      className="w-full custom-table"
+      toolBarRender={false}
+      search={false}
       columns={totalColumns}
-      tableProps={{ title: "" }}
-      customPagination={{
-        pageSize: false,
-        total: false,
-        showSizeChanger: false,
-      }}
-    ></CommonTable>
+      pagination={false}
+    ></ProTable>
   );
 };
 

@@ -1,9 +1,12 @@
-import { DatePicker, Input, InputNumber, Select } from "antd";
+import { AutoComplete, DatePicker, Input, InputNumber, Select } from "antd";
 import React from "react";
 import UseMergeableSearchParams from "../../hooks/useMergeableSearchParams";
 import { toTimeStamp } from "../../utils/toTimeStamp";
+import { useTranslation } from "react-i18next";
 
 const CustomSearchInput = ({ props }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`ex.${key}`);
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
 
   const {
@@ -13,6 +16,7 @@ const CustomSearchInput = ({ props }) => {
     ex = "",
     inputProps = {},
     selectProps = {},
+    autoCompleteProps = {},
   } = props;
 
   const handleInputChange = (e) => {
@@ -44,7 +48,7 @@ const CustomSearchInput = ({ props }) => {
         <Input
           name={name}
           onChange={handleInputChange}
-          placeholder={ex && `例：${ex}`}
+          placeholder={ex && `${i18n("ex")}${ex}`}
           value={searchParams[name] || ""}
         />
       );
@@ -66,7 +70,7 @@ const CustomSearchInput = ({ props }) => {
           onChange={(v) => {
             handleSelectChange(v, name);
           }}
-          placeholder={ex && `例：${ex}`}
+          placeholder={ex && `${i18n("ex")}${ex}`}
         />
       );
     case "number":
@@ -78,17 +82,38 @@ const CustomSearchInput = ({ props }) => {
           onChange={(v) => {
             handleInputNumberChange(v, name);
           }}
-          placeholder={ex && `例：${ex}`}
+          placeholder={ex && `${i18n("ex")}${ex}`}
         />
       );
     case "textarea":
-      return <Input.TextArea name={name} placeholder={ex && `例：${ex}`} />;
+      return (
+        <Input.TextArea name={name} placeholder={ex && `${i18n("ex")}${ex}`} />
+      );
+    case "autoComplete":
+      return (
+        <AutoComplete
+          {...autoCompleteProps}
+          style={{
+            width: 200,
+          }}
+          onSelect={(data) => {
+            setSearchParams({ [name]: data });
+          }}
+          onSearch={(text) => {
+            setSearchParams({ [name]: text });
+          }}
+          placeholder={ex && `${i18n("ex")}${ex}`}
+          filterOption={(inputValue, option) =>
+            option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+          }
+        />
+      );
     default:
       return (
         <Input
           onChange={handleInputChange}
           name={name}
-          placeholder={ex && `例：${ex}`}
+          placeholder={ex && `${i18n("ex")}${ex}`}
           value={searchParams[name] || ""}
         />
       );

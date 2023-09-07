@@ -4,8 +4,12 @@ import { useNavigate } from "react-router";
 import { usePreviousPagePath } from "../../hooks/usePreviousPagePath";
 import { useDispatch } from "react-redux";
 import { clearPopType } from "../../redux/action/common/action";
+import { useTranslation } from "react-i18next";
 
 const CustomModal = ({ modalProps, children, setIsModalOpen, isModalOpen }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`commonModal.${key}`);
+
   const { title, width } = modalProps || {};
 
   const previousPath = usePreviousPagePath();
@@ -40,7 +44,7 @@ const CustomModal = ({ modalProps, children, setIsModalOpen, isModalOpen }) => {
       open={isModalOpenPassed ? isModalOpen : true}
       onOk={handleOk}
       onCancel={handleCancel}
-      okText="關閉"
+      okText={i18n("close")}
       cancelButtonProps={{ style: { display: "none" } }}
       destroyOnClose
     >

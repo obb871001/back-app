@@ -7,8 +7,13 @@ import { useEffect, useState } from "react";
 import UseMergeableSearchParams from "../../../../hooks/useMergeableSearchParams";
 import { resetPlayerPassword } from "../../../../api/methods/postApi";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const PlayerPassword = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.admin.playersearch.col.${key}`);
+  const i18n_commonModal = (key) => t(`commonModal.${key}`);
+
   const [form] = useForm();
 
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
@@ -25,10 +30,9 @@ const PlayerPassword = () => {
 
   const onFinish = (values) => {
     setButtonLoading(true);
-    console.log(values);
     if (values.password !== values.confirmPassword) {
       notification.error({
-        message: "提交失敗",
+        message: i18n_commonModal("submitFail"),
         description: "兩次密碼輸入不一致",
       });
       setButtonLoading(false);
@@ -39,15 +43,14 @@ const PlayerPassword = () => {
       passwd: CryptoJS.MD5(values.password).toString(),
     })
       .then((res) => {
-        console.log(res);
         notification.success({
-          message: "提交成功",
+          message: i18n_commonModal("submitSuccess"),
         });
       })
       .catch((err) => {
         const data = err.response.data;
         notification.error({
-          message: "提交失敗",
+          message: i18n_commonModal("submitFail"),
         });
       })
       .finally(() => {
@@ -59,7 +62,6 @@ const PlayerPassword = () => {
     <ProForm
       form={form}
       onFinish={async (values) => {
-        console.log(values);
         onFinish(values);
       }}
       layout="horizontal"
@@ -80,7 +82,7 @@ const PlayerPassword = () => {
                 form.submit();
               }}
             >
-              重置會員密碼
+              {i18n("resetPassword")}
             </Button>,
           ];
         },
@@ -89,13 +91,13 @@ const PlayerPassword = () => {
         console.log(values);
       }}
     >
-      <ProForm.Item label="玩家名稱">
+      <ProForm.Item label={i18n("playerId")}>
         <ProFormText value={playerDetail?.memId} readonly />
       </ProForm.Item>
-      <ProForm.Item name="password" label="新密碼">
+      <ProForm.Item name="password" label={i18n("newPassword")}>
         <ProFormText.Password />
       </ProForm.Item>
-      <ProForm.Item name="confirmPassword" label="確認新密碼">
+      <ProForm.Item name="confirmPassword" label={i18n("confirmPassword")}>
         <ProFormText.Password />
       </ProForm.Item>
     </ProForm>

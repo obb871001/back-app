@@ -4,8 +4,12 @@ import { useSelector } from "react-redux";
 
 import CommonTitle from "../form/commonTitle";
 import { CopyTwoTone } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 
 const CommissionPermission = ({ hiddenTitle, form }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`permission.commission.${key}`);
+
   const gameList = useSelector((state) => state.gameList.gamePlatform);
 
   const copyCommission = () => {
@@ -20,7 +24,7 @@ const CommissionPermission = ({ hiddenTitle, form }) => {
   };
 
   return (
-    <Form.Item label={hiddenTitle || <CommonTitle title="佣金設定" />}>
+    <Form.Item label={hiddenTitle || <CommonTitle title={i18n("title")} />}>
       <Space className="!flex" direction="vertical" size="large">
         {gameList?.map((game, index) => {
           return (
@@ -66,8 +70,8 @@ const CommissionPermission = ({ hiddenTitle, form }) => {
                 <ProFormDigit
                   width={200}
                   name={["game_commission", game]}
-                  placeholder={"最小為0,最大為100"}
-                  rules={[{ required: true, message: "請輸入返佣比例" }]}
+                  placeholder={i18n("limit")}
+                  rules={[{ required: true, message: i18n("commissionHint") }]}
                   fieldProps={{
                     addonAfter: "%",
                     min: 0,

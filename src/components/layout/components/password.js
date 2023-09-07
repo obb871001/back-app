@@ -55,9 +55,7 @@ const Password = ({ isModalOpen, setIsModalOpen }) => {
             );
           },
         }}
-        onFinish={() => {
-          console.log("1");
-        }}
+        onFinish={() => {}}
       >
         {basicForm.map((item) => {
           return <CustomForm {...item} />;

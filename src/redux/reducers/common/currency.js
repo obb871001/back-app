@@ -5,7 +5,7 @@ const currencyList = window.getcurrency || fakeCurrency;
 
 const CurrencyReducers = (
   state = currencyList.find((item) => item.iso_code === Cookies.get("currency"))
-    ?.symbol,
+    ?.symbol || "$",
   action
 ) => {
   switch (action.type) {

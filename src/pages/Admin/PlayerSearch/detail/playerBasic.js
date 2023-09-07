@@ -15,69 +15,98 @@ import { getMemberList } from "../../../../api/methods/getApi";
 import { storeDetail, trigger } from "../../../../redux/action/common/action";
 import { updateMemberBasic } from "../../../../api/methods/patchApi";
 import { APP_NAME } from "../../../../constant";
+import { useTranslation } from "react-i18next";
 
 const PlayerBasic = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.admin.playersearch.col.${key}`);
+  const i18n_statusCode = (key) => t(`status_code.${key}`);
+  const i18n_commonModal = (key) => t(`commonModal.${key}`);
+
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
   const { playeruid } = searchParams;
 
   const playerDetail = useSelector((state) => state.commonDetail);
   const triggerApi = useSelector((state) => state.trigger);
+  const isCredit = useSelector((state) => state.basicConfig.is_credit === 1);
+  const statusCode = useSelector((state) => state.basicConfig.statusCode);
   const dispatch = useDispatch();
 
   const [form] = useForm();
 
+  const [editPlayer, setEditPlayer] = useState(false);
+  const [updateButton, setUpdateButton] = useState(false);
+
   useEffect(() => {
     form.setFieldsValue({
+      memId: playerDetail.memId,
       true_name: playerDetail.true_name,
       crypto_address: playerDetail.crypto_address,
       email: playerDetail.email,
       mobile: playerDetail.mobile,
+      status: playerDetail.status,
     });
-  }, [playerDetail]);
-
-  const [editPlayer, setEditPlayer] = useState(false);
-  const [updateButton, setUpdateButton] = useState(false);
+  }, [playerDetail, editPlayer]);
 
   const basicDetail = [
     {
-      label: "代理上線",
+      label: i18n("agent"),
       component: (
-        <Form.Item label="代理上線">{filterAgentLevel(playerDetail)}</Form.Item>
+        <Form.Item label={i18n("agent")}>
+          {filterAgentLevel(playerDetail)}
+        </Form.Item>
       ),
     },
 
     {
-      label: "玩家名稱",
+      label: i18n("playerId"),
       name: "memId",
       type: "text",
       readonly: true,
     },
     {
-      label: "真實姓名",
+      label: i18n("accountStatus"),
+      name: "status",
+      type: "radio",
+      value: i18n_statusCode(form.getFieldValue("status")),
+      readonly: !editPlayer,
+      options: statusCode?.map((code) => {
+        return {
+          label: `${i18n_statusCode(`${code}`)}${i18n_statusCode(
+            `${code}hint`
+          )}`,
+          value: code,
+        };
+      }),
+      layout: "vertical",
+    },
+
+    {
+      label: i18n("truename"),
       name: "true_name",
       type: "text",
       readonly: !editPlayer,
     },
     {
-      label: "虛擬貨幣錢包地址",
+      label: i18n("cryptoAddress"),
       name: "crypto_address",
       type: "text",
       readonly: !editPlayer,
     },
     {
-      label: "電子郵件",
+      label: i18n("email"),
       name: "email",
       type: "text",
       readonly: !editPlayer,
     },
     {
-      label: "手機號碼",
+      label: i18n("mobile"),
       name: "mobile",
       type: "text",
       readonly: !editPlayer,
     },
     {
-      label: "註冊日期",
+      label: i18n("registerDate"),
       value: playerDetail.create_time,
       type: "text",
       readonly: true,
@@ -90,7 +119,7 @@ const PlayerBasic = () => {
       .then((res) => {
         console.log(res);
         notification.success({
-          message: "提交成功",
+          message: i18n_commonModal("submitSuccess"),
         });
         getMemberList({
           paramsData: { uid: uid },
@@ -106,7 +135,7 @@ const PlayerBasic = () => {
       .catch((err) => {
         console.log(err);
         notification.error({
-          message: "提交失敗",
+          message: i18n_commonModal("submitFail"),
         });
       })
       .finally(() => {
@@ -136,9 +165,10 @@ const PlayerBasic = () => {
         }}
         submitter={{
           render: (props, doms) => {
-            return APP_NAME === "PAIGOW" ? null : (
+            // isCredit ? null :
+            return (
               <EditAuthColumns>
-                <Form.Item label="操作">
+                <Form.Item label={i18n("action")}>
                   {editPlayer
                     ? [
                         <Button
@@ -148,12 +178,11 @@ const PlayerBasic = () => {
                           type="primary"
                           onClick={() => {
                             setEditPlayer(false);
-                            form.resetFields();
                           }}
                           className="mr-[10px]"
                           htmlType="button"
                         >
-                          取消
+                          {i18n("cancel")}
                         </Button>,
                         <Button
                           loading={updateButton}
@@ -163,7 +192,7 @@ const PlayerBasic = () => {
                           }}
                           htmlType="button"
                         >
-                          提交
+                          {i18n("submit")}
                         </Button>,
                       ]
                     : [
@@ -175,7 +204,7 @@ const PlayerBasic = () => {
                           type="primary"
                           htmlType="button"
                         >
-                          編輯玩家基本資料
+                          {i18n("editPlayerBasic")}
                         </Button>,
                       ]}
                 </Form.Item>
@@ -195,7 +224,7 @@ const PlayerBasic = () => {
       </ProForm>
       <Divider />
       <Typography.Title level={4} italic>
-        錢包資訊
+        {i18n("walletInformation")}
       </Typography.Title>
       <Balance />
     </>

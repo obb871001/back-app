@@ -8,12 +8,20 @@ import {
 import NoticeTitle from "../../../../components/hint/noticeTitle";
 import CustomForm from "../../../../components/form/customForm";
 import { Alert } from "antd";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 const CreatePlayerForm = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.admin.playersearch.modal.${key}`);
+  const i18n_express = (key) => t(`expressHint.${key}`);
+
+  const agentNameList = useSelector((state) => state.agentNameList);
+
   const requiredForm = [
     [
       {
-        label: "玩家帳號",
+        label: i18n("playerAccount"),
         name: "memId",
         type: "text",
         required: true,
@@ -21,10 +29,13 @@ const CreatePlayerForm = () => {
     ],
     [
       {
-        label: "代理",
+        label: i18n("playerAgent"),
         name: "cagent",
-        type: "text",
+        type: "autoComplete",
         required: true,
+        options: agentNameList?.map((item) => {
+          return { value: item };
+        }),
       },
     ],
   ];
@@ -32,33 +43,38 @@ const CreatePlayerForm = () => {
   const optionalForm = [
     [
       {
-        label: "真實姓名",
+        label: i18n("truename"),
         name: "true_name",
         type: "text",
       },
     ],
     [
       {
-        label: "手機",
+        label: i18n("mobile"),
         name: "mobile",
         type: "text",
-        rules: [{ pattern: PHONE_EXPRESSION, message: "請輸入正確的手機號碼" }],
+        rules: [
+          { pattern: PHONE_EXPRESSION, message: i18n_express("mobileHint") },
+        ],
       },
     ],
     [
       {
-        label: "Email",
+        label: i18n("email"),
         name: "email",
         type: "text",
       },
     ],
     [
       {
-        label: "生日",
+        label: i18n("birthday"),
         name: "birthday",
         type: "text",
         rules: [
-          { pattern: BIRTHDAY_EXPRESSION, message: "請輸入正確的生日格式" },
+          {
+            pattern: BIRTHDAY_EXPRESSION,
+            message: i18n_express("birthdayHint"),
+          },
         ],
         ex: "1998-10-01",
       },
@@ -66,7 +82,7 @@ const CreatePlayerForm = () => {
   ];
   return (
     <>
-      <Alert message="登入預設密碼為123456" type="info" showIcon />
+      <Alert message={`${i18n("passwordHint")}123456`} type="info" showIcon />
       <NoticeTitle required />
       {requiredForm.map((group) => {
         return (

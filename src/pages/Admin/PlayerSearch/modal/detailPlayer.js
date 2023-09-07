@@ -10,8 +10,12 @@ import UseMergeableSearchParams from "../../../../hooks/useMergeableSearchParams
 import PlayerPassword from "../detail/playerPassword";
 import PlayerBetLimit from "../detail/playerBetLimit";
 import { useNavigate, useParams } from "react-router";
+import { useTranslation } from "react-i18next";
 
 const DetailPlayer = ({ setIsModalOpen, isModalOpen }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.admin.playersearch.${key}`);
+
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
   const { tabKey = "1" } = searchParams;
   const { uid } = useParams();
@@ -22,9 +26,9 @@ const DetailPlayer = ({ setIsModalOpen, isModalOpen }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (uid || searchParams.uid) {
+    if (uid || searchParams.commonUid) {
       getMemberList({
-        paramsData: { uid: uid || searchParams.uid },
+        paramsData: { uid: uid || searchParams.commonUid },
       }).then((res) => {
         dispatch(storeDetail(res.data.list[0]));
       });
@@ -38,22 +42,22 @@ const DetailPlayer = ({ setIsModalOpen, isModalOpen }) => {
   const tabs = [
     {
       key: "1",
-      label: `基本資料`,
+      label: i18n("tabs.basicInfo"),
       children: <PlayerBasic />,
     },
     {
       key: "2",
-      label: `重設密碼`,
+      label: i18n("tabs.resetPassword"),
       children: <PlayerPassword />,
     },
     {
       key: "3",
-      label: `限紅設定`,
+      label: i18n("tabs.betLimitSettings"),
       children: <PlayerBetLimit />,
     },
   ];
   return (
-    <CustomModal modalProps={{ title: "玩家詳細資料" }}>
+    <CustomModal modalProps={{ title: i18n("tabs.playerDetail") }}>
       <Tabs
         defaultActiveKey={tabKey}
         activeKey={tabKey}

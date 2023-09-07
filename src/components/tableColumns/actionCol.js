@@ -4,8 +4,12 @@ import { useLocation, useNavigate } from "react-router";
 import { filterMenuKeys } from "../../helpers/aboutAuth/filterMenuKeys";
 import { setPopType } from "../../redux/action/common/action";
 import { allowClick, notAllowClick } from "../../assets/style/styleConfig";
+import { useTranslation } from "react-i18next";
 
 const ActionCol = ({ callApi, apiUid, openEdit, openDetail }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`actionCol.${key}`);
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -32,10 +36,10 @@ const ActionCol = ({ callApi, apiUid, openEdit, openDetail }) => {
             if (!isEditable) return;
             callApi();
             dispatch(setPopType("edit"));
-            navigate(`edit?uid=${apiUid}`);
+            navigate(`edit?commonUid=${apiUid}`);
           }}
         >
-          編輯
+          {i18n("edit")}
         </p>
       )}
       {openDetail && (
@@ -44,10 +48,10 @@ const ActionCol = ({ callApi, apiUid, openEdit, openDetail }) => {
           onClick={() => {
             callApi();
             dispatch(setPopType("detail"));
-            navigate(`detail?uid=${apiUid}`);
+            navigate(`detail?commonUid=${apiUid}`);
           }}
         >
-          查看
+          {i18n("view")}
         </p>
       )}
     </section>

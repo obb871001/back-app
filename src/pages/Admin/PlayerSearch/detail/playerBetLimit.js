@@ -16,8 +16,13 @@ import {
 } from "antd";
 import { updatePlayerBetLimit } from "../../../../api/methods/postApi";
 import UseMergeableSearchParams from "../../../../hooks/useMergeableSearchParams";
+import { useTranslation } from "react-i18next";
 
 const PlayerBetLimit = () => {
+  const { t } = useTranslation();
+  const i18n_commonModal = (key) => t(`commonModal.${key}`);
+  const i18n = (key) => t(`page.admin.playersearch.modal.${key}`);
+
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
   const { playeruid } = searchParams;
 
@@ -47,7 +52,6 @@ const PlayerBetLimit = () => {
           const filteredOptions = item.options.filter((optionItem) => {
             return limitArray?.includes(optionItem.value);
           });
-          console.log(filteredOptions);
 
           if (filteredOptions.length > 0) {
             if (!result[modifiedPlatform]) {
@@ -72,16 +76,15 @@ const PlayerBetLimit = () => {
       bet_limit: result,
     })
       .then((res) => {
-        console.log(res);
         notification.success({
-          message: "提交成功",
+          message: i18n_commonModal("submitSuccess"),
         });
         form.resetFields();
       })
       .catch((err) => {
         const data = err.response.data;
         notification.error({
-          message: "提交失敗",
+          message: i18n_commonModal("submitFail"),
         });
       })
       .finally(() => {
@@ -130,7 +133,7 @@ const PlayerBetLimit = () => {
       })}
       <div className="flex flex-col gap-[5px] mb-[20px]">
         <Typography.Title level={4}>
-          設定對象：{playerDetail.memId}
+          {i18n("settingTarget")}：{playerDetail.memId}
         </Typography.Title>
         {Object.keys(detailKeys).map((game) => {
           return (
@@ -150,7 +153,7 @@ const PlayerBetLimit = () => {
       </div>
       <Space>
         <Button loading={buttonLoading} htmlType="submit" type="primary">
-          提交表單
+          {i18n("submit")}
         </Button>
         <Button
           loading={buttonLoading}
@@ -160,7 +163,7 @@ const PlayerBetLimit = () => {
           }}
           htmlType="button"
         >
-          重置
+          {i18n("reset")}
         </Button>
       </Space>
     </Form>

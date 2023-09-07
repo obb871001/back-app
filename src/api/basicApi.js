@@ -4,8 +4,6 @@ import { storeBetLimit, storeGame } from "../redux/action/game/action";
 
 export const BasicApi = (dispatch) => async () => {
   try {
-    console.log(window.getgamelist);
-    console.log(window.getcurrency);
     dispatch(storeGame(window.getgamelist));
     localStorage.setItem("gameList", JSON.stringify(window.getgamelist));
     Cookies.set("currency", window.getbaseconfig.default_currency);
@@ -14,6 +12,8 @@ export const BasicApi = (dispatch) => async () => {
       storeBasicConfig({
         ...window.getbaseconfig,
         currency: window.getcurrency,
+        statusCode: window.statusCode || [],
+        actionCode: window.actionCode || [],
       })
     );
     document.title = window.getbaseconfig?.web_name;

@@ -14,8 +14,13 @@ import {
   apiCalling,
   storeTotalRecords,
 } from "../../redux/action/common/action";
+import { useTranslation } from "react-i18next";
 
 const AgentLog = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.agentinfomation.agentlog.${key}`);
+  const i18n_unit = (key) => t(`unit.${key}`);
+
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
   const { create_ts, current_page, per_page } = searchParams;
 
@@ -53,12 +58,12 @@ const AgentLog = () => {
 
   const columns = [
     {
-      title: "編號",
+      title: i18n("col.number"),
       dataIndex: "uid",
       key: "uid",
     },
     {
-      title: "代理",
+      title: i18n("col.agent"),
       key: "agent",
       render: (row) => {
         return filterAgentLevel(row);
@@ -68,7 +73,7 @@ const AgentLog = () => {
       ex: "agent01",
     },
     {
-      title: "暱稱",
+      title: i18n("col.nickname"),
       dataIndex: "nick_name",
       key: "nick_name",
       search: true,
@@ -76,7 +81,7 @@ const AgentLog = () => {
       ex: "Godtone",
     },
     {
-      title: "時間",
+      title: i18n("col.time"),
       dataIndex: "create_time",
       key: "create_time",
       render: (row) => relativeFromTime(row),
@@ -84,18 +89,18 @@ const AgentLog = () => {
       type: "date",
     },
     {
-      title: "等級",
+      title: i18n("col.level"),
       dataIndex: "level",
       key: "level",
       search: true,
       type: "number",
       inputProps: {
-        addonAfter: "級",
+        addonAfter: i18n_unit("level"),
       },
       ex: "1",
     },
     {
-      title: "手機",
+      title: i18n("col.mobile"),
       dataIndex: "mobile",
       key: "mobile",
       search: true,
@@ -103,7 +108,7 @@ const AgentLog = () => {
       ex: "0912345678",
     },
     {
-      title: "Email",
+      title: i18n("col.email"),
       dataIndex: "email",
       key: "email",
       search: true,
@@ -111,21 +116,21 @@ const AgentLog = () => {
       ex: "abc@gmail.com",
     },
     {
-      title: "IP",
+      title: i18n("col.ip"),
       dataIndex: "ip",
       key: "ip",
       search: true,
       type: "text",
     },
     {
-      title: "操作類型",
+      title: i18n("col.actionType"),
       dataIndex: "action",
       key: "action",
       search: true,
       type: "select",
     },
     {
-      title: "備忘錄",
+      title: i18n("col.memo"),
       dataIndex: "memo",
       key: "memo",
       search: true,

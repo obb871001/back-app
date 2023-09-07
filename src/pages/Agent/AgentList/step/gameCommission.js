@@ -2,14 +2,18 @@ import { ProFormGroup } from "@ant-design/pro-components";
 import { Divider, Space, Typography } from "antd";
 import { useState } from "react";
 import CommissionPermission from "../../../../components/permissionComponents/commissionPermission";
+import { useTranslation } from "react-i18next";
 
 const GameCommission = ({ form }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.agentinfomation.agentlist.modal.${key}`);
+
   const [customSetting, setCustomSetting] = useState(false);
   return (
     <>
       <div className="mb-[20px]">
         <Typography.Title italic level={4}>
-          遊戲佣金
+          {i18n("gameCommission")}
         </Typography.Title>{" "}
         <Space align="baseline">
           <ProFormGroup>
@@ -24,7 +28,7 @@ const GameCommission = ({ form }) => {
             onClick={() => setCustomSetting((prev) => !prev)}
             underline
           >
-            {customSetting.commission ? "自訂" : "取消"}
+            {customSetting.commission ? i18n("customize") : i18n("cancel")}
           </Typography.Text>
         </Space>
       </div>

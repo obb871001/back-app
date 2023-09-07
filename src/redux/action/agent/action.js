@@ -10,3 +10,9 @@ export const storeBasicConfig = (info) => {
     payload: info,
   };
 };
+export const storeAgentNameList = (list) => {
+  return {
+    type: "storeAgentNameList",
+    payload: list,
+  };
+};

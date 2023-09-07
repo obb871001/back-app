@@ -1,4 +1,4 @@
-import { ProForm, ProFormDigit } from "@ant-design/pro-components";
+import { ProForm, ProFormDigit, ProFormText } from "@ant-design/pro-components";
 import { Button, Divider, Form, Space, notification } from "antd";
 import React, { useEffect, useState } from "react";
 import CommonTooltip from "../../../../../components/hint/commonTooltip";
@@ -18,13 +18,19 @@ import { useForm } from "antd/es/form/Form";
 import EditAuthPage from "../../../../../utils/EditAuthPage";
 import EditAuthColumns from "../../../../../utils/EditAuthColumns";
 import { trigger } from "../../../../../redux/action/common/action";
+import { useTranslation } from "react-i18next";
 
 const Balance = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.admin.playersearch.col.${key}`);
+  const i18n_commonModal = (key) => t(`commonModal.${key}`);
+
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
   const { uid, tabKey } = searchParams;
 
   const playerDetail = useSelector((state) => state.commonDetail);
   const CURRENCY = useSelector((state) => state.CURRENCY);
+  const isCredit = useSelector((state) => state.basicConfig.is_credit === 1);
   const dispatch = useDispatch();
 
   const [form] = useForm();
@@ -48,13 +54,15 @@ const Balance = () => {
       ...(methodType === "deposit" && {
         change_wash: form.getFieldValue("change_wash") || 0,
       }),
+      cagent_memo: form.getFieldValue("cagent_memo") || "",
+      member_memo: form.getFieldValue("member_memo") || "",
     };
     setButtonLoading(true);
     action({ paramsData: paramsData })
       .then((res) => {
         dispatch(trigger());
         notification.success({
-          message: "提交成功",
+          message: i18n_commonModal("submitSuccess"),
         });
         setEditBalance(false);
         form.resetFields();
@@ -62,7 +70,7 @@ const Balance = () => {
       .catch((err) => {
         const data = err.response.data;
         notification.error({
-          message: "提交失敗",
+          message: i18n_commonModal("submitFail"),
         });
       })
       .finally(() => {
@@ -86,7 +94,7 @@ const Balance = () => {
       submitter={false}
     >
       <ProFormDigit
-        label={`帳戶餘額`}
+        label={i18n("accountBalance")}
         value={playerDetail.balance || 0}
         readonly
         addonAfter={CURRENCY}
@@ -94,7 +102,7 @@ const Balance = () => {
       {editBalance && (
         <>
           <ProFormDigit
-            label={`金額`}
+            label={i18n("amounts")}
             name="change_point"
             min={0}
             readonly={!editBalance}
@@ -103,16 +111,16 @@ const Balance = () => {
             }}
           />
 
-          {APP_NAME !== "PAIGOW" && (
+          {!isCredit && (
             <ProFormDigit
               label={
                 <CommonTooltip
-                  title="存款洗碼量"
-                  tooltip="提款無需輸入此欄位"
+                  title={i18n("depositWashpoints")}
+                  tooltip={i18n("withdrawDontInputThisField")}
                 />
               }
               min={0}
-              placeholder={`提款無需輸入此欄位`}
+              placeholder={i18n("withdrawDontInputThisField")}
               name="change_wash"
               readonly={!editBalance}
               fieldProps={{
@@ -120,10 +128,30 @@ const Balance = () => {
               }}
             />
           )}
+          <ProFormText
+            label={
+              <CommonTooltip
+                title={i18n("cagentMemo")}
+                tooltip={i18n("cagentMemoHint")}
+              />
+            }
+            placeholder={`${i18n("cagentMemoEx")}${CURRENCY}`}
+            name="cagent_memo"
+          />
+          <ProFormText
+            label={
+              <CommonTooltip
+                title={i18n("playerMemo")}
+                tooltip={i18n("playerMemoHint")}
+              />
+            }
+            placeholder={`${i18n("playerMemoEx")}${CURRENCY}`}
+            name="member_memo"
+          />
         </>
       )}
       <EditAuthColumns>
-        <Form.Item label="操作">
+        <Form.Item label={i18n("action")}>
           <section className="flex items-center gap-[10px]">
             {editBalance && (
               <>
@@ -134,7 +162,7 @@ const Balance = () => {
                   htmlType="button"
                   loading={buttonLoading}
                 >
-                  存款
+                  {i18n("deposit")}
                 </Button>
                 <Button
                   icon={<SwapOutlined />}
@@ -143,7 +171,7 @@ const Balance = () => {
                   htmlType="button"
                   loading={buttonLoading}
                 >
-                  提款
+                  {i18n("withdraw")}
                 </Button>
               </>
             )}
@@ -157,18 +185,18 @@ const Balance = () => {
               danger={editBalance}
               loading={buttonLoading}
             >
-              {editBalance ? "取消" : "編輯餘額"}
+              {editBalance ? i18n("cancel") : i18n("editBalance")}
             </Button>
           </section>
         </Form.Item>
       </EditAuthColumns>
 
-      {APP_NAME !== "PAIGOW" && (
+      {!isCredit && (
         <>
           <Divider dashed />
           <Form.Item
             className="custom-form-mb-0"
-            label="該玩家目前洗碼量"
+            label={i18n("playerWashNow")}
             name="wash_check"
           >
             <ProFormDigit
@@ -182,7 +210,7 @@ const Balance = () => {
             />
           </Form.Item>
           <EditAuthColumns>
-            <Form.Item label="操作">
+            <Form.Item label={i18n("action")}>
               {editWashCheck ? (
                 <Space>
                   <Button
@@ -191,10 +219,10 @@ const Balance = () => {
                       setEditWashCheck(false);
                     }}
                   >
-                    取消
+                    {i18n("cancel")}
                   </Button>
                   <Button htmlType="button" type="primary">
-                    更新洗碼量
+                    {i18n("updateWashpoints")}
                   </Button>
                 </Space>
               ) : (
@@ -205,7 +233,7 @@ const Balance = () => {
                     setEditWashCheck(true);
                   }}
                 >
-                  編輯洗碼量
+                  {i18n("editWashPoints")}
                 </Button>
               )}
             </Form.Item>

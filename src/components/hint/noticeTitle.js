@@ -1,8 +1,11 @@
 import { CheckOutlined } from "@ant-design/icons";
 import { Typography } from "antd";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const NoticeTitle = ({ required, optional, customTitle }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`commonModal.${key}`);
   return (
     <div className="mb-[10px]">
       <Typography.Title
@@ -12,7 +15,11 @@ const NoticeTitle = ({ required, optional, customTitle }) => {
         strong
       >
         <CheckOutlined />{" "}
-        {required ? "必填欄位" : optional ? "選填欄位" : customTitle}
+        {required
+          ? i18n("requiredCol")
+          : optional
+          ? i18n("optionalCol")
+          : customTitle}
       </Typography.Title>
       <div className="w-full border-b-1 border-dotted border-[#082958]"></div>
     </div>

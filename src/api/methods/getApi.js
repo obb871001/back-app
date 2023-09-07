@@ -27,6 +27,14 @@ export const getMemberLog = ({ paramsData } = {}) => {
   });
 };
 
+export const getMemberWalletLog = ({ paramsData } = {}) => {
+  return reportApi.get("/memberWalletLog", {
+    params: {
+      ...paramsData,
+    },
+  });
+};
+
 //MEMBER//
 //MEMBER//
 //MEMBER//
@@ -34,6 +42,11 @@ export const getMemberLog = ({ paramsData } = {}) => {
 //AGENT//
 //AGENT//
 //AGENT//
+export const getAgentNameList = () => {
+  //獲得代理名單（用於下拉選單）
+  return agentApi.get("/nameList");
+};
+
 export const getAgentList = ({ paramsData } = {}) => {
   return agentApi.get("", {
     params: {
@@ -73,9 +86,9 @@ export const getAgentLog = ({ paramsData } = {}) => {
 //REPORT//
 //REPORT//
 
-export const getWinLoseReports = ({ std, etd } = {}) => {
-  return reportApi.get("/dataland", {
-    params: { std: std, etd: etd, limit: COMMON_PAGE },
+export const getWinLoseReports = ({ paramsData } = {}) => {
+  return reportApi.get("/dataLand", {
+    params: { ...paramsData },
   });
 };
 
@@ -84,13 +97,13 @@ export const getHomeReports = ({} = {}) => {
 };
 
 export const getAgentReport = ({ paramsData } = {}) => {
-  return reportApi.get("/dataland/cagent", {
+  return reportApi.get("/dataLand/cagent", {
     params: { ...paramsData },
   });
 };
 
 export const getPlayerFromAgentReport = ({ paramsData } = {}) => {
-  return reportApi.get("/dataland/direct", {
+  return reportApi.get("/dataLand/direct", {
     params: { ...paramsData },
   });
 };

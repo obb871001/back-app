@@ -4,17 +4,27 @@ import CommonTable from "../../components/table/commonTable";
 import { getWinLoseReports } from "../../api/methods/getApi";
 import UseMergeableSearchParams from "../../hooks/useMergeableSearchParams";
 import { getToday } from "../../utils/getDay";
+import { useSelector } from "react-redux";
+import Wrapper from "../../components/layout/Wrapper";
+import TableWrapper from "../../components/layout/TableWrapper";
+import { useTranslation } from "react-i18next";
 
 const WloseReports = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.reports.winlossReports.${key}`);
+
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
-  const { std = getToday(), etd = getToday() } = searchParams;
+  const { create_ts } = searchParams;
 
   const [reportsData, setReportsData] = useState([]);
 
+  const trigger = useSelector((state) => state.trigger);
+
   useEffect(() => {
     getWinLoseReports({
-      std: std,
-      etd: etd,
+      paramsData: {
+        create_ts,
+      },
     })
       .then((res) => {
         console.log(res);
@@ -24,48 +34,50 @@ const WloseReports = () => {
         const data = err.response.data;
       })
       .finally(() => {});
-  }, []);
+  }, [trigger]);
 
   const columns = [
     {
-      title: "原廠",
+      title: i18n("col.gamePlatform"),
       dataIndex: "platform",
       key: "platform",
     },
     {
-      title: "投注量",
+      title: i18n("col.turnover"),
       align: "right",
       dataIndex: "turnover",
       key: "turnover",
     },
     {
-      title: "輸/贏",
+      title: i18n("col.winloss"),
       align: "right",
       dataIndex: "winAmount",
       key: "winAmount",
     },
     {
-      title: "Jackpot 下注",
+      title: i18n("col.jackpotBet"),
       align: "right",
       dataIndex: "jpbet",
       key: "jpbet",
     },
     {
-      title: "Jackpot 輸贏",
+      title: i18n("col.jackpotWinloss"),
       align: "right",
       dataIndex: "jpwin",
       key: "jpwin",
     },
   ];
   return (
-    <>
+    <Wrapper>
       <SearchTool />
-      <CommonTable
-        dataSource={reportsData}
-        columns={columns}
-        tableProps={{ title: "輸贏報表" }}
-      />
-    </>
+      <TableWrapper>
+        <CommonTable
+          dataSource={reportsData}
+          columns={columns}
+          tableProps={{ title: i18n("col.title") }}
+        />
+      </TableWrapper>
+    </Wrapper>
   );
 };
 

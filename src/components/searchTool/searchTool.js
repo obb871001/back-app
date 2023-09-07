@@ -23,10 +23,11 @@ import { SearchOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { trigger } from "../../redux/action/common/action";
 import AdvanceComponents from "./advanceComponents";
+import { useTranslation } from "react-i18next";
 
 const buttons = [
   {
-    label: "今天",
+    label: "today",
     timeFunc: () => {
       const start = getToday();
       const end = getToday();
@@ -34,7 +35,7 @@ const buttons = [
     },
   },
   {
-    label: "昨天",
+    label: "yesterday",
     timeFunc: () => {
       const start = getYesterday();
       const end = getYesterday();
@@ -42,24 +43,27 @@ const buttons = [
     },
   },
   {
-    label: "本週",
+    label: "thisWeek",
     timeFunc: () => getWeek(1, 7),
   },
   {
-    label: "上週",
+    label: "lastWeek",
     timeFunc: () => getWeek(-6, 0),
   },
   {
-    label: "本月",
+    label: "thisMonth",
     timeFunc: () => getMonth(0),
   },
   {
-    label: "上月",
+    label: "lastMonth",
     timeFunc: () => getMonth(1),
   },
 ];
 
 const SearchTool = ({ columns = [] }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`layout.searchTool.${key}`);
+
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
   const { create_ts } = searchParams;
   const dispatch = useDispatch();
@@ -151,7 +155,7 @@ const SearchTool = ({ columns = [] }) => {
       </section> */}
       {/* <section className={sectionClass}> */}
       <div className={`flex flex-col gap-[10px] w-full`}>
-        <span>時間範圍：</span>
+        <span>{i18n("timeRange")}：</span>
         <DatePicker.RangePicker
           onChange={onRangeChange}
           value={[dayjs(std, dateFormat), dayjs(etd, dateFormat)]}
@@ -176,7 +180,7 @@ const SearchTool = ({ columns = [] }) => {
             }}
             type="primary"
           >
-            {button.label}
+            {i18n(button.label)}
           </Button>
         ))}{" "}
       </div>
@@ -196,7 +200,7 @@ const SearchTool = ({ columns = [] }) => {
         type="primary"
         icon={<SearchOutlined />}
       >
-        搜尋
+        {i18n("search")}
       </Button>
       <Divider dashed />
     </section>

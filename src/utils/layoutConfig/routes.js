@@ -33,6 +33,7 @@ import {
   TransactionOutlined,
   TranslationOutlined,
   UserOutlined,
+  WalletOutlined,
 } from "@ant-design/icons";
 import Home from "../../pages/Home/Home";
 import PlayerSearch from "../../pages/Admin/PlayerSearch";
@@ -64,6 +65,7 @@ import DetailAgent from "../../pages/Agent/AgentList/modal/detailAgent";
 import PlayerLog from "../../pages/Admin/PlayerLog";
 import PlatformSetting from "../../pages/System/PlatformSetting/PlatformSetting";
 import CreatePlayer from "../../pages/Admin/PlayerSearch/modal/createPlayer";
+import PlayerWalletLog from "../../pages/Admin/PlayerWalletLog";
 
 export default {
   route: {
@@ -115,6 +117,16 @@ export default {
             component: (
               <AuthPage>
                 <PlayerLog />
+              </AuthPage>
+            ),
+          },
+          {
+            path: "memberwalletlog",
+            name: "錢包記錄",
+            icon: <WalletOutlined />,
+            component: (
+              <AuthPage>
+                <PlayerWalletLog />
               </AuthPage>
             ),
           },

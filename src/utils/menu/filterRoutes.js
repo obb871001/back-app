@@ -7,6 +7,7 @@ export const filterRoutes = (routes) => {
         name: route.name,
         icon: route.icon,
         main: route.main,
+        path: route.path,
       });
       filteredRoutes = filteredRoutes.concat(filterRoutes(route.routes));
     } else {

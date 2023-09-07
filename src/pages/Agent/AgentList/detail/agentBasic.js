@@ -10,8 +10,16 @@ import MenuPermission from "./menuPermission";
 import { filterMenuKeys } from "../../../../helpers/aboutAuth/filterMenuKeys";
 import GamePermissionDetail from "./GamePermissionDetail";
 import { filterAgentLevel } from "../../../../utils/oldUtils/filterAgentLevel";
+import { useTranslation } from "react-i18next";
+import { color } from "../utils/statusCodeColor";
 
 const AgentBasic = ({ type }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.agentinfomation.agentlist.modal.${key}`);
+  const i18n_unit = (key) => t(`unit.${key}`);
+  const i18n_statusCode = (key) => t(`status_code.${key}`);
+  const i18n_switch = (key) => t(`switch.${key}`);
+
   const agentDetail = useSelector((state) => state.commonDetail);
 
   const [form] = useForm();
@@ -33,44 +41,44 @@ const AgentBasic = ({ type }) => {
 
   const basicForm = [
     {
-      label: "代理上線",
+      label: i18n("agentLine"),
       type: "text",
       value: filterAgentLevel(agentDetail),
       agentType: true,
     },
 
     {
-      label: type === "child" ? "子帳號名稱" : "代理名稱",
+      label: type === "child" ? i18n("childName") : i18n("agentName"),
       name: "cagent",
       type: "text",
       agentType: true,
     },
     {
-      label: type === "child" ? "子帳號等級" : "代理等級",
+      label: type === "child" ? i18n("childLevel") : i18n("agentLevel"),
       name: "level",
       type: "number",
-      addonAfter: "級",
+      addonAfter: i18n_unit("level"),
       agentType: true,
     },
 
     {
-      label: type === "child" ? "子帳號編號" : "代理編號",
+      label: type === "child" ? i18n("childNumber") : i18n("agentNumber"),
       name: "uid",
       type: "number",
       addonBefore: "No.",
       agentType: true,
     },
     {
-      label: type === "child" ? "子帳號暱稱" : "代理暱稱",
+      label: type === "child" ? i18n("childNickname") : i18n("agentNickname"),
       name: "nick_name",
       type: "text",
       agentType: true,
     },
     {
       component: (
-        <Form.Item label="帳號狀態">
-          <Tag color={agentDetail.status == 1 ? "green" : "red"}>
-            {agentDetail.status == 1 ? "開啟" : "關閉"}
+        <Form.Item label={i18n("accountStatus")}>
+          <Tag color={color(agentDetail.status)}>
+            {i18n_statusCode(`${agentDetail.status}`)}
           </Tag>
         </Form.Item>
       ),
@@ -78,51 +86,51 @@ const AgentBasic = ({ type }) => {
     },
 
     {
-      label: "真實姓名",
+      label: i18n("truename"),
       name: "true_name",
       type: "text",
       agentType: true,
     },
     {
-      label: "登入名稱",
+      label: i18n("loginname"),
       name: "login_name",
       type: "text",
       agentType: true,
     },
 
     {
-      label: "手機",
+      label: i18n("mobile"),
       name: "mobile",
       type: "text",
       agentType: true,
     },
     {
-      label: "創建日期",
+      label: i18n("createDate"),
       name: "create_time",
       type: "text",
       agentType: true,
     },
     {
-      label: "上次登入日期",
+      label: i18n("lastLoginDate"),
       name: "oauth",
       type: "text",
       agentType: true,
     },
 
     {
-      label: "Email",
+      label: i18n("email"),
       name: "email",
       type: "text",
       agentType: true,
     },
     {
       component: (
-        <Form.Item label="遊戲佔成狀態">
+        <Form.Item label={i18n("gameCommission")}>
           <span
             className={`${allowClick} underline`}
             onClick={() => setModalGameCommission(true)}
           >
-            查看
+            {i18n("view")}
           </span>
         </Form.Item>
       ),
@@ -130,12 +138,12 @@ const AgentBasic = ({ type }) => {
     },
     {
       component: (
-        <Form.Item label="選單權限">
+        <Form.Item label={i18n("menuPermission")}>
           <span
             className={`${allowClick} underline`}
             onClick={() => setModalMenuPermission(true)}
           >
-            查看
+            {i18n("view")}
           </span>
         </Form.Item>
       ),
@@ -143,12 +151,12 @@ const AgentBasic = ({ type }) => {
     },
     {
       component: (
-        <Form.Item label="遊戲權限">
+        <Form.Item label={i18n("gamePermission")}>
           <span
             className={`${allowClick} underline`}
             onClick={() => setModalGamePermission(true)}
           >
-            查看
+            {i18n("view")}
           </span>
         </Form.Item>
       ),

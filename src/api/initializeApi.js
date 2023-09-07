@@ -1,18 +1,27 @@
 import { notification } from "antd";
-import { storeAgentInfo } from "../redux/action/agent/action";
+import {
+  storeAgentInfo,
+  storeAgentNameList,
+} from "../redux/action/agent/action";
 import {
   globalEndLoading,
   globalStartLoading,
 } from "../redux/action/common/action";
 import { storeGame } from "../redux/action/game/action";
-import { agentInfo } from "./methods/getApi";
+import { agentInfo, getAgentNameList } from "./methods/getApi";
 
 export const InitializeApi = (dispatch, navigate) => async () => {
   try {
     dispatch(globalStartLoading());
-    const [agentInfoData] = await Promise.all([agentInfo()]);
+    const [agentInfoData, agentNameListData] = await Promise.all([
+      agentInfo(),
+      getAgentNameList(),
+    ]);
     if (agentInfoData) {
       dispatch(storeAgentInfo(agentInfoData));
+    }
+    if (agentNameListData) {
+      dispatch(storeAgentNameList(agentNameListData));
     }
   } catch (error) {
     console.error(error);

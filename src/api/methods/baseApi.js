@@ -12,6 +12,7 @@ const createApi = (baseUrl) => {
       Authorization: sessionStorage.getItem("token"),
       Currency: Cookies.get("currency") || "TWD",
       webname: APP_NAME,
+      isCredit: window.getbaseconfig?.is_credit || 0,
     },
   });
   api.interceptors.request.use((config) => {

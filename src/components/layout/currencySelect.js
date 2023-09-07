@@ -8,8 +8,12 @@ import { fakeCurrency } from "../../constant";
 import usdt from "../../../node_modules/cryptocurrency-icons/svg/color/usdt.svg";
 import eth from "../../../node_modules/cryptocurrency-icons/svg/color/eth.svg";
 import { setCurrency } from "../../redux/action/common/action";
+import { useTranslation } from "react-i18next";
 
 const CurrencySelect = () => {
+  const { i18n, t } = useTranslation();
+  const i18n_header = (key) => t(`layout.header.${key}`);
+
   const currencyList = useSelector(
     (state) => state.basicConfig.currency || fakeCurrency
   );
@@ -21,7 +25,7 @@ const CurrencySelect = () => {
   };
   return (
     <>
-      <Typography.Text>幣別：</Typography.Text>
+      <Typography.Text>{i18n_header("currency")}：</Typography.Text>
       <Select
         className="!w-[120px]"
         placeholder="Select with images"

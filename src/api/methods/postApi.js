@@ -13,6 +13,17 @@ export const createAgent = ({ data } = {}) => {
   });
 };
 
+export const agentDeposit = ({ data } = {}) => {
+  return agentApi.post("/deposit", {
+    ...data,
+  });
+};
+export const agentWithdraw = ({ data } = {}) => {
+  return agentApi.post("/withdraw", {
+    ...data,
+  });
+};
+
 export const switchAgentStatus = ({ uid } = {}) => {
   return agentApi.post("/switch", {
     uid: uid,

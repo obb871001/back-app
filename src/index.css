@@ -45,3 +45,10 @@ code {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+.custom-table .ant-table-thead .ant-table-cell {
+  background-color: #b7e3c8;
+  font-weight: 600;
+}
+.custom-expand-table .ant-pro-card-body {
+  padding-inline: 0px !important;
+}

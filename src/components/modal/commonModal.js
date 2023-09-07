@@ -11,6 +11,7 @@ import {
   clearPopType,
   trigger,
 } from "../../redux/action/common/action";
+import { useTranslation } from "react-i18next";
 
 const waitTime = (time = 100) => {
   return new Promise((resolve) => {
@@ -30,6 +31,9 @@ const CommonModal = ({
   submitFunction,
   antdModalProps,
 }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`commonModal.${key}`);
+
   const { width = 600, title } = modalProps || {};
 
   const dispatch = useDispatch();
@@ -72,7 +76,7 @@ const CommonModal = ({
           const successMessage = await submitFunction(values);
           notification.open({
             message: successMessage,
-            description: `提交成功`,
+            description: i18n("submitSuccess"),
             icon: <SmileOutlined className="text-green-500" />,
           });
           if (useButton) {
@@ -88,7 +92,7 @@ const CommonModal = ({
           if (typeof data === "string") {
             notification.error({
               message: data,
-              description: `提交失敗`,
+              description: i18n("submitFail"),
               icon: <MehOutlined className="text-red-500" />,
             });
           } else if (typeof data === "object") {
@@ -99,13 +103,13 @@ const CommonModal = ({
                   {index + 1}：{item}
                 </div>
               )),
-              description: `提交失敗`,
+              description: i18n("submitFail"),
               icon: <MehOutlined className="text-red-500" />,
             });
           } else {
             notification.error({
               message: data,
-              description: `提交失敗`,
+              description: i18n("submitFail"),
               icon: <MehOutlined className="text-red-500" />,
             });
           }
@@ -116,6 +120,7 @@ const CommonModal = ({
         onCancel: () => {
           clearFormAndDetail();
         },
+        cancelText: i18n("cancelText"),
         ...antdModalProps,
       }}
       initialValues={initialValues}

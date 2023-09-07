@@ -10,7 +10,7 @@ import { storeDetail } from "../../../../redux/action/common/action";
 
 const DetailAgent = ({ type }) => {
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
-  const { uid, tabKey = "1" } = searchParams;
+  const { uid, commonUid, tabKey = "1" } = searchParams;
 
   const agentDetail = useSelector((state) => state.commonDetail);
   const dispatch = useDispatch();
@@ -20,10 +20,10 @@ const DetailAgent = ({ type }) => {
   };
 
   useEffect(() => {
-    agentInfo({ agentUid: uid }).then((data) => {
+    agentInfo({ agentUid: uid || commonUid }).then((data) => {
       dispatch(storeDetail(data));
     });
-  }, [uid]);
+  }, [uid, commonUid]);
   const tabs = [
     {
       key: "1",

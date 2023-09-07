@@ -2,8 +2,12 @@ import React from "react";
 import CustomModal from "../../../../components/modal/customModal";
 import { Tabs } from "antd";
 import UseMergeableSearchParams from "../../../../hooks/useMergeableSearchParams";
+import { useTranslation } from "react-i18next";
 
 const DetailChild = ({ setIsModalOpen, isModalOpen }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.agentinfomation.agentlist.tabs.${key}`);
+
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
   const { playeruid, tabKey = "1" } = searchParams;
 
@@ -14,12 +18,12 @@ const DetailChild = ({ setIsModalOpen, isModalOpen }) => {
   const tabs = [
     {
       key: "1",
-      label: `基本資料`,
+      label: i18n("basicInfo"),
       children: "幾本",
     },
     {
       key: "2",
-      label: `重設密碼`,
+      label: i18n("resetPassword"),
       children: "重設密碼",
     },
   ];
@@ -28,7 +32,7 @@ const DetailChild = ({ setIsModalOpen, isModalOpen }) => {
     <CustomModal
       isModalOpen={isModalOpen}
       setIsModalOpen={setIsModalOpen}
-      modalProps={{ title: "子帳號詳細資料" }}
+      modalProps={{ title: i18n("subDetail") }}
     >
       <Tabs
         defaultActiveKey={tabKey}

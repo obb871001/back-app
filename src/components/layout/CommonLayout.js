@@ -29,8 +29,13 @@ import Password from "./components/password";
 import { filterMenuKeys } from "../../helpers/aboutAuth/filterMenuKeys";
 import motion from "framer-motion";
 import CurrencySelect from "./currencySelect";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const CommonLayout = () => {
+  const { t } = useTranslation();
+  const i18n_menu = (key) => t(`layout.menu.${key}`);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -94,6 +99,9 @@ const CommonLayout = () => {
   function filterRoutes(routes, systemArray) {
     return routes?.reduce((filtered, route) => {
       const newRoute = { ...route };
+      if (newRoute.name) {
+        newRoute.name = i18n_menu(newRoute.path.replace("/", ""));
+      }
 
       if (route.routes && route.controllSubmenu !== 1) {
         newRoute.routes = filterRoutes(route.routes, systemArray);
@@ -136,7 +144,6 @@ const CommonLayout = () => {
       routes: filterRoutes(routesProps.route.routes, systemMenu),
     },
   };
-  console.log(filteredRoutes);
 
   return (
     <>

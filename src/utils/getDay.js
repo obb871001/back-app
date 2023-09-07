@@ -53,3 +53,8 @@ export const relativeFromTime = (timeStr) => {
     </p>
   );
 };
+export const unixFormat = (time) => {
+  const TIME = dayjs.unix(time);
+  const format = "YYYY-MM-DD HH:mm:ss";
+  return dayjs(TIME.$d).format(format);
+};

@@ -1,36 +1,46 @@
 import {
   ProFormGroup,
+  ProFormRadio,
   ProFormSwitch,
   ProFormText,
 } from "@ant-design/pro-components";
-import { Divider } from "antd";
+import { Divider, Space } from "antd";
 import React from "react";
 import CustomForm from "../../../../components/form/customForm";
 import { PASSWORD_EXPRESSION, USERNAME_EXPRESSION } from "../../../../regex";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const BasicInformation = ({ form, type }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.agentinfomation.agentlist.modal.${key}`);
+  const i18n_switch = (key) => t(`switch.${key}`);
+  const i18n_statusCode = (key) => t(`status_code.${key}`);
+  const i18n_expressHint = (key) => t(`expressHint.${key}`);
+
   const popType = useSelector((state) => state.popType);
+  const basicConfig = useSelector((state) => state.basicConfig);
+  const { statusCode = [] } = basicConfig;
+
   const basicInfoForm = [
     [
       {
         name: "lastAgent",
-        label: "上層代理",
+        label: i18n("agentLine"),
         type: "text",
         readonly: true,
       },
       {
-        name: "type",
-        label: "類型",
+        label: i18n("type"),
         type: "text",
         readonly: true,
-        value: type === "child" ? "子帳號" : "代理商",
+        value: type === "child" ? i18n("child") : i18n("agent"),
       },
     ],
     [
       {
         name: "cagent",
-        label: type === "child" ? "子帳號" : "代理帳號",
+        label: type === "child" ? i18n("child") : i18n("agentAccount"),
         type: "text",
         required: true,
         disabled: popType === "edit",
@@ -38,16 +48,15 @@ const BasicInformation = ({ form, type }) => {
         rules: [
           {
             pattern: USERNAME_EXPRESSION,
-            message:
-              "開頭必須以英文字母开头，后续字符可以是英文字母、数字或下划线",
+            message: i18n_expressHint("accountHint"),
           },
         ],
       },
       {
         name: "nick_name",
-        label: "暱稱",
+        label: i18n("nickname"),
         type: "text",
-        tooltip: "設定辨識名稱",
+        tooltip: i18n_expressHint("nicknameHint"),
         required: true,
         ex: "豐哥",
       },
@@ -55,7 +64,7 @@ const BasicInformation = ({ form, type }) => {
     [
       {
         name: "passwd",
-        label: "密碼",
+        label: i18n("password"),
         type: "password",
         required: true,
         disabled: popType === "edit",
@@ -63,7 +72,7 @@ const BasicInformation = ({ form, type }) => {
         rules: [
           {
             pattern: PASSWORD_EXPRESSION,
-            message: "不可包含特殊符號，例：@#$%^&*(",
+            message: i18n_expressHint("passwordHint"),
           },
         ],
       },
@@ -81,13 +90,18 @@ const BasicInformation = ({ form, type }) => {
           </ProFormGroup>
         );
       })}
-      <ProFormSwitch
+      <ProFormRadio.Group
         name="status"
-        label="帳號狀態"
-        tooltip="開啟時代理可登入後台"
-        checkedChildren="啟用"
-        unCheckedChildren="停用"
-        checked={form.getFieldValue("status") == 1}
+        layout="vertical"
+        label={i18n("accountStatus")}
+        options={statusCode.map((code) => {
+          return {
+            label: `${i18n_statusCode(`${code}`)}${i18n_statusCode(
+              `${code}hint`
+            )}`,
+            value: code,
+          };
+        })}
       />
     </>
   );

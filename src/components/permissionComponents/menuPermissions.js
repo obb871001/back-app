@@ -8,8 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { storeForm } from "../../redux/action/form/action";
 import { filterMenuKeys } from "../../helpers/aboutAuth/filterMenuKeys";
 import CommonTooltip from "../hint/commonTooltip";
+import { useTranslation } from "react-i18next";
 
 const MenuPermissions = ({ form, hiddenTitle, type }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`permission.menu.${key}`);
+  const i18n_menu = (key) => t(`layout.menu.${key}`);
+
   const dispatch = useDispatch();
   const formDetail = useSelector((state) => state.formReducers);
   const agentDetail = useSelector((state) => state.commonDetail);
@@ -17,14 +22,14 @@ const MenuPermissions = ({ form, hiddenTitle, type }) => {
 
   const menuConfig = [
     {
-      label: "檢視",
+      label: i18n("view"),
       prefix: "permission",
     },
     {
-      label: "編輯",
+      label: i18n("edit"),
       prefix: "editable",
       notTitle: true,
-      hint: "需勾選檢視權限",
+      hint: i18n("editHint  "),
     },
   ];
 
@@ -125,7 +130,6 @@ const MenuPermissions = ({ form, hiddenTitle, type }) => {
       [`menu_${prefix}`]: checkedList.length === menu.length,
     });
   };
-
   return (
     <Space align="middle">
       {menuConfig.map((config) => {
@@ -139,7 +143,7 @@ const MenuPermissions = ({ form, hiddenTitle, type }) => {
               ) : (
                 <CommonTitle
                   className={config.notTitle && "h-[28px]"}
-                  title={!config.notTitle && "選單權限"}
+                  title={!config.notTitle && i18n("title")}
                 />
               )
             }
@@ -163,7 +167,9 @@ const MenuPermissions = ({ form, hiddenTitle, type }) => {
               }
               className="mb-[10px] flex flex-row-reverse"
             >
-              {!config.notTitle && <span className="w-[150px] flex">全選</span>}
+              {!config.notTitle && (
+                <span className="w-[150px] flex">{i18n("selectAll")}</span>
+              )}
             </Checkbox>
 
             <Divider className="!my-[10px]" />
@@ -185,7 +191,7 @@ const MenuPermissions = ({ form, hiddenTitle, type }) => {
                         ) : (
                           <>
                             <span className="mr-[5px]">{item.icon}</span>
-                            {item.name}
+                            {i18n_menu(item.path.replace("/", ""))}
                           </>
                         )}
                       </Typography.Title>
@@ -207,7 +213,9 @@ const MenuPermissions = ({ form, hiddenTitle, type }) => {
                         }
                       >
                         {!config.notTitle && (
-                          <span className="w-[150px] flex">{item.name}</span>
+                          <span className="w-[150px] flex">
+                            {i18n_menu(item.path)}
+                          </span>
                         )}
                       </Checkbox>
                     </div>

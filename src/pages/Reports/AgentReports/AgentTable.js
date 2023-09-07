@@ -1,37 +1,75 @@
-import React from "react";
+import React, { memo, useMemo } from "react";
 import CommonTable from "../../../components/table/commonTable";
 import { ProTable } from "@ant-design/pro-components";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
+import UseMergeableSearchParams from "../../../hooks/useMergeableSearchParams";
+import { allowClick } from "../../../assets/style/styleConfig";
+import { useSelector } from "react-redux";
+import { fakeGameArray } from "../../../constant";
 
-const AgentTable = ({ agentList, agentTotal }) => {
+const AgentTable = ({ agentList, agentTotal, setApiCalling, apiCalling }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.reports.playerreport.${key}`);
+
+  const [searchParams, setSearchParams] = UseMergeableSearchParams();
+
+  const gamePlatform = useSelector(
+    (state) => state.gameList.gamePlatform || fakeGameArray
+  );
+
   const agentColumns = [
     {
-      title: "代理名稱/暱稱",
-      render: (row) => {
-        return `${row.cagent}/${row.nick_name}`;
+      title: i18n("col.agent"),
+      dataIndex: "cagent",
+      key: "cagent",
+      render: (value, row) => {
+        return (
+          <p
+            onClick={() => {
+              if (apiCalling) {
+                return;
+              }
+              setApiCalling(true);
+              setSearchParams({ agentUid: row.uid });
+            }}
+            className={`my-0 ${allowClick} underline ${
+              apiCalling && "!cursor-not-allowed"
+            }`}
+          >
+            {value}
+          </p>
+        );
       },
     },
     {
-      title: "線上會員",
-      dataIndex: "member_count",
-      key: "member_count",
+      title: i18n("col.nickname"),
+      dataIndex: "nick_name",
+      key: "nick_name",
+    },
+
+    {
+      title: i18n("col.onlinePlayer"),
+      dataIndex: "mem_count",
+      key: "mem_count",
     },
     {
-      title: "單量",
+      title: i18n("col.orderNumber"),
       dataIndex: "order_count",
       key: "order_count",
       align: "order_count",
     },
 
     {
-      title: "有效投注額",
+      title: i18n("col.validTurnover"),
       dataIndex: "validTurnover",
       key: "validTurnover",
       align: "right",
     },
     {
-      title: "損益",
-      dataIndex: "winloss",
-      key: "winloss",
+      title: i18n("col.winloss"),
+      dataIndex: "self",
+      key: "self",
       align: "right",
     },
   ];
@@ -39,8 +77,55 @@ const AgentTable = ({ agentList, agentTotal }) => {
   return (
     <CommonTable
       dataSource={agentList}
+      rowKey="uid"
       columns={agentColumns}
-      tableProps={{ title: "代理詳細資料" }}
+      expandable={{
+        expandedRowRender: (record, key) => {
+          return (
+            <ProTable
+              columns={[
+                {
+                  title: i18n("col.platform"),
+                  dataIndex: "platform",
+                  key: "platform",
+                },
+                {
+                  title: i18n("col.orderNumber"),
+                  dataIndex: "order_number",
+                  key: "order_number",
+                },
+                {
+                  title: i18n("col.validTurnover"),
+                  dataIndex: "validTurnover",
+                  key: "validTurnover",
+                  align: "right",
+                },
+                {
+                  title: i18n("col.winloss"),
+                  dataIndex: "self",
+                  key: "self",
+                  align: "right",
+                },
+              ]}
+              headerTitle={false}
+              search={false}
+              className="custom-expand-table"
+              size="small"
+              options={false}
+              dataSource={gamePlatform?.map((item) => {
+                return {
+                  platform: item,
+                  order_number: 0,
+                  validTurnover: record?.[`validTurnover_${item}`] || 0,
+                  self: record?.[`self_${item}`] || 0,
+                };
+              })}
+              pagination={false}
+            />
+          );
+        },
+      }}
+      tableProps={{ title: i18n("tabs.agentDetailData") }}
     />
   );
 };

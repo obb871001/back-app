@@ -1,1 +1,466 @@
-{}
+{
+  "page": {
+    "home": {
+      "title": "Information Dashboard",
+      "recentOperation": "Recent Operational Status",
+      "showNumber": "Display Number",
+      "validTurnover": "Valid Betting",
+      "totalWinLoss": "Total Win/Loss",
+      "validTurnoverOrderNumber": "Valid Betting Orders",
+      "activePlayer": "Active Player",
+      "amount": "Amount (Ten Thousand)",
+      "people": "Number of People",
+      "validTurnoverOrderNumberUnit": "Order Count (Orders)",
+      "everyMinuteUpdate": "Update Every Minute",
+      "focusInformation": "Key Information",
+      "agentInformation": "Agent Information",
+      "agentNumber": "Number of Agents",
+      "addAgent": "Add New Agent",
+      "playerInformation": "Player Information",
+      "playerTotalNumber": "Total Players",
+      "newPlayer": "New Players",
+      "activePlayerNumber": "Active Players",
+      "turnoverInformation": "Betting Information",
+      "turnover": "Betting Amount (Ten Thousand)",
+      "winLoss": "Profit and Loss",
+      "depositInformation": "Deposit Information",
+      "total": "Total",
+      "firstDepositPeople": "First-time Depositors",
+      "totalPeople": "Total People",
+      "withdrawInformation": "Withdrawal Information",
+      "totalRevenue": "Total Revenue (Total Deposit - Total Withdrawal)",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "thisWeek": "This Week",
+      "lastWeek": "Last Week",
+      "thisMonth": "This Month",
+      "lastMonth": "Last Month"
+    },
+    "admin": {
+      "playerWalletLog": {
+        "col": {
+          "member": "Member",
+          "backend": "Backend"
+        }
+      },
+      "playersearch": {
+        "create": "New Player",
+        "modal": {
+          "title": "Create Player",
+          "passwordHint": "Default login password is",
+          "playerAccount": "Player Account",
+          "playerAgent": "Agent",
+          "truename": "Real Name",
+          "mobile": "Mobile",
+          "email": "Email",
+          "birthday": "Birthday"
+        },
+        "tabs": {
+          "basicInfo": "Basic Information",
+          "resetPassword": "Reset Password",
+          "betLimitSettings": "Betting Limit Settings",
+          "playerDetail": "Player Details"
+        },
+        "col": {
+          "number": "Number",
+          "agent": "Agent Line",
+          "playerId": "Player ID",
+          "accountBalance": "Account Balance",
+          "truename": "Real Name",
+          "registerDate": "Registration Date",
+          "country": "Country",
+          "action": "Action",
+          "mobile": "Mobile",
+          "email": "Email",
+          "cryptoAddress": "Cryptocurrency Address",
+          "editPlayerBasic": "Edit Player's Basic Information",
+          "walletInformation": "Wallet Information",
+          "editBalance": "Edit Balance",
+          "playerWashNow": "Current Wash Amount for the Player",
+          "editWashPoints": "Edit Wash Points",
+          "cancel": "Cancel",
+          "submit": "Submit",
+          "amounts": "Amounts",
+          "depositWashpoints": "Deposit Wash Points",
+          "withdrawDontInputThisField": "Do not input this field for withdrawal",
+          "deposit": "Deposit",
+          "withdraw": "Withdraw",
+          "updateWashpoints": "Update Wash Points",
+          "newPassword": "New Password",
+          "confirmPassword": "Confirm Password",
+          "resetPassword": "Reset Password",
+          "accountStatus": "Account Status",
+          "cagentMemo": "Agent Memo",
+          "cagentMemoHint": "This field can be used to input remarks and reasons for this operation (for backend reference)",
+          "cagentMemoEx": "Example: Abnormal player betting, backend deducted 100",
+          "playerMemo": "Player Memo",
+          "playerMemoHint": "This field allows players to see the remarks regarding balance changes (for players)",
+          "playerMemoEx": "Example: Due to operational anomaly, backend will retrieve 100"
+        }
+      },
+      "memberlog": {
+        "col": {
+          "number": "Number",
+          "playerId": "Player ID",
+          "belongAgent": "Affiliated Agent",
+          "agentLevel": "Agent Level",
+          "country": "Country",
+          "device": "Device",
+          "domain": "Domain",
+          "ip": "IP",
+          "createTime": "Creation Time"
+        }
+      },
+      "memberwalletlog": {
+        "col": {
+          "transactionDetail": "Transaction Details",
+          "number": "Number",
+          "playerId": "Player ID",
+          "transactionTime": "Transaction Time",
+          "type": "Type",
+          "game": "Game",
+          "amounts": "Amounts",
+          "playerBalance": "Player Balance",
+          "orderNumber": "Order Number",
+          "exportFrom": "Export From",
+          "exportTo": "Export To",
+          "beforeTransactionBalance": "Balance Before Transaction",
+          "afterTransactionBalance": "Balance After Transaction",
+          "amounts": "Amounts",
+          "member": "Member",
+          "backend": "Backend"
+        }
+      }
+    },
+    "agentinfomation": {
+      "agentlist": {
+        "tabs": {
+          "basicInfo": "Basic Information",
+          "resetPassword": "Reset Password"
+        },
+        "modal": {
+          "create": "Create Agent",
+          "agentLine": "Parent Agent",
+          "agent": "Agent",
+          "child": "Sub-account",
+          "type": "Type",
+          "agentAccount": "Agent Account",
+          "nickname": "Nickname",
+          "password": "Password",
+          "accountStatus": "Account Status",
+          "truename": "Real Name",
+          "mobile": "Mobile",
+          "email": "Email",
+          "birthday": "Birthday",
+          "lastLoginDate": "Last Login Time",
+          "childName": "Sub-account Name",
+          "agentName": "Agent Name",
+          "childLevel": "Sub-account Level",
+          "agentLevel": "Agent Level",
+          "childNumber": "Sub-account Number",
+          "agentNumber": "Agent Number",
+          "childNickname": "Sub-account Nickname",
+          "agentNickname": "Agent Nickname",
+          "loginname": "Login Name",
+          "createDate": "Creation Time",
+          "gameCommission": "Game Commission",
+          "gameCommissionDetail": "Game Commission Details",
+          "menuPermission": "Menu Permission",
+          "menuPermissionDetail": "Menu Permission Details",
+          "gamePermission": "Game Permission",
+          "gamePermissionDetail": "Game Permission Details",
+          "view": "View",
+          "set": "Set",
+          "basicInfo": "Basic Information",
+          "customize": "Customize",
+          "cancel": "Cancel",
+          "editAgent": "Edit Agent",
+          "editChild": "Edit Sub-account",
+          "createAgent": "Create Agent",
+          "createChild": "Create Sub-account",
+          "creditPop": {
+            "credit": "Credit",
+            "title": "Adjust {{credit}} Balance",
+            "myCredit": "My {{credit}} Balance",
+            "agent": "Agent",
+            "agentCreditNow": "Current {{credit}} Balance of Agent",
+            "quota": "Adjustment Amount",
+            "agentCreditAfter": "Agent's {{credit}} Balance After Adjustment",
+            "yourCreditAfter": "Your {{credit}} Balance After Adjustment",
+            "submit": "Submit",
+            "limitHint": "Minimum adjustment amount is 100",
+            "quotaNotEnough": "Insufficient own quota, adjustment cannot be made"
+          }
+        },
+        "col": {
+          "number": "Number",
+          "agentLine": "Parent Agent",
+          "agent": "Agent",
+          "loginName": "Login Name",
+          "level": "Level",
+          "nickname": "Nickname",
+          "truename": "Real Name",
+          "mobile": "Mobile",
+          "birthday": "Birthday",
+          "email": "Email",
+          "playerNumber": "Number of Players",
+          "createTime": "Creation Time",
+          "lastLoginTime": "Last Login Time",
+          "accountStatus": "Account Status",
+          "action": "Action",
+          "loginNotyet": "Not Logged In",
+          "confirmHint": "Are you sure you want to {{action}} the account of {{cagent}}?",
+          "confirm": "Confirm Accurate",
+          "balance": "Balance",
+          "credit": "Credit "
+        }
+      },
+      "sublist": {
+        "col": {
+          "number": "Number",
+          "agentLine": "Parent Agent",
+          "subAccount": "Sub-account",
+          "level": "Level",
+          "nickname": "Nickname",
+          "truename": "Real Name",
+          "mobile": "Mobile",
+          "birthday": "Birthday",
+          "email": "Email",
+          "createDate": "Creation Date",
+          "lastLoginTime": "Last Login Time",
+          "accountStatus": "Account Status",
+          "action": "Action",
+          "loginNotyet": "Not Logged In"
+        }
+      },
+      "agentlog": {
+        "col": {
+          "number": "Number",
+          "agent": "Agent",
+          "nickname": "Nickname",
+          "time": "Time",
+          "level": "Level",
+          "mobile": "Mobile",
+          "email": "Email",
+          "ip": "IP",
+          "actionType": "Action Type",
+          "memo": "Remarks"
+        }
+      }
+    },
+    "reports": {
+      "playerreport": {
+        "treeText": "Agent Level",
+        "tabs": {
+          "agentDetailData": "Agent Detailed Data",
+          "playerDetailData": "Player Detailed Data"
+        },
+        "col": {
+          "number": "Number",
+          "playerId": "Player ID",
+          "agent": "Agent",
+          "nickname": "Nickname",
+          "statisticalData": "Statistical Data",
+          "detailData": "Detailed Data",
+          "backTop": "Return to Previous Level",
+          "statisticalType": "Statistical Type",
+          "onlinePlayer": "Online Players",
+          "orderNumber": "Order Quantity",
+          "turnover": "Bet Amount",
+          "validTurnover": "Valid Bet",
+          "winloss": "Profit/Loss",
+          "platform": "Platform"
+        }
+      },
+      "winlossReports": {
+        "col": {
+          "title": "Win/Loss Report",
+          "gamePlatform": "Game Platform",
+          "turnover": "Betting Amount",
+          "winloss": "Profit and Loss",
+          "jackpotBet": "Jackpot Bet",
+          "jackpotWinloss": "Jackpot Profit and Loss"
+        }
+      },
+      "gamehistory": {
+        "hint": {
+          "pleaseOpenGameDetail": "Please expand the game details first",
+          "transactionDetail": "Transaction detail record",
+          "gameDetail": "Game details",
+          "collape": "Collapse",
+          "expand": "Expand"
+        },
+        "col": {
+          "number": "Number",
+          "belongAgent": "Belonging Agent",
+          "playerId": "Player ID",
+          "transactionTime": "Transaction Time",
+          "orderNumber": "Bet Slip Number",
+          "roundId": "Round ID",
+          "validTurnover": "Valid Bet",
+          "betAmounts": "Bet Amounts",
+          "payout": "Payout",
+          "winloss": "Profit/Loss",
+          "betTime": "Betting Time",
+          "payoutTime": "Payout Time",
+          "betType": "Betting Type",
+          "beforeTransactionBalance": "Balance before Transaction",
+          "afterTransactionBalance": "Balance after Transaction",
+          "result": "Result"
+        },
+        "result": {
+          "settled": "Settled",
+          "cancel": "Canceled",
+          "error": "Error",
+          "nonGambling": "Non-gambling",
+          "banker": "Banker",
+          "player": "Player"
+        }
+      }
+    }
+  },
+  "layout": {
+    "searchTool": {
+      "timeRange": "Time Range",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "thisWeek": "This Week",
+      "lastWeek": "Last Week",
+      "thisMonth": "This Month",
+      "lastMonth": "Last Month",
+      "search": "Search"
+    },
+    "header": {
+      "language": "Language",
+      "currency": "Currency"
+    },
+    "menu": {
+      "agentlist": "Agent Inquiry",
+      "agentlog": "Agent Log",
+      "bankaccount": "Bank Account",
+      "cashflowstatus": "Online Payment Merchant",
+      "comission": "Commission Issuance",
+      "depositlist": "Deposit Payment Dashboard",
+      "eventlist": "Event List",
+      "fundinout": "Fund In/Out",
+      "gamehistory": "Game History",
+      "gamepermissions": "Game Permissions",
+      "gift": "Gift",
+      "home": "Home",
+      "inbox": "Inbox",
+      "marquee": "Marquee",
+      "memberlevelsettings": "Member Level Settings",
+      "memberlog": "Member Log",
+      "memberwalletlog": "Member Wallet Log",
+      "menupermissions": "Menu Permissions",
+      "platformsetting": "Platform Settings",
+      "playerreport": "Statistical Report",
+      "playersearch": "Player Inquiry",
+      "promotion": "Promotion",
+      "refercode": "Referral Code",
+      "sublist": "Sub-account Inquiry",
+      "winlossreport": "Win/Loss Report",
+      "withdrawlist": "Withdrawal Application Review",
+      "admin": "Member Management",
+      "agentinfomation": "Agent Management",
+      "cashflowinfomation": "Online Payment Merchant",
+      "reports": "Reports",
+      "systemsetting": "System Settings"
+    }
+  },
+  "action_code": {
+    "1": "Create Tag",
+    "2": "Update Tag",
+    "3": "Delete Tag",
+    "4": "Set Login Name",
+    "5": "Enable Agent",
+    "6": "Disable Agent",
+    "7": "Update Agent",
+    "8": "Deposit Points",
+    "9": "Withdraw Points",
+    "10": "Reset Player Password",
+    "11": "Enable Player",
+    "12": "Disable Player",
+    "13": "Set Betting Limit",
+    "14": "Update Player Info",
+    "15": "Create Player",
+    "16": "Freeze Agent",
+    "17": "Close Agent",
+    "18": "Freeze Player",
+    "19": "Close Player"
+  },
+  "expressHint": {
+    "birthdayHint": "Please enter the correct date of birth format",
+    "mobileHint": "Please enter the correct mobile format",
+    "accountHint": "Must start with an English letter, subsequent characters can be English letters, numbers, or underscores",
+    "nicknameHint": "Set a recognizable name",
+    "passwordHint": "Cannot contain special symbols, e.g., @#$%^&*(",
+    "openHint": "When enabled, the agent can log into the backend"
+  },
+  "commonModal": {
+    "cancelText": "Cancel",
+    "requiredCol": "Required Field",
+    "optionalCol": "Optional Field",
+    "close": "Close",
+    "create": "Create",
+    "submitSuccess": "Submit Successfully",
+    "submitFail": "Submit Failed"
+  },
+  "actionCol": {
+    "view": "View",
+    "edit": "Edit",
+    "detail": "Detail"
+  },
+  "unit": {
+    "level": "Level"
+  },
+  "commonTable": {
+    "export": "Export",
+    "fileName": "File Name",
+    "timeRange": "Time Range",
+    "action": "Action",
+    "search": "Search",
+    "download": "Download",
+    "pleaseSearchData": "Please search data first",
+    "totalData": "Total {{total}} records"
+  },
+  "ex": {
+    "export_points": "Transfer Points",
+    "ex": "Ex."
+  },
+  "switch": {
+    "open": "Open",
+    "close": "Close"
+  },
+  "permission": {
+    "commission": {
+      "title": "Commission Settings",
+      "commissionHint": "Please enter commission percentage, e.g., 50%",
+      "limit": "Minimum is 0, Maximum is 100"
+    },
+    "menu": {
+      "view": "View",
+      "edit": "Edit",
+      "editHint": "Need to select view permission",
+      "title": "Menu Permissions",
+      "selectAll": "Select All"
+    },
+    "game": {
+      "title": "Game Permissions",
+      "selectAll": "Select All"
+    }
+  },
+  "status_code": {
+    "1": "Activated",
+    "2": "Frozen",
+    "0": "Closed",
+    "3": "Advanced Closed",
+    "1hint": "",
+    "2hint": "(Once frozen, players cannot play but can still check their accounts)",
+    "0hint": "(Affected by batch activation)",
+    "3hint": "(Not affected by batch activation)"
+  },
+  "common": {
+    "loading": "Loading..."
+  }
+}

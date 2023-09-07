@@ -3,5 +3,5 @@ import zhCN from "antd/lib/locale/zh_CN";
 
 export const antdLocalePackage = {
   en: enUS,
-  zh_chs: zhCN,
+  zh_cn: zhCN,
 };
