@@ -32,7 +32,9 @@ import {
   TrademarkOutlined,
   TransactionOutlined,
   TranslationOutlined,
+  UserAddOutlined,
   UserOutlined,
+  UsergroupAddOutlined,
   WalletOutlined,
 } from "@ant-design/icons";
 import Home from "../../pages/Home/Home";
@@ -66,6 +68,11 @@ import PlayerLog from "../../pages/Admin/PlayerLog";
 import PlatformSetting from "../../pages/System/PlatformSetting/PlatformSetting";
 import CreatePlayer from "../../pages/Admin/PlayerSearch/modal/createPlayer";
 import PlayerWalletLog from "../../pages/Admin/PlayerWalletLog";
+import CreateAgentDashBoard from "../../pages/Agent/AgentList/modal/createAgentDashboard";
+import CreateChildDashBoard from "../../pages/Agent/ChildList/modal/createChildDashBoard";
+import CreateMenuAuth from "../../pages/System/MenuAuth/modal/createMenuAuth";
+import ViewMenuAuth from "../../pages/System/MenuAuth/modal/viewMenuAuth";
+import CommonPageTitle from "../../components/layout/CommonPageTitle";
 
 export default {
   route: {
@@ -75,7 +82,11 @@ export default {
         path: "/home",
         name: "首頁",
         icon: <HomeOutlined />,
-        component: <Home />,
+        component: (
+          <AuthPage>
+            <Home />
+          </AuthPage>
+        ),
         index: true,
         main: true,
       },
@@ -101,7 +112,7 @@ export default {
             ),
             routes: [
               {
-                path: "detail",
+                path: "detail/:uid",
                 component: <DetailPlayer />,
               },
               {
@@ -111,36 +122,15 @@ export default {
             ],
           },
           {
-            path: "memberlog",
-            name: "會員操作紀錄",
-            icon: <FileSearchOutlined />,
+            path: "createplayer",
+            name: "新增玩家",
+            icon: <UserAddOutlined />,
+            hidden_permission: true,
             component: (
               <AuthPage>
-                <PlayerLog />
+                <CreatePlayer />
               </AuthPage>
             ),
-          },
-          {
-            path: "memberwalletlog",
-            name: "錢包記錄",
-            icon: <WalletOutlined />,
-            component: (
-              <AuthPage>
-                <PlayerWalletLog />
-              </AuthPage>
-            ),
-          },
-        ],
-      },
-      {
-        name: "代理信息",
-        icon: <ApartmentOutlined />,
-        path: "/agentinfomation",
-        main: true,
-        routes: [
-          {
-            path: "/agentinfomation",
-            redirectTo: "/agentinfomation/agentlist",
           },
           {
             path: "agentlist",
@@ -162,64 +152,70 @@ export default {
                 ),
               },
               {
-                path: "create",
-                component: (
-                  <EditAuthPage>
-                    <CreateAgent />
-                  </EditAuthPage>
-                ),
-              },
-              {
-                path: "detail",
+                path: "detail/:uid",
                 component: <DetailAgent type="agent" />,
               },
             ],
           },
           {
-            path: "sublist",
-            name: "子帳號列表",
-            icon: <SolutionOutlined />,
+            path: "createagent",
+            name: "新增代理商",
+            icon: <UsergroupAddOutlined />,
+            hidden_permission: true,
+            level_limit: window.getbaseconfig?.level_limit,
             component: (
               <AuthPage>
-                <ChildList />{" "}
-              </AuthPage>
-            ),
-            controllSubmenu: 1,
-            routes: [
-              {
-                path: "edit",
-                component: (
-                  <EditAuthPage>
-                    <CreateChild />
-                  </EditAuthPage>
-                ),
-              },
-              {
-                path: "create",
-                component: (
-                  <EditAuthPage>
-                    <CreateChild />
-                  </EditAuthPage>
-                ),
-              },
-              {
-                path: "detail",
-                component: <DetailAgent type="child" />,
-              },
-            ],
-          },
-          {
-            path: "agentlog",
-            name: "代理操作紀錄",
-            icon: <BarsOutlined />,
-            component: (
-              <AuthPage>
-                <AgentLog />{" "}
+                <CreateAgentDashBoard />
               </AuthPage>
             ),
           },
         ],
       },
+      // {
+      //   name: "代理信息",
+      //   icon: <ApartmentOutlined />,
+      //   path: "/agentinfomation",
+      //   main: true,
+      //   routes: [
+      //     {
+      //       path: "/agentinfomation",
+      //       redirectTo: "/agentinfomation/agentlist",
+      //     },
+      //     {
+      //       path: "sublist",
+      //       name: "子帳號列表",
+      //       icon: <SolutionOutlined />,
+      //       component: (
+      //         <AuthPage>
+      //           <ChildList />{" "}
+      //         </AuthPage>
+      //       ),
+      //       controllSubmenu: 1,
+      //       routes: [
+      //         {
+      //           path: "edit",
+      //           component: (
+      //             <EditAuthPage>
+      //               <CreateChild />
+      //             </EditAuthPage>
+      //           ),
+      //         },
+      //         {
+      //           path: "create",
+      //           component: (
+      //             <EditAuthPage>
+      //               <CreateChild />
+      //             </EditAuthPage>
+      //           ),
+      //         },
+      //         {
+      //           path: "detail",
+      //           component: <DetailAgent type="child" />,
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // },
       {
         path: "/cashflowinfomation",
         name: "現金流管理",
@@ -295,6 +291,36 @@ export default {
               },
             ],
           },
+          {
+            path: "agentlog",
+            name: "代理操作紀錄",
+            icon: <BarsOutlined />,
+            component: (
+              <AuthPage>
+                <AgentLog />{" "}
+              </AuthPage>
+            ),
+          },
+          {
+            path: "memberlog",
+            name: "會員操作紀錄",
+            icon: <FileSearchOutlined />,
+            component: (
+              <AuthPage>
+                <PlayerLog />
+              </AuthPage>
+            ),
+          },
+          {
+            path: "memberwalletlog",
+            name: "錢包記錄",
+            icon: <WalletOutlined />,
+            component: (
+              <AuthPage>
+                <PlayerWalletLog />
+              </AuthPage>
+            ),
+          },
         ],
       },
       {
@@ -318,6 +344,44 @@ export default {
             ),
           },
           {
+            path: "sublist",
+            name: "子帳號列表",
+            icon: <SolutionOutlined />,
+            component: (
+              <AuthPage>
+                <ChildList />{" "}
+              </AuthPage>
+            ),
+            controllSubmenu: 1,
+            routes: [
+              {
+                path: "edit",
+                component: (
+                  <EditAuthPage>
+                    <CreateChild />
+                  </EditAuthPage>
+                ),
+              },
+              {
+                path: "detail/:uid",
+                component: <DetailAgent type="child" />,
+              },
+            ],
+          },
+          {
+            path: "createchild",
+            name: "新增子帳號",
+            icon: <UserAddOutlined />,
+            hidden_permission: true,
+            level_limit: window.getbaseconfig?.level_limit,
+            component: (
+              <AuthPage>
+                <CreateChildDashBoard />
+              </AuthPage>
+            ),
+          },
+
+          {
             path: "menupermissions",
             name: "菜單權限設定",
             icon: <BarsOutlined />,
@@ -326,6 +390,25 @@ export default {
                 <MenuAuthSettings />{" "}
               </AuthPage>
             ),
+            controllSubmenu: 1,
+            routes: [
+              {
+                path: "create",
+                component: (
+                  <EditAuthPage>
+                    <CreateMenuAuth />
+                  </EditAuthPage>
+                ),
+              },
+              {
+                path: "edit",
+                component: <CreateMenuAuth />,
+              },
+              {
+                path: "detail/:uid",
+                component: <ViewMenuAuth />,
+              },
+            ],
           },
 
           {
@@ -427,6 +510,7 @@ export default {
           {
             path: "platformsetting",
             name: "站台系統設置",
+            hidden_editable: true,
             icon: <DatabaseOutlined />,
             component: <PlatformSetting />,
           },

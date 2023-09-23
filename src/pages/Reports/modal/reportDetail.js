@@ -62,10 +62,13 @@ const ReportDetail = () => {
       label: i18n("col.playerId"),
       value: reportDetail.memId,
     },
-
+    {
+      label: i18n("col.playerInGameId"),
+      value: reportDetail.player_id,
+    },
     {
       label: i18n("col.transactionTime"),
-      value: relativeFromTime(reportDetail.create_time),
+      value: relativeFromTime(reportDetail.create_time, { unix: true }),
     },
 
     {
@@ -78,11 +81,11 @@ const ReportDetail = () => {
     },
     {
       label: i18n("col.betTime"),
-      value: relativeFromTime(reportDetail.bet_ts),
+      value: relativeFromTime(reportDetail.bet_ts, { unix: true }),
     },
     {
       label: i18n("col.payoutTime"),
-      value: relativeFromTime(reportDetail.win_ts),
+      value: relativeFromTime(reportDetail.win_ts, { unix: true }),
     },
     {
       label: i18n("col.beforeTransactionBalance"),

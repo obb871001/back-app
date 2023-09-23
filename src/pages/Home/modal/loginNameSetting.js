@@ -9,26 +9,30 @@ import CommonModal from "../../../components/modal/commonModal";
 import { setFirstLoginName } from "../../../api/methods/postApi";
 import { notification } from "antd";
 import { GodMod } from "../../../utils/GodMod";
+import { useTranslation } from "react-i18next";
 
 const LoginNameSetting = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.loginname.${key}`);
+
   const [trigger, setTrigger] = useState(true);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (formData) => {
     if (formData.newPasswd !== formData.newPasswdAgain) {
-      throw "兩次密碼輸入不一致";
+      throw i18n("passwordNotSame");
     }
     try {
       await setFirstLoginName({
         data: {
-          loginname: formData.loginname,
-          newPasswd: CryptoJS.MD5(formData.newPasswd).toString(),
+          login_name: formData.loginname,
+          new_passwd: CryptoJS.MD5(formData.newPasswd).toString(),
         },
       });
       sessionStorage.removeItem("token");
       navigate("/signin");
-      return "登錄名已成功設置，請重新登入，並使用新的登錄名登入";
+      return i18n("successSetLoginName");
     } catch (err) {
       throw err;
     }
@@ -36,7 +40,7 @@ const LoginNameSetting = () => {
 
   return (
     <CommonModal
-      modalProps={{ title: "設定登入名稱", width: 600 }}
+      modalProps={{ title: i18n("setLoginname"), width: 600 }}
       modalTrigger={trigger}
       setModalTrigger={setTrigger}
       submitFunction={handleSubmit}
@@ -45,7 +49,7 @@ const LoginNameSetting = () => {
           if (!GodMod) {
             navigate("/signin");
             notification.error({
-              message: "尚未設置登入名稱，請重新登入",
+              message: i18n("unsetLoginName"),
               icon: <MehOutlined className="text-red-500" />,
             });
           }

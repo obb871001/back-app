@@ -1,7 +1,11 @@
 import React from "react";
 
-const TableWrapper = ({ children }) => {
-  return <section className="w-full overflow-scroll">{children}</section>;
+const TableWrapper = ({ children, className }) => {
+  return (
+    <section className={`w-full overflow-scroll shadow rounded ${className}`}>
+      {children}
+    </section>
+  );
 };
 
 export default TableWrapper;

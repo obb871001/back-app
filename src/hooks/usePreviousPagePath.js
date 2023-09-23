@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router";
 
-export function usePreviousPagePath() {
+export function usePreviousPagePath(previousIndex) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -15,6 +15,9 @@ export function usePreviousPagePath() {
     )
   ) {
     return pathSegments.slice(0, -2).join("/");
+  }
+  if (previousIndex) {
+    return pathSegments.slice(0, -previousIndex).join("/");
   }
   const newPathSegments = pathSegments.slice(0, -1);
   const newPath = newPathSegments.join("/");

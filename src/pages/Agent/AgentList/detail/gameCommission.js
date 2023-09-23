@@ -6,7 +6,7 @@ const GameCommission = ({ isModalOpen, setIsModalOpen, props }) => {
   const { t } = useTranslation();
   const i18n = (key) => t(`page.agentinfomation.agentlist.modal.${key}`);
 
-  const { game_commission } = props;
+  const { game_per } = props;
   return (
     <CustomModal
       isModalOpen={isModalOpen}
@@ -14,11 +14,11 @@ const GameCommission = ({ isModalOpen, setIsModalOpen, props }) => {
       modalProps={{ title: i18n("gameCommissionDetail"), width: 500 }}
     >
       <section className="flex flex-col gap-[10px]">
-        {Object.keys(game_commission).map((item) => {
+        {Object.keys(game_per).map((item) => {
           return (
             <section className="flex items-center gap-[20px]">
               <div className="w-[100px] font-bold">{item}：</div>
-              <div>{game_commission?.[item]}%</div>
+              <div>{game_per?.[item]}%</div>
             </section>
           );
         })}

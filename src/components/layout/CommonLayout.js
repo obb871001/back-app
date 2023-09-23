@@ -1,11 +1,21 @@
 import { useNavigate, Outlet, useLocation } from "react-router";
 import {
+  DollarCircleOutlined,
+  EyeOutlined,
   LockOutlined,
   LogoutOutlined,
   ProfileOutlined,
 } from "@ant-design/icons";
 import { PageContainer, ProCard, ProLayout } from "@ant-design/pro-components";
-import { Button, Dropdown, Input, Select, Skeleton, notification } from "antd";
+import {
+  Button,
+  Divider,
+  Dropdown,
+  Input,
+  Select,
+  Skeleton,
+  notification,
+} from "antd";
 import { useEffect, useMemo, useState } from "react";
 
 import routesProps from "../../utils/layoutConfig/routes";
@@ -15,6 +25,7 @@ import {
   APP_NAME,
   VERSION,
   YEAR,
+  fakeEditableMenu,
   fakeGameArray,
   fakeMenu,
 } from "../../constant";
@@ -24,17 +35,27 @@ import { updateDataPeriodically } from "../../api/updateDataPeriodically";
 import LanguageSelect from "./LanguageSelect";
 import TimeInformation from "./TimeInformation";
 import Profile from "./components/profile";
-import { setPopType } from "../../redux/action/common/action";
+import {
+  clearTotalRecords,
+  setPopType,
+} from "../../redux/action/common/action";
 import Password from "./components/password";
 import { filterMenuKeys } from "../../helpers/aboutAuth/filterMenuKeys";
 import motion from "framer-motion";
 import CurrencySelect from "./currencySelect";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import AgentBalance from "./AgentBalance";
+import { formatNumber } from "../../utils/formatNumber";
+import Typography from "antd/es/typography/Typography";
+import { initHasSearched } from "../../redux/action/form/action";
+import Cookies from "js-cookie";
 
 const CommonLayout = () => {
   const { t } = useTranslation();
   const i18n_menu = (key) => t(`layout.menu.${key}`);
+  const i18n_status_code = (key) => t(`status_code.${key}`);
+  const i18n_cagent_level = (key) => t(`cagent_level.${key}`);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,19 +70,22 @@ const CommonLayout = () => {
   const agentMenu = useSelector((state) =>
     filterMenuKeys(state.agentInfo.menu_permission)
   );
+  const editableMenu = useSelector((state) =>
+    filterMenuKeys(state.agentInfo.menu_editable)
+  );
   const globalLoading = useSelector((state) => state.globalLoading);
   const apiCalling = useSelector((state) => state.apiCalling);
+  const CURRENCY = useSelector((state) => state.CURRENCY);
+  const isCredit = useSelector((state) => state.basicConfig?.is_credit === 1);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!sessionStorage.getItem("token")) {
+    if (!Cookies.get("token")) {
       window.sessionStorage.removeItem("token");
       notification.error({
-        message: "登入逾時，請重新登入",
+        message: i18n_menu("loginExpired"),
       });
-      setTimeout(() => {
-        navigate("/signin");
-      }, 1500);
+      navigate("/signin");
     }
     setPathname(location.pathname || "/");
   }, [location.pathname]);
@@ -78,9 +102,9 @@ const CommonLayout = () => {
 
   const settings = {
     fixSiderbar: true,
-    layout: "mix",
+    // layout: "mix",
     splitMenus: true,
-    // layout: "top",
+    layout: "top",
   };
 
   const [pathname, setPathname] = useState(location.pathname);
@@ -99,6 +123,7 @@ const CommonLayout = () => {
   function filterRoutes(routes, systemArray) {
     return routes?.reduce((filtered, route) => {
       const newRoute = { ...route };
+
       if (newRoute.name) {
         newRoute.name = i18n_menu(newRoute.path.replace("/", ""));
       }
@@ -108,9 +133,13 @@ const CommonLayout = () => {
         newRoute.routes = newRoute.routes.filter((route) =>
           systemArray.includes(route.path)
         );
-        newRoute.routes = newRoute.routes.filter((route) =>
-          agentMenu.includes(route.path)
-        );
+        newRoute.routes = newRoute.routes.filter((route) => {
+          if (editableMenu.includes(route.path)) {
+            return route;
+          } else if (agentMenu.includes(route.path)) {
+            return route;
+          }
+        });
         if (newRoute.routes.length === 0) {
           return filtered;
         }
@@ -156,6 +185,7 @@ const CommonLayout = () => {
         <ProLayout
           title={APP_NAME}
           logo={process.env.REACT_APP_LOGO_PATH}
+          pageTitleRender={false}
           bgLayoutImgList={[
             {
               src: "https://img.alicdn.com/imgextra/i2/O1CN01O4etvp1DvpFLKfuWq_!!6000000000279-2-tps-609-606.png",
@@ -189,16 +219,38 @@ const CommonLayout = () => {
           avatarProps={{
             src: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
             size: "small",
-            title: `Hello! ${agentInfo?.cagent}(Lv.${agentInfo?.level})`,
+            title: `${agentInfo?.cagent}(${i18n_cagent_level(
+              agentInfo?.level
+            )})`,
             render: (props, dom) => {
               return (
                 <Dropdown
                   menu={{
                     items: [
                       {
+                        key: "balance",
+                        icon: <DollarCircleOutlined />,
+                        label: `${i18n_menu("balance")}：${formatNumber(
+                          agentInfo?.[isCredit ? "credit" : "vpoint"]
+                        )}${CURRENCY}`,
+                        disabled: true,
+                      },
+                      {
+                        key: "status",
+                        icon: <EyeOutlined />,
+                        label: `${i18n_menu(
+                          "accountStatus"
+                        )}：${i18n_status_code(`${agentInfo?.status}`)}`,
+                        disabled: true,
+                      },
+
+                      {
+                        type: "divider",
+                      },
+                      {
                         key: "profile",
                         icon: <ProfileOutlined />,
-                        label: "個人資料",
+                        label: i18n_menu("profile"),
                         onClick: () => {
                           dispatch(setPopType("detail"));
                           setOpenProfile(true);
@@ -207,7 +259,7 @@ const CommonLayout = () => {
                       {
                         key: "password",
                         icon: <LockOutlined />,
-                        label: "重設密碼",
+                        label: i18n_menu("resetPassword"),
                         onClick: () => {
                           setOpenResetPassword(true);
                         },
@@ -216,7 +268,7 @@ const CommonLayout = () => {
                       {
                         key: "logout",
                         icon: <LogoutOutlined />,
-                        label: "退出登录",
+                        label: i18n_menu("logout"),
                         onClick: () => {
                           sessionStorage.removeItem("token");
                           navigate("/signin");
@@ -246,10 +298,11 @@ const CommonLayout = () => {
                     e.stopPropagation();
                     e.preventDefault();
                   }}
-                  className="gap-[10px]"
+                  className="gap-x-[10px]"
                 >
                   <LanguageSelect />
                   <CurrencySelect />
+                  <AgentBalance />
                 </div>
               ) : undefined,
             ];
@@ -297,6 +350,12 @@ const CommonLayout = () => {
               <div
                 onClick={() => {
                   const locationPath = location.pathname;
+                  dispatch(initHasSearched());
+                  dispatch(clearTotalRecords());
+                  localStorage.setItem(
+                    "lastPath",
+                    item.path.split("/")[item.path.split("/").length - 1]
+                  );
                   if (locationPath.includes(item.path)) {
                     return;
                   }
@@ -310,14 +369,18 @@ const CommonLayout = () => {
           {...settings}
         >
           <PageContainer
+            className="!bg-white"
             header={{
               style: {
-                maxWidth: "90vw",
+                maxWidth: "85vw",
                 margin: "auto",
               },
               title: "",
               breadcrumbRender: (props, originBreadcrumb) => {
-                if (location.pathname.includes("home")) {
+                if (
+                  location.pathname.includes("home") ||
+                  location.pathname === "/"
+                ) {
                   return "";
                 }
                 if (apiCalling || globalLoading) {
@@ -343,18 +406,19 @@ const CommonLayout = () => {
             }}
           >
             <ProCard
+              className="md:w-[80vw] w-[100vw]"
               style={{
                 minHeight: 800,
-                maxWidth: "90vw",
                 margin: "auto",
               }}
             >
               <Outlet />
+              {apiCalling || globalLoading ? null : <Divider />}
             </ProCard>
           </PageContainer>
         </ProLayout>
       </div>
-      {agentInfo.loginname == 0 && <LoginNameSetting />}
+      {agentInfo.name_set == 0 && <LoginNameSetting />}
       {openProfile && (
         <Profile isModalOpen={openProfile} setIsModalOpen={setOpenProfile} />
       )}

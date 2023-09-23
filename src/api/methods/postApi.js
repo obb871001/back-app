@@ -1,4 +1,4 @@
-import { agentApi, api, memberApi } from "./baseApi";
+import { agentApi, api, cagentTagApi, memberApi } from "./baseApi";
 
 export const actionSignIn = ({ account, passwd } = {}) => {
   return api.post("/login", {
@@ -13,14 +13,14 @@ export const createAgent = ({ data } = {}) => {
   });
 };
 
-export const agentDeposit = ({ data } = {}) => {
+export const agentDeposit = ({ paramsData } = {}) => {
   return agentApi.post("/deposit", {
-    ...data,
+    ...paramsData,
   });
 };
-export const agentWithdraw = ({ data } = {}) => {
+export const agentWithdraw = ({ paramsData } = {}) => {
   return agentApi.post("/withdraw", {
-    ...data,
+    ...paramsData,
   });
 };
 
@@ -72,5 +72,11 @@ export const updatePlayerBetLimit = ({ uid, bet_limit } = {}) => {
   return memberApi.post("/limit", {
     uid: uid,
     bet_limit: bet_limit,
+  });
+};
+
+export const createTag = ({ paramsData } = {}) => {
+  return cagentTagApi.post("", {
+    ...paramsData,
   });
 };

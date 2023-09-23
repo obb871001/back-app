@@ -6,21 +6,22 @@ import CommonTitle from "../form/commonTitle";
 import { CopyTwoTone } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
-const CommissionPermission = ({ hiddenTitle, form }) => {
+const CommissionPermission = ({ hiddenTitle, form, prefix }) => {
   const { t } = useTranslation();
-  const i18n = (key) => t(`permission.commission.${key}`);
+  const i18n = (key, props) => t(`permission.commission.${key}`, { ...props });
 
   const gameList = useSelector((state) => state.gameList.gamePlatform);
+  const agentGamePercent = useSelector((state) => state.agentInfo.game_per);
 
   const copyCommission = () => {
-    const commission = form.getFieldValue("game_commission");
+    const commission = form.getFieldValue(`game_${prefix}`);
     const commissionValue = Object.values(commission);
     const commissionKey = Object.values(gameList);
     const commissionObj = {};
     commissionKey.forEach((key, index) => {
       commissionObj[key] = commissionValue[0];
     });
-    form.setFieldsValue({ game_commission: commissionObj });
+    form.setFieldsValue({ [`game_${prefix}`]: commissionObj });
   };
 
   return (
@@ -69,13 +70,22 @@ const CommissionPermission = ({ hiddenTitle, form }) => {
               <div className="flex items-center gap-[10px] custom-form-mb-0">
                 <ProFormDigit
                   width={200}
-                  name={["game_commission", game]}
-                  placeholder={i18n("limit")}
-                  rules={[{ required: true, message: i18n("commissionHint") }]}
+                  name={[`game_${prefix}`, game]}
+                  placeholder={i18n("limit", {
+                    max: agentGamePercent?.[game],
+                  })}
+                  rules={[
+                    {
+                      required: true,
+                      message: i18n("commissionHint", {
+                        max: agentGamePercent?.[game],
+                      }),
+                    },
+                  ]}
                   fieldProps={{
                     addonAfter: "%",
                     min: 0,
-                    max: 100,
+                    max: agentGamePercent?.[game],
                   }}
                 />
               </div>

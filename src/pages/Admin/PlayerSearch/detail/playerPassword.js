@@ -1,5 +1,5 @@
 import { ProForm, ProFormGroup, ProFormText } from "@ant-design/pro-components";
-import { Button, notification } from "antd";
+import { Button, Form, notification } from "antd";
 import CryptoJS from "crypto-js";
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
@@ -17,9 +17,10 @@ const PlayerPassword = () => {
   const [form] = useForm();
 
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
-  const { playeruid, tabKey } = searchParams;
+  const { commonUid, tabKey } = searchParams;
 
   const playerDetail = useSelector((state) => state.commonDetail);
+  const basicConfig = useSelector((state) => state.basicConfig);
 
   const [buttonLoading, setButtonLoading] = useState(false);
 
@@ -30,17 +31,9 @@ const PlayerPassword = () => {
 
   const onFinish = (values) => {
     setButtonLoading(true);
-    if (values.password !== values.confirmPassword) {
-      notification.error({
-        message: i18n_commonModal("submitFail"),
-        description: "兩次密碼輸入不一致",
-      });
-      setButtonLoading(false);
-      return;
-    }
     resetPlayerPassword({
-      uid: playeruid,
-      passwd: CryptoJS.MD5(values.password).toString(),
+      uid: commonUid,
+      passwd: CryptoJS.MD5(basicConfig?.default_passwd).toString(),
     })
       .then((res) => {
         notification.success({
@@ -74,31 +67,27 @@ const PlayerPassword = () => {
       submitter={{
         render: (props, doms) => {
           return [
-            <Button
-              key="submit"
-              type="primary"
-              loading={buttonLoading}
-              onClick={() => {
-                form.submit();
-              }}
-            >
-              {i18n("resetPassword")}
-            </Button>,
+            <Form.Item label={i18n("action")}>
+              <Button
+                key="submit"
+                type="primary"
+                loading={buttonLoading}
+                onClick={() => {
+                  form.submit();
+                }}
+              >
+                {i18n("resetPassword")}
+              </Button>
+            </Form.Item>,
           ];
         },
-      }}
-      onValuesChange={(values) => {
-        console.log(values);
       }}
     >
       <ProForm.Item label={i18n("playerId")}>
         <ProFormText value={playerDetail?.memId} readonly />
       </ProForm.Item>
-      <ProForm.Item name="password" label={i18n("newPassword")}>
-        <ProFormText.Password />
-      </ProForm.Item>
-      <ProForm.Item name="confirmPassword" label={i18n("confirmPassword")}>
-        <ProFormText.Password />
+      <ProForm.Item label={i18n("defaultPassword")}>
+        <ProFormText value={basicConfig?.default_passwd} readonly />
       </ProForm.Item>
     </ProForm>
   );

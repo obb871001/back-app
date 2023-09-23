@@ -1,26 +1,30 @@
+import i18n from "i18next";
+
 export default function handleDetail(row) {
+  const i18n_col = (key) =>
+    i18n.t(`page.reports.gamehistory.platform.paigow.${key}`);
   const detail = JSON.parse(row);
 
   const statusCode = (code) => {
     switch (code) {
       case "0":
-        return "該筆正常遊玩";
+        return i18n_col("statusCode.0");
       case "1":
-        return "該筆取消歸還";
+        return i18n_col("statusCode.1");
       case "2":
-        return "該筆修正補償";
+        return i18n_col("statusCode.2");
       default:
-        return "錯誤";
+        return i18n_col("statusCode.error");
     }
   };
 
   return [
-    { label: "抽水值", value: detail.rake },
-    { label: "遊戲局號", value: detail.gameRoundId },
-    { label: "上莊費", value: detail.bankerFee },
-    { label: "出資額", value: detail.bankerPay },
-    { label: "莊家贏次數", value: detail.bankerWinCount },
-    { label: "有效投注次數", value: detail.playerBetCount },
-    { label: "遊玩狀態", value: statusCode(detail.gameStatus) },
+    { label: i18n_col("rake"), value: `${detail.rake}%` },
+    { label: i18n_col("gameRoundId"), value: detail.gameRoundId },
+    { label: i18n_col("bankerFee"), value: detail.bankerFee },
+    { label: i18n_col("bankerPay"), value: detail.bankerPay },
+    { label: i18n_col("bankerWinCount"), value: detail.bankerWinCount },
+    { label: i18n_col("playerBetCount"), value: detail.playerBetCount },
+    { label: i18n_col("gameStatus"), value: statusCode(detail.gameStatus) },
   ];
 }

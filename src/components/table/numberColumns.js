@@ -2,20 +2,24 @@ import { useMemo } from "react";
 import { formatNumber } from "../../utils/formatNumber";
 import { useSelector } from "react-redux";
 
-const NumberColumns = ({ number, notStyle }) => {
-  const CURRENCY = useSelector((state) => state.CURRENCY);
+const NumberColumns = ({ number, notStyle, revert }) => {
+  const CURRENCY = useSelector((state) => state?.CURRENCY);
+  let numericValue = parseFloat(number);
+  if (revert) {
+    numericValue = -numericValue;
+  }
 
   const style = useMemo(() => {
-    return Number(number) >= 0;
-  }, [number]);
+    return numericValue >= 0;
+  }, [numericValue]);
   return (
     <p
       className={`my-0 font-semibold ${
         style ? "text-green-700" : "text-red-700"
-      } ${notStyle || Number(number) === 0 ? "!text-black" : ""}`}
+      } ${notStyle || numericValue === 0 ? "!text-black" : ""}`}
     >
       {CURRENCY}
-      {formatNumber(number)}
+      {formatNumber(numericValue)}
     </p>
   );
 };

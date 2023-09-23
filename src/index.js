@@ -7,6 +7,10 @@ import { createStore } from "redux";
 import AllReducers from "./redux/reducers/AllReducers";
 import reportWebVitals from "./reportWebVitals";
 import { ConfigProvider } from "antd";
+import { HashRouter } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import { APP_NAME } from "./constant";
+import i18next from "i18next";
 
 const store = createStore(
   AllReducers,
@@ -15,10 +19,19 @@ const store = createStore(
     window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
+const i18n = (key) => i18next.t(`page.sign_in.${key}`);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
-    <App />
+    <HashRouter>
+      <Helmet>
+        <title>
+          {`${APP_NAME}-
+          ${i18n("backendCms")}`}
+        </title>
+      </Helmet>
+      <App />
+    </HashRouter>
   </Provider>
 );
 

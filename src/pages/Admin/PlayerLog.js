@@ -13,17 +13,25 @@ import {
   storeTotalRecords,
 } from "../../redux/action/common/action";
 import { useTranslation } from "react-i18next";
+import RelativeTimeCol from "../../components/tableColumns/relativeTimeCol";
+import NavigatePlayer from "../../components/table/navigatePlayer";
+import { levelOptions } from "../../components/form/levelOption";
+import CommonPageTitle from "../../components/layout/CommonPageTitle";
 
 const PlayerLog = () => {
   const { t } = useTranslation();
   const i18n = (key) => t(`page.admin.memberlog.${key}`);
   const i18n_unit = (key) => t(`unit.${key}`);
+  const i18n_cagent_level = (key) => t(`cagent_level.${key}`);
 
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
   const { create_ts, current_page, per_page } = searchParams;
 
   const dispatch = useDispatch();
   const trigger = useSelector((state) => state.trigger);
+  const nowTime = useSelector((state) => state.nowTime);
+  const agentNameList = useSelector((state) => state.agentNameList);
+  const agentLevel = useSelector((state) => state.agentInfo.level);
 
   const [tableLoading, setTableLoading] = useState(false);
   const [playerLogData, setPlayerLogData] = useState([]);
@@ -66,13 +74,21 @@ const PlayerLog = () => {
       search: true,
       type: "text",
       ex: "player001",
+      render: (value, row) => {
+        return <NavigatePlayer uid={row.member_info_uid} player={value} />;
+      },
     },
     {
       title: i18n("col.belongAgent"),
       dataIndex: "cagent_belong",
       key: "cagent_belong",
       search: true,
-      type: "text",
+      type: "autoComplete",
+      autoCompleteProps: {
+        options: agentNameList?.map((item) => {
+          return { value: item };
+        }),
+      },
       ex: "agent01",
     },
     {
@@ -80,7 +96,16 @@ const PlayerLog = () => {
       dataIndex: "cagent_level",
       key: "cagent_level",
       search: true,
-      type: "number",
+      type: "select",
+      render: (row) => {
+        return i18n_cagent_level(`${row}`);
+      },
+      selectProps: {
+        options: levelOptions({
+          Lv: agentLevel,
+        }),
+      },
+      csvTurn: true,
       ex: "1",
       addonAfter: i18n_unit("level"),
     },
@@ -121,23 +146,29 @@ const PlayerLog = () => {
     {
       title: i18n("col.createTime"),
       dataIndex: "create_time",
-      key: "create_time",
-      search: true,
+      key: "create_ts",
+      render: (row) => {
+        return <RelativeTimeCol now={nowTime} timeStr={row} />;
+      },
+      search: false,
       type: "date",
     },
   ];
   return (
-    <Wrapper>
-      <SearchTool columns={columns} />
-      <TableWrapper>
-        <CommonTable
-          csvApi={getMemberLog}
-          tableLoading={tableLoading}
-          columns={columns}
-          dataSource={playerLogData}
-        />
-      </TableWrapper>
-    </Wrapper>
+    <>
+      <CommonPageTitle pagePath="memberlog" />
+      <Wrapper>
+        <SearchTool columns={columns} />
+        <TableWrapper>
+          <CommonTable
+            csvApi={getMemberLog}
+            tableLoading={tableLoading}
+            columns={columns}
+            dataSource={playerLogData}
+          />
+        </TableWrapper>
+      </Wrapper>
+    </>
   );
 };
 

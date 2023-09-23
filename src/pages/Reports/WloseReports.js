@@ -8,6 +8,9 @@ import { useSelector } from "react-redux";
 import Wrapper from "../../components/layout/Wrapper";
 import TableWrapper from "../../components/layout/TableWrapper";
 import { useTranslation } from "react-i18next";
+import { formatNumber } from "../../utils/formatNumber";
+import NumberColumns from "../../components/table/numberColumns";
+import CommonPageTitle from "../../components/layout/CommonPageTitle";
 
 const WloseReports = () => {
   const { t } = useTranslation();
@@ -34,7 +37,7 @@ const WloseReports = () => {
         const data = err.response.data;
       })
       .finally(() => {});
-  }, [trigger]);
+  }, [trigger, create_ts]);
 
   const columns = [
     {
@@ -47,37 +50,45 @@ const WloseReports = () => {
       align: "right",
       dataIndex: "turnover",
       key: "turnover",
+      render: (value) => <NumberColumns number={value} notStyle />,
     },
     {
       title: i18n("col.winloss"),
       align: "right",
       dataIndex: "winAmount",
       key: "winAmount",
+      render: (value) => <NumberColumns number={value} />,
     },
     {
       title: i18n("col.jackpotBet"),
       align: "right",
       dataIndex: "jpbet",
       key: "jpbet",
+      render: (value) => <NumberColumns number={value} notStyle />,
     },
     {
       title: i18n("col.jackpotWinloss"),
       align: "right",
       dataIndex: "jpwin",
       key: "jpwin",
+      render: (value) => <NumberColumns number={value} />,
     },
   ];
   return (
-    <Wrapper>
-      <SearchTool />
-      <TableWrapper>
-        <CommonTable
-          dataSource={reportsData}
-          columns={columns}
-          tableProps={{ title: i18n("col.title") }}
-        />
-      </TableWrapper>
-    </Wrapper>
+    <>
+      <CommonPageTitle pagePath="winlossreport" />
+
+      <Wrapper>
+        <SearchTool />
+        <TableWrapper>
+          <CommonTable
+            dataSource={reportsData}
+            columns={columns}
+            tableProps={{ title: i18n("col.title") }}
+          />
+        </TableWrapper>
+      </Wrapper>
+    </>
   );
 };
 

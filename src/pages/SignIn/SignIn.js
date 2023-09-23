@@ -13,36 +13,33 @@ import "./styles.css";
 import { actionSignIn } from "../../api/methods/postApi";
 import { useState } from "react";
 import { GodMod } from "../../utils/GodMod";
+import { APP_NAME } from "../../constant";
+import { useTranslation } from "react-i18next";
+import Cookies from "js-cookie";
 
 const Signin = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.sign_in.${key}`);
+
   const navigate = useNavigate();
 
   const [buttonLoading, setButtonLoading] = useState(false);
 
   const onFinish = (values) => {
     setButtonLoading(true);
-    // if (GodMod) {
-    //   navigate("/home");
-    //   notification.open({
-    //     message: "老子登入了",
-    //     description: `歡迎回來 ${values.username}`,
-    //     icon: <SmileOutlined className="text-blue-500" />,
-    //   });
-    //   return;
-    // }
     actionSignIn({
       account: values.username,
       passwd: CryptoJS.MD5(values.password).toString(),
     })
       .then((data) => {
         navigate("/home");
-        if (sessionStorage.getItem("token")) {
-          sessionStorage.removeItem("token");
+        if (Cookies.get("token")) {
+          Cookies.remove("token");
         }
-        sessionStorage.setItem("token", data.token);
+        Cookies.set("token", data.token);
         notification.open({
-          message: data.message,
-          description: `歡迎回來 ${values.username}`,
+          message: i18n("loginSuccess"),
+          description: `${i18n("welcome")} ${values.username}`,
           icon: <SmileOutlined className="text-blue-500" />,
         });
       })
@@ -50,7 +47,7 @@ const Signin = () => {
         const data = err.response.data;
         notification.open({
           message: data.message,
-          description: `請檢查帳號密碼`,
+          description: `${i18n("pleaseConfirmAccountPassword")}`,
           icon: <MehOutlined className="text-red-500" />,
         });
       })
@@ -68,8 +65,8 @@ const Signin = () => {
       <section className="bg-white shadow">
         <LoginForm
           logo={process.env.REACT_APP_LOGO_PATH}
-          title="Boom69"
-          subTitle="後台管理"
+          title={APP_NAME}
+          subTitle={i18n("backendCms")}
           onValuesChange={(values) => {}}
           loading={buttonLoading}
           onFinish={(values) => {
@@ -82,11 +79,11 @@ const Signin = () => {
               size: "large",
               prefix: <UserOutlined className={"prefixIcon"} />,
             }}
-            placeholder={"用户名"}
+            placeholder={i18n("loginName")}
             rules={[
               {
                 required: true,
-                message: "请输入用户名!",
+                message: i18n("pleaseInputLoginName"),
               },
             ]}
           />
@@ -96,11 +93,11 @@ const Signin = () => {
               size: "large",
               prefix: <LockOutlined className={"prefixIcon"} />,
             }}
-            placeholder={"密码"}
+            placeholder={i18n("password")}
             rules={[
               {
                 required: true,
-                message: "请输入密码!",
+                message: i18n("pleaseInputPassword"),
               },
             ]}
           ></ProFormText.Password>

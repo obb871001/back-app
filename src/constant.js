@@ -4,6 +4,8 @@ export const APP_NAME = window.getbaseconfig?.web_name || "WEBNAME";
 export const COMMON_PAGE = 30;
 export const API_RELOAD = 20000;
 export const VERSION = "0.0.3";
+export const cardTitleClass =
+  "bg-gradient-to-b from-[#f2f2f2] via-[#FAFAFA] bg-[#f2f2f2] ";
 
 export const fakeGameArray = [
   "MWSlot",
@@ -650,4 +652,41 @@ export const fakeMenu = [
   "comission",
   "gamepermissions",
   "platformsetting",
+  "createplayer",
+  "createagent",
+  "createchild",
 ];
+export const fakeEditableMenu = [
+  "home",
+  "playersearch",
+  "memberlog",
+  "memberwalletlog",
+  "agentlist",
+  "sublist",
+  "agentlog",
+  "fundinout",
+  "depositlist",
+  "withdrawlist",
+  "cashflowstatus",
+  "playerreport",
+  "winlossreport",
+  "gamehistory",
+  "memberlevelsettings",
+  "eventlist",
+  "refercode",
+  "marquee",
+  "gift",
+  "promotion",
+  "inbox",
+  "bankaccount",
+  "menupermissions",
+  "comission",
+  "gamepermissions",
+  "platformsetting",
+  "createplayer",
+  "createagent",
+  "createchild",
+];
+export const specialCommission = {
+  PAIGOW: { companyCommission: true, percent: 5 },
+};

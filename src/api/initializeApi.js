@@ -9,6 +9,7 @@ import {
 } from "../redux/action/common/action";
 import { storeGame } from "../redux/action/game/action";
 import { agentInfo, getAgentNameList } from "./methods/getApi";
+import i18next from "i18next";
 
 export const InitializeApi = (dispatch, navigate) => async () => {
   try {
@@ -27,7 +28,7 @@ export const InitializeApi = (dispatch, navigate) => async () => {
     console.error(error);
     window.sessionStorage.removeItem("token");
     notification.error({
-      message: "登入逾時，請重新登入",
+      message: i18next.t("layout.menu.loginExpired"),
     });
     if (navigate) {
       setTimeout(() => {

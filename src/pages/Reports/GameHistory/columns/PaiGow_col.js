@@ -58,7 +58,7 @@ export default function PaiGowColumns() {
       dataIndex: "betTime",
       key: "betTime",
       render: (row) => {
-        return <RelativeTimeCol now={nowTime} timeStr={row} />;
+        return <RelativeTimeCol now={nowTime} timeStr={row} unix />;
       },
       search: true,
       type: "date",
@@ -73,8 +73,8 @@ export default function PaiGowColumns() {
     },
     {
       title: i18n("col.roundId"),
-      dataIndex: "round_id",
-      key: "round_id",
+      dataIndex: "roundId",
+      key: "roundId",
       columnsHidden: true,
       search: true,
       type: "text",
@@ -88,10 +88,7 @@ export default function PaiGowColumns() {
         return <NumberColumns notStyle number={row} />;
       },
       search: true,
-      type: "number",
-      inputProps: {
-        addonAfter: CURRENCY,
-      },
+      type: "rangeNumber",
     },
     {
       title: i18n("col.payout"),
@@ -101,10 +98,7 @@ export default function PaiGowColumns() {
         return <NumberColumns notStyle number={row} />;
       },
       search: true,
-      type: "number",
-      inputProps: {
-        addonAfter: CURRENCY,
-      },
+      type: "rangeNumber",
     },
 
     {
@@ -115,20 +109,7 @@ export default function PaiGowColumns() {
         return <NumberColumns number={row} />;
       },
       search: true,
-      type: "number",
-      inputProps: {
-        addonAfter: CURRENCY,
-      },
-    },
-    {
-      title: i18n("col.betTime"),
-      dataIndex: "betTime",
-      key: "betTime",
-      render: (row) => {
-        return unixFormat(row);
-      },
-      search: true,
-      type: "date",
+      type: "rangeNumber",
     },
     {
       title: i18n("col.payoutTime"),
@@ -172,6 +153,7 @@ export default function PaiGowColumns() {
               hash: row.hash,
               round_id: row.roundId,
               create_time: row.betTime,
+              player_id: row.playerId,
               bet_ts: row.betTime,
               win_ts: row.winTime,
               bet: row.bet,
@@ -180,7 +162,7 @@ export default function PaiGowColumns() {
               before_balance: row.beforeBalance,
               after_balance: row.afterBalance,
               memId: row.memId,
-              roundcode: roundCode(row.round_code),
+              roundcode: roundCode(row.roundCode),
               detail: [
                 { label: i18n("col.betType"), value: betType(row.betType) },
                 ...handleDetail(row.extra),

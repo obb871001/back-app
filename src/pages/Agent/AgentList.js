@@ -23,6 +23,7 @@ import {
   Switch,
   Tag,
   Typography,
+  message,
   notification,
 } from "antd";
 import Wrapper from "../../components/layout/Wrapper";
@@ -43,18 +44,24 @@ import { allowClick } from "../../assets/style/styleConfig";
 import { formatNumber } from "../../utils/formatNumber";
 import CustomModal from "../../components/modal/customModal";
 import AdjustBalance from "./AgentList/modal/adjustBalance";
+import AgentTree from "./components/agentTree";
+import { levelOptions } from "../../components/form/levelOption";
+import CommonPageTitle from "../../components/layout/CommonPageTitle";
 
 const AgentList = () => {
   const { t } = useTranslation();
   const i18n = (key, props) =>
     t(`page.agentinfomation.agentlist.${key}`, { ...props });
+  const i18n_common = (key) => t(`common.${key}`);
 
   const i18n_switch = (key) => t(`switch.${key}`);
   const i18n_unit = (key) => t(`unit.${key}`);
   const i18n_statusCode = (key) => t(`status_code.${key}`);
+  const i18n_tree = (key) => t(`page.reports.playerreport.${key}`);
+  const i18n_cagent_level = (key) => t(`cagent_level.${key}`);
 
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
-  const { current_page, per_page } = searchParams;
+  const { current_page, per_page, agentUid } = searchParams;
 
   const canEdit = useEditStatus();
 
@@ -63,6 +70,9 @@ const AgentList = () => {
   const { statusCode = [], is_credit } = basicConfig;
   const trigger = useSelector((state) => state.trigger);
   const CURRENCY = useSelector((state) => state.CURRENCY);
+  const hasSearched = useSelector((state) => state.hasSearched);
+  const agentLevel = useSelector((state) => state.agentInfo?.level);
+  const agentNameList = useSelector((state) => state.agentNameList);
 
   const [confirmButtonLoading, setConfirmButtonLoading] = useState(false);
   const [agentList, setAgentList] = useState([]);
@@ -70,31 +80,41 @@ const AgentList = () => {
   const [initialRender, setInitialRender] = useState(true);
   const [openBalanceModal, setOpenBalanceModal] = useState(false);
   const [agentData, setAgentData] = useState({});
+  const [timeOption, setTimeOption] = useState(false);
+  const [agentTree, setAgentTree] = useState([]);
+  const [treeApiCalling, setTreeApiCalling] = useState(false);
 
   useEffect(() => {
-    setTableLoading(true);
-    if (initialRender) {
-      dispatch(apiCalling());
+    if (treeApiCalling) {
+      message.loading({ content: i18n_common("loading") });
     }
+    if (hasSearched) {
+      setTableLoading(true);
+      getAgentList({
+        paramsData: {
+          ...searchParams,
+          create_ts: timeOption ? searchParams.create_ts : undefined,
+          ...(agentUid && { tree_uid: agentUid }),
+        },
+      })
+        .then((data) => {
+          setAgentList(data.data.list);
+          setAgentTree(data.data.tree);
+          dispatch(storeTotalRecords(data.data.pagination));
+        })
+        .catch((err) => {
+          const data = err.response.data;
+        })
+        .finally(() => {
+          setTableLoading(false);
+          dispatch(apiCalled());
+          setInitialRender(false);
 
-    getAgentList({
-      paramsData: {
-        ...searchParams,
-      },
-    })
-      .then((data) => {
-        setAgentList(data.data.list);
-        dispatch(storeTotalRecords(data.data.pagination));
-      })
-      .catch((err) => {
-        const data = err.response.data;
-      })
-      .finally(() => {
-        setTableLoading(false);
-        dispatch(apiCalled());
-        setInitialRender(false);
-      });
-  }, [trigger, current_page, per_page]);
+          message.destroy();
+          setTreeApiCalling(false); //讀取cagent tree結束
+        });
+    }
+  }, [trigger, agentUid, current_page, per_page]);
 
   const columns = [
     {
@@ -110,17 +130,43 @@ const AgentList = () => {
       dataIndex: "cagent_belong",
       key: "cagent_belong",
       search: true,
-      type: "text",
+      type: "autoComplete",
+      autoCompleteProps: {
+        options: agentNameList?.map((item) => {
+          return { value: item };
+        }),
+      },
       ex: "agent001",
     },
 
     {
       title: i18n("col.agent"),
       dataIndex: "cagent",
-      key: "cagent",
+      key: "search_cagent",
+      render: (row, value) => (
+        <p
+          onClick={() => {
+            if (treeApiCalling) {
+              return;
+            }
+            setTreeApiCalling(true);
+            setSearchParams({ agentUid: value.uid });
+          }}
+          className={`my-0 ${allowClick} underline ${
+            treeApiCalling && "!cursor-not-allowed"
+          }`}
+        >
+          {row}
+        </p>
+      ),
+      csvTurn: true,
+      csvRender: (row) => {
+        return `${row}`;
+      },
       search: true,
       type: "text",
       ex: "agent01",
+      searchOrder: 1,
     },
     {
       title: i18n("col.loginName"),
@@ -136,13 +182,18 @@ const AgentList = () => {
     {
       title: i18n("col.level"),
       dataIndex: "level",
-      key: "level",
+      key: "search_level",
       search: true,
-      type: "number",
-      ex: "1",
-      inputProps: {
-        addonAfter: i18n_unit("level"),
+      type: "select",
+      selectProps: {
+        options: levelOptions({
+          Lv: agentLevel,
+        }),
       },
+      render: (row) => {
+        return i18n_cagent_level(`${row}`);
+      },
+      csvTurn: true,
     },
     {
       title: i18n("col.nickname"),
@@ -161,17 +212,21 @@ const AgentList = () => {
       ex: "Chang Chia-Hang",
     },
     {
-      title: `${i18n("col.credit")}${i18n("col.balance")}`,
+      title: `${i18n("col.balance")}`,
       dataIndex: is_credit === 1 ? "credit" : "vpoint",
       key: is_credit === 1 ? "credit" : "vpoint",
       render: (value, row) => {
         return (
           <span
             onClick={() => {
-              setOpenBalanceModal(true);
-              setAgentData(row);
+              if (canEdit) {
+                setOpenBalanceModal(true);
+                setAgentData(row);
+              }
             }}
-            className={`${allowClick} cursor-pointer underline font-bold`}
+            className={`${canEdit && allowClick} ${
+              canEdit && "cursor-pointer underline"
+            } font-bold`}
           >
             {CURRENCY}
             {formatNumber(value)}
@@ -215,17 +270,15 @@ const AgentList = () => {
     {
       title: i18n("col.createTime"),
       dataIndex: "create_time",
-      key: "create_time",
-      search: true,
+      key: "create_ts",
+      search: false,
       type: "date",
     },
     {
       title: i18n("col.lastLoginTime"),
-      dataIndex: "oauth",
-      key: "oauth",
-      render: (row) => {
-        return !row ? relativeFromTime(row) : `(${i18n("col.loginNotyet")})`;
-      },
+      dataIndex: "oauth_ts",
+      key: "oauth_ts",
+      render: (row) => relativeFromTime(row, { unix: true }),
       search: true,
       type: "date",
     },
@@ -236,6 +289,10 @@ const AgentList = () => {
       render: (value, row) => {
         return <Tag color={color(value)}>{i18n_statusCode(`${value}`)}</Tag>;
       },
+      csvRender: (row) => {
+        return i18n_statusCode(`${row}`);
+      },
+      csvTurn: true,
       search: true,
       type: "select",
       selectProps: {
@@ -267,28 +324,44 @@ const AgentList = () => {
     },
   ];
   return (
-    <Wrapper>
-      <SearchTool columns={columns} />
-      {/* <CreateAgent /> */}
-      <TableWrapper>
-        <EditAuthColumns>
-          <CreateButton type={i18n("col.agent")} />
-        </EditAuthColumns>
-        <CommonTable
-          csvApi={getAgentList}
-          tableLoading={tableLoading}
+    <>
+      <CommonPageTitle pagePath="agentlist" />
+      <Wrapper>
+        <SearchTool
+          timeOptional={{
+            enabled: true,
+            open: timeOption,
+            setOpen: setTimeOption,
+          }}
           columns={columns}
-          dataSource={agentList}
+          priorityList={[i18n_tree("treeText"), i18n("col.agent")]}
+          closeTimeOptional
         />
-      </TableWrapper>
-      {openBalanceModal && (
-        <AdjustBalance
-          openBalanceModal={openBalanceModal}
-          setOpenBalanceModal={setOpenBalanceModal}
-          agentData={agentData}
-        />
-      )}
-    </Wrapper>
+        {/* <CreateAgent /> */}
+        <TableWrapper>
+          {/* <EditAuthColumns>
+          <CreateButton type={i18n("col.agent")} />
+        </EditAuthColumns> */}
+          <CommonTable
+            tableProps={{
+              title: <AgentTree agentTree={agentTree} />,
+            }}
+            csvApi={getAgentList}
+            tableLoading={tableLoading}
+            columns={columns}
+            dataSource={agentList}
+            closeTimeOptional
+          />
+        </TableWrapper>
+        {openBalanceModal && (
+          <AdjustBalance
+            openBalanceModal={openBalanceModal}
+            setOpenBalanceModal={setOpenBalanceModal}
+            agentData={agentData}
+          />
+        )}
+      </Wrapper>
+    </>
   );
 };
 

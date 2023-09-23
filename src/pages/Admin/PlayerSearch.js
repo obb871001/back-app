@@ -32,6 +32,9 @@ import NavigatePlayer from "../../components/table/navigatePlayer";
 import NumberColumns from "../../components/table/numberColumns";
 import { useTranslation } from "react-i18next";
 import { color } from "../Agent/AgentList/utils/statusCodeColor";
+import AdjustBalance from "../Agent/AgentList/modal/adjustBalance";
+import useEditStatus from "../../utils/EditStatus";
+import CommonPageTitle from "../../components/layout/CommonPageTitle";
 
 const PlayerSearch = () => {
   const { t } = useTranslation();
@@ -43,38 +46,42 @@ const PlayerSearch = () => {
 
   const navigate = useNavigate();
 
+  const canEdit = useEditStatus();
+
   const [playerList, setPlayerList] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);
   const [initialRender, setInitialRender] = useState(true);
+  const [openBalanceModal, setOpenBalanceModal] = useState(false);
+  const [agentData, setAgentData] = useState({});
+  const [timeOption, setTimeOption] = useState(false);
 
   const dispatch = useDispatch();
   const trigger = useSelector((state) => state.trigger);
   const CURRENCY = useSelector((state) => state.CURRENCY);
   const agentNameList = useSelector((state) => state.agentNameList);
   const statusCode = useSelector((state) => state.basicConfig.statusCode);
+  const hasSearched = useSelector((state) => state.hasSearched);
 
   useEffect(() => {
-    setTableLoading(true);
-    if (initialRender) {
-      dispatch(apiCalling());
+    if (hasSearched) {
+      setTableLoading(true);
+      getMemberList({
+        paramsData: {
+          // create_ts: timeOption ? searchParams.create_ts : undefined,
+          ...searchParams,
+        },
+      })
+        .then((data) => {
+          setPlayerList(data.data.list);
+          dispatch(storeTotalRecords(data.data.pagination));
+        })
+        .catch((err) => {
+          const data = err.response.data;
+        })
+        .finally(() => {
+          setTableLoading(false);
+        });
     }
-    getMemberList({
-      paramsData: {
-        ...searchParams,
-      },
-    })
-      .then((data) => {
-        setPlayerList(data.data.list);
-        dispatch(storeTotalRecords(data.data.pagination));
-      })
-      .catch((err) => {
-        const data = err.response.data;
-      })
-      .finally(() => {
-        setTableLoading(false);
-        setInitialRender(false);
-        dispatch(apiCalled());
-      });
   }, [current_page, per_page, trigger]);
 
   const columns = [
@@ -89,8 +96,8 @@ const PlayerSearch = () => {
     },
     {
       title: i18n("col.agent"),
-      key: "cagent",
-      render: (row) => filterAgentLevel(row),
+      dataIndex: "cagent_belong",
+      key: "cagent_belong",
       search: true,
       type: "autoComplete",
       autoCompleteProps: {
@@ -108,27 +115,26 @@ const PlayerSearch = () => {
       search: true,
       type: "text",
       ex: "player01",
-      render: (row, value) => {
-        return <NavigatePlayer uid={value.uid} player={row} />;
-      },
+      searchOrder: 1,
     },
     {
       title: i18n("col.accountBalance"),
       dataIndex: "balance",
       key: "balance",
-      render: (row) => `${formatNumber(row)}${CURRENCY}`,
-      search: true,
-      type: "number",
-      inputProps: {
-        addonAfter: CURRENCY,
-      },
+      search: false,
+      type: "rangeNumber",
       ex: "20",
       render: (row, value) => (
         <span
           onClick={() => {
-            navigate(`detail?commonUid=${value.uid}`);
+            if (canEdit) {
+              setOpenBalanceModal(true);
+              setAgentData(value);
+            }
           }}
-          className={`${allowClick} cursor-pointer underline font-bold`}
+          className={`${canEdit && allowClick} ${
+            canEdit && "cursor-pointer underline"
+          } font-bold`}
         >
           {CURRENCY}
           {formatNumber(row)}
@@ -164,10 +170,10 @@ const PlayerSearch = () => {
     },
 
     {
-      title: i18n("col.registerDate"),
-      dataIndex: "create_time",
-      key: "create_time",
-      render: (row) => relativeFromTime(row),
+      title: i18n("col.oauthTime"),
+      dataIndex: "oauth_ts",
+      key: "oauth_ts",
+      render: (row) => relativeFromTime(row, { unix: true }),
       search: true,
       type: "date",
       ex: "1998-10-01",
@@ -187,6 +193,10 @@ const PlayerSearch = () => {
       render: (value, row) => {
         return <Tag color={color(value)}>{i18n_statusCode(`${value}`)}</Tag>;
       },
+      csvRender: (row) => {
+        return i18n_statusCode(`${row}`);
+      },
+      csvTurn: true,
       search: true,
       type: "select",
       selectProps: {
@@ -206,11 +216,11 @@ const PlayerSearch = () => {
         return (
           <ActionCol
             callApi={() => {
-              getMemberList({
-                paramsData: { uid: row.uid },
-              }).then((res) => {
-                dispatch(storeDetail(res.data.list[0]));
-              });
+              // getMemberList({
+              //   paramsData: { uid: row.uid },
+              // }).then((res) => {
+              //   dispatch(storeDetail(res.data.list[0]));
+              // });
             }}
             apiUid={row.uid}
             openDetail
@@ -221,20 +231,40 @@ const PlayerSearch = () => {
   ];
 
   return (
-    <Wrapper>
-      <SearchTool columns={columns} />
-      <TableWrapper>
-        <EditAuthColumns>
-          <CreateButton type={i18n("create")} />
-        </EditAuthColumns>
-        <CommonTable
-          csvApi={getMemberList}
-          dataSource={playerList}
+    <>
+      <CommonPageTitle pagePath="playersearch" />
+      <Wrapper>
+        <SearchTool
+          timeOptional={{
+            enabled: true,
+            open: timeOption,
+            setOpen: setTimeOption,
+          }}
+          closeTimeOptional
           columns={columns}
-          tableLoading={tableLoading}
         />
-      </TableWrapper>
-    </Wrapper>
+        <TableWrapper>
+          {/* <EditAuthColumns>
+          <CreateButton type={i18n("create")} />
+        </EditAuthColumns> */}
+          <CommonTable
+            csvApi={getMemberList}
+            dataSource={playerList}
+            columns={columns}
+            tableLoading={tableLoading}
+            closeTimeOptional
+          />
+        </TableWrapper>
+        {openBalanceModal && (
+          <AdjustBalance
+            openBalanceModal={openBalanceModal}
+            setOpenBalanceModal={setOpenBalanceModal}
+            agentData={agentData}
+            isPlayer
+          />
+        )}
+      </Wrapper>
+    </>
   );
 };
 

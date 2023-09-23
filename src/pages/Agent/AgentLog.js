@@ -15,17 +15,26 @@ import {
   storeTotalRecords,
 } from "../../redux/action/common/action";
 import { useTranslation } from "react-i18next";
+import TableWrapper from "../../components/layout/TableWrapper";
+import { Popover, Tooltip } from "antd";
+import { allowClick } from "../../assets/style/styleConfig";
+import DetailModal from "./modal/detailModal";
+import NavigateDetail from "../../components/table/navigateDetail";
+import CommonPageTitle from "../../components/layout/CommonPageTitle";
 
 const AgentLog = () => {
   const { t } = useTranslation();
   const i18n = (key) => t(`page.agentinfomation.agentlog.${key}`);
   const i18n_unit = (key) => t(`unit.${key}`);
+  const i18n_actionCode = (key) => t(`action_code.${key}`);
 
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
   const { create_ts, current_page, per_page } = searchParams;
 
   const dispatch = useDispatch();
   const trigger = useSelector((state) => state.trigger);
+  const basicConfig = useSelector((state) => state.basicConfig);
+  const reportDetailPop = useSelector((state) => state.reportDetailPop);
 
   const [agentLogData, setAgentLogData] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);
@@ -64,56 +73,19 @@ const AgentLog = () => {
     },
     {
       title: i18n("col.agent"),
-      key: "agent",
-      render: (row) => {
-        return filterAgentLevel(row);
-      },
+      dataIndex: "cagent",
+      key: "cagent",
       search: true,
       type: "text",
       ex: "agent01",
     },
     {
-      title: i18n("col.nickname"),
-      dataIndex: "nick_name",
-      key: "nick_name",
-      search: true,
-      type: "text",
-      ex: "Godtone",
-    },
-    {
       title: i18n("col.time"),
       dataIndex: "create_time",
-      key: "create_time",
+      key: "create_ts",
       render: (row) => relativeFromTime(row),
-      search: true,
+      search: false,
       type: "date",
-    },
-    {
-      title: i18n("col.level"),
-      dataIndex: "level",
-      key: "level",
-      search: true,
-      type: "number",
-      inputProps: {
-        addonAfter: i18n_unit("level"),
-      },
-      ex: "1",
-    },
-    {
-      title: i18n("col.mobile"),
-      dataIndex: "mobile",
-      key: "mobile",
-      search: true,
-      type: "text",
-      ex: "0912345678",
-    },
-    {
-      title: i18n("col.email"),
-      dataIndex: "email",
-      key: "email",
-      search: true,
-      type: "text",
-      ex: "abc@gmail.com",
     },
     {
       title: i18n("col.ip"),
@@ -124,28 +96,53 @@ const AgentLog = () => {
     },
     {
       title: i18n("col.actionType"),
-      dataIndex: "action",
-      key: "action",
+      dataIndex: "action_code",
+      key: "action_code",
+      render: (row) => {
+        return i18n_actionCode(row);
+      },
       search: true,
+      selectProps: {
+        options: basicConfig?.actionCode?.map((action) => {
+          return {
+            label: i18n_actionCode(`${action}`),
+            value: action,
+          };
+        }),
+      },
+
       type: "select",
     },
     {
       title: i18n("col.memo"),
-      dataIndex: "memo",
-      key: "memo",
+      dataIndex: "cagent_memo",
+      key: "cagent_memo",
       search: true,
       type: "textarea",
     },
+    {
+      title: "",
+      key: "detail",
+      render: (row) => {
+        return <NavigateDetail props={row} />;
+      },
+    },
   ];
   return (
-    <Wrapper>
-      <SearchTool columns={columns} />
-      <CommonTable
-        tableLoading={tableLoading}
-        columns={columns}
-        dataSource={agentLogData}
-      />
-    </Wrapper>
+    <>
+      <CommonPageTitle pagePath="agentlog" />
+      <Wrapper>
+        <SearchTool columns={columns} />
+        <TableWrapper>
+          <CommonTable
+            tableLoading={tableLoading}
+            columns={columns}
+            dataSource={agentLogData}
+          />
+        </TableWrapper>
+        {reportDetailPop && <DetailModal />}
+      </Wrapper>
+    </>
   );
 };
 

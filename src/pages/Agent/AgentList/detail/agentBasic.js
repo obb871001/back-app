@@ -12,6 +12,7 @@ import GamePermissionDetail from "./GamePermissionDetail";
 import { filterAgentLevel } from "../../../../utils/oldUtils/filterAgentLevel";
 import { useTranslation } from "react-i18next";
 import { color } from "../utils/statusCodeColor";
+import FilterLevelName from "../../../../utils/filterLevelName";
 
 const AgentBasic = ({ type }) => {
   const { t } = useTranslation();
@@ -59,6 +60,13 @@ const AgentBasic = ({ type }) => {
       type: "number",
       addonAfter: i18n_unit("level"),
       agentType: true,
+      component: (
+        <Form.Item
+          label={type === "child" ? i18n("childLevel") : i18n("agentLevel")}
+        >
+          {FilterLevelName(type, agentDetail.level)}
+        </Form.Item>
+      ),
     },
 
     {

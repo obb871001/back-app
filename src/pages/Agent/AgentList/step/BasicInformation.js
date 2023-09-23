@@ -10,6 +10,7 @@ import CustomForm from "../../../../components/form/customForm";
 import { PASSWORD_EXPRESSION, USERNAME_EXPRESSION } from "../../../../regex";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import FilterLevelName from "../../../../utils/filterLevelName";
 
 const BasicInformation = ({ form, type }) => {
   const { t } = useTranslation();
@@ -20,6 +21,7 @@ const BasicInformation = ({ form, type }) => {
 
   const popType = useSelector((state) => state.popType);
   const basicConfig = useSelector((state) => state.basicConfig);
+  const agentInfo = useSelector((state) => state.agentInfo);
   const { statusCode = [] } = basicConfig;
 
   const basicInfoForm = [
@@ -34,7 +36,7 @@ const BasicInformation = ({ form, type }) => {
         label: i18n("type"),
         type: "text",
         readonly: true,
-        value: type === "child" ? i18n("child") : i18n("agent"),
+        value: FilterLevelName(type, agentInfo.level + 1),
       },
     ],
     [
@@ -94,6 +96,12 @@ const BasicInformation = ({ form, type }) => {
         name="status"
         layout="vertical"
         label={i18n("accountStatus")}
+        rules={[
+          {
+            required: true,
+            message: i18n_expressHint("accountStatusHint"),
+          },
+        ]}
         options={statusCode.map((code) => {
           return {
             label: `${i18n_statusCode(`${code}`)}${i18n_statusCode(

@@ -18,6 +18,7 @@ const WalletDetail = () => {
   const reportDetail = useSelector((state) => state.reportDetail);
   const reportDetailPop = useSelector((state) => state.reportDetailPop);
   const nowTime = useSelector((state) => state.nowTime);
+  const basicConfig = useSelector((state) => state.basicConfig);
   const dispatch = useDispatch();
 
   const [openMore, setOpenMore] = useState(false);
@@ -28,7 +29,9 @@ const WalletDetail = () => {
     html2canvas(refDetail.current).then((canvas) => {
       const dataUrl = canvas.toDataURL("image/png");
       const link = document.createElement("a");
-      link.download = `${reportDetail.memId}-${reportDetail.hash}.png`;
+      link.download = `${reportDetail.memId}-${i18n(
+        "col.transactionDetail"
+      )}.png`;
       link.href = dataUrl;
       link.click();
     });
@@ -73,15 +76,31 @@ const WalletDetail = () => {
     },
     {
       label: i18n("col.beforeTransactionBalance"),
-      value: <NumberColumns notStyle number={reportDetail.mem_before} />,
+      value: (
+        <NumberColumns
+          notStyle
+          number={
+            reportDetail?.[`mem_${basicConfig.wallet_type}_wallet_before`]
+          }
+        />
+      ),
     },
     {
       label: i18n("col.afterTransactionBalance"),
-      value: <NumberColumns notStyle number={reportDetail.mem_after} />,
+      value: (
+        <NumberColumns
+          notStyle
+          number={reportDetail?.[`mem_${basicConfig.wallet_type}_wallet_after`]}
+        />
+      ),
     },
     {
       label: i18n("col.amounts"),
-      value: <NumberColumns number={reportDetail.mem_trans_sub} />,
+      value: (
+        <NumberColumns
+          number={reportDetail?.[`mem_${basicConfig.wallet_type}_wallet_trans`]}
+        />
+      ),
     },
   ];
 

@@ -64,6 +64,10 @@ sftp
     return sftp.uploadDir(localPath, remotePath);
   })
   .then(() => {
+    const remoteIndexPath = path.join(remotePath, "index.html");
+    return sftp.delete(remoteIndexPath);
+  })
+  .then(() => {
     console.log("Upload completed");
     return sftp.end();
   })

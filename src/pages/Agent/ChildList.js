@@ -28,6 +28,7 @@ import EditAuthColumns from "../../utils/EditAuthColumns";
 import { relativeFromTime } from "../../utils/getDay";
 import { useTranslation } from "react-i18next";
 import { Tag } from "antd";
+import CommonPageTitle from "../../components/layout/CommonPageTitle";
 
 const ChildList = () => {
   const { t } = useTranslation();
@@ -43,10 +44,12 @@ const ChildList = () => {
   const basicConfig = useSelector((state) => state.basicConfig);
   const { statusCode = [] } = basicConfig;
   const trigger = useSelector((state) => state.trigger);
+  const agentNameList = useSelector((state) => state.agentNameList);
 
   const [childList, setChildList] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);
   const [initialRender, setInitialRender] = useState(true);
+  const [timeOption, setTimeOption] = useState(false);
 
   useEffect(() => {
     setTableLoading(true);
@@ -57,6 +60,7 @@ const ChildList = () => {
     getChildList({
       paramsData: {
         ...searchParams,
+        create_ts: timeOption ? searchParams.create_ts : undefined,
       },
     })
       .then((data) => {
@@ -83,26 +87,32 @@ const ChildList = () => {
     },
     {
       title: i18n("col.agentLine"),
-      key: "cagent",
+      key: "cagent_belong",
       render: (row) => {
         return filterAgentLevel(row);
       },
       search: true,
-      type: "text",
+      type: "autoComplete",
+      autoCompleteProps: {
+        options: agentNameList?.map((item) => {
+          return { value: item };
+        }),
+      },
       ex: "agent01",
     },
     {
       title: i18n("col.subAccount"),
       dataIndex: "cagent",
-      key: "cagent",
+      key: "search_cagent",
       search: true,
       type: "text",
       ex: "child01",
+      searchOrder: 1,
     },
     {
       title: i18n("col.level"),
       dataIndex: "level",
-      key: "level",
+      key: "search_level",
       search: true,
       type: "number",
       ex: "1",
@@ -152,18 +162,16 @@ const ChildList = () => {
     },
     {
       title: i18n("col.createDate"),
-      dataIndex: "createDate",
-      key: "createDate",
-      search: true,
+      dataIndex: "create_time",
+      key: "create_ts",
+      search: false,
       type: "date",
     },
     {
       title: i18n("col.lastLoginTime"),
-      dataIndex: "oauth",
-      key: "oauth",
-      render: (row) => {
-        return !row ? relativeFromTime(row) : `(${i18n("col.loginNotyet")})`;
-      },
+      dataIndex: "oauth_ts",
+      key: "oauth_ts",
+      render: (row) => relativeFromTime(row, { unix: true }),
       search: true,
       type: "date",
     },
@@ -220,20 +228,32 @@ const ChildList = () => {
   ];
 
   return (
-    <Wrapper>
-      <SearchTool columns={columns} />
-      <TableWrapper>
-        <EditAuthColumns>
-          <CreateButton type={i18n("col.subAccount")} />
-        </EditAuthColumns>
-        <CommonTable
-          tableLoading={tableLoading}
-          csvApi={getChildList}
+    <>
+      <CommonPageTitle pagePath="sublist" />
+      <Wrapper>
+        <SearchTool
+          timeOptional={{
+            enabled: true,
+            open: timeOption,
+            setOpen: setTimeOption,
+          }}
           columns={columns}
-          dataSource={childList}
+          closeTimeOptional
         />
-      </TableWrapper>
-    </Wrapper>
+        <TableWrapper>
+          {/* <EditAuthColumns>
+          <CreateButton type={i18n("col.subAccount")} />
+        </EditAuthColumns> */}
+          <CommonTable
+            tableLoading={tableLoading}
+            csvApi={getChildList}
+            columns={columns}
+            dataSource={childList}
+            closeTimeOptional
+          />
+        </TableWrapper>
+      </Wrapper>
+    </>
   );
 };
 

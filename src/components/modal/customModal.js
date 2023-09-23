@@ -6,13 +6,19 @@ import { useDispatch } from "react-redux";
 import { clearPopType } from "../../redux/action/common/action";
 import { useTranslation } from "react-i18next";
 
-const CustomModal = ({ modalProps, children, setIsModalOpen, isModalOpen }) => {
+const CustomModal = ({
+  modalProps,
+  children,
+  setIsModalOpen,
+  isModalOpen,
+  previousIndex,
+}) => {
   const { t } = useTranslation();
   const i18n = (key) => t(`commonModal.${key}`);
 
   const { title, width } = modalProps || {};
 
-  const previousPath = usePreviousPagePath();
+  const previousPath = usePreviousPagePath(previousIndex);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -24,7 +30,7 @@ const CustomModal = ({ modalProps, children, setIsModalOpen, isModalOpen }) => {
       setIsModalOpen(false);
     } else {
       dispatch(clearPopType());
-      navigate(previousPath);
+      navigate(-1);
     }
   };
 
@@ -33,7 +39,7 @@ const CustomModal = ({ modalProps, children, setIsModalOpen, isModalOpen }) => {
       setIsModalOpen(false);
     } else {
       dispatch(clearPopType());
-      navigate(previousPath);
+      navigate(-1);
     }
   };
 

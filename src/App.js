@@ -33,6 +33,7 @@ import GameHistory from "./pages/Reports/GameHistory";
 import ReportDetail from "./pages/Reports/modal/reportDetail";
 import Home from "./pages/Home/Home";
 import NotFoundPage from "./components/permissionComponents/notFoundPage";
+import AuthPage from "./utils/AuthPage";
 
 function App() {
   const [api, contextHolder] = notification.useNotification();
@@ -42,6 +43,10 @@ function App() {
   const agentMenu = useSelector((state) =>
     filterMenuKeys(state.agentInfo.menu_permission)
   );
+  const editableMenu = useSelector((state) =>
+    filterMenuKeys(state.agentInfo.menu_editable)
+  );
+
   const gamePlatform = useSelector(
     (state) => state.gameList.gamePlatform || fakeGameArray
   );
@@ -49,9 +54,11 @@ function App() {
     (state) => state.basicConfig?.menu || fakeMenu
   );
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     BasicApi(dispatch)();
-    InitializeApi(dispatch)();
+    InitializeApi(dispatch, navigate)();
   }, []);
 
   const router = routesProps.route.routes;
@@ -64,9 +71,13 @@ function App() {
         newRoute.routes = newRoute.routes.filter((route) =>
           systemArray.includes(route.path)
         );
-        newRoute.routes = newRoute.routes.filter((route) =>
-          agentMenu.includes(route.path)
-        );
+        newRoute.routes = newRoute.routes.filter((route) => {
+          if (editableMenu.includes(route.path)) {
+            return route;
+          } else if (agentMenu.includes(route.path)) {
+            return route;
+          }
+        });
 
         if (newRoute.routes.length === 0) {
           return filtered;
@@ -145,27 +156,40 @@ function App() {
   useEffect(() => {
     dayjs.locale(i18n.language === "zh_cn" ? "zh-cn" : i18n.language);
   }, [i18n.language]);
-  console.log(filteredRoutes);
 
   return (
     <ConfigProvider locale={antdLocalePackage[i18n.language]}>
       <main>
         {contextHolder}
-        <HashRouter>
-          <Routes>
-            <Route path="/signin" element={<Signin />} />
+        <Routes>
+          <Route path="/signin" element={<Signin />} />
+          <Route
+            path="/"
+            element={
+              <Permission>
+                <CommonLayout />
+              </Permission>
+            }
+          >
+            <Route
+              path="*"
+              element={
+                <AuthPage>
+                  <Home />
+                </AuthPage>
+              }
+            />
             <Route
               path="/"
               element={
-                <Permission>
-                  <CommonLayout />
-                </Permission>
+                <AuthPage>
+                  <Home />
+                </AuthPage>
               }
-            >
-              {generateRoutes(filteredRoutes.route.routes)}
-            </Route>
-          </Routes>
-        </HashRouter>
+            />
+            {generateRoutes(filteredRoutes.route.routes)}
+          </Route>
+        </Routes>
       </main>
     </ConfigProvider>
   );

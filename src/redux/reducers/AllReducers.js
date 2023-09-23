@@ -17,6 +17,7 @@ import ReportDetailPopReducers from "./game/openReportDetail";
 import NowTimeReducers from "./common/nowTime";
 import CurrencyReducers from "./common/currency";
 import AgentNameListReducers from "./agent/agentNameList";
+import HasSearchedReducers from "./form/hasSearchedReducers";
 
 const AllReducers = combineReducers({
   formReducers: StoreFormReducers,
@@ -37,6 +38,7 @@ const AllReducers = combineReducers({
   nowTime: NowTimeReducers,
   CURRENCY: CurrencyReducers,
   agentNameList: AgentNameListReducers,
+  hasSearched: HasSearchedReducers,
 });
 
 export default AllReducers;

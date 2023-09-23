@@ -13,17 +13,24 @@ import NoticeTitle from "../../../../components/hint/noticeTitle";
 import OptionalInfo from "../step/OptionalInfo";
 import { useSelector } from "react-redux";
 import { filterMenuKeys } from "../../../../helpers/aboutAuth/filterMenuKeys";
+import { isEmptyObject } from "../../../../utils/isEmptyObject";
 
 const CreateAgentForm = ({ form }) => {
   const agentDetail = useSelector((state) => state.commonDetail);
 
   useEffect(() => {
-    if (agentDetail) {
+    if (!isEmptyObject(agentDetail)) {
       form.setFieldsValue({
         ...agentDetail,
         game_permission: filterMenuKeys(agentDetail.game_permission),
         menu_permission: filterMenuKeys(agentDetail.menu_permission),
         menu_editable: filterMenuKeys(agentDetail.menu_editable),
+      });
+      console.log("!!");
+    } else {
+      console.log("!@###");
+      form.setFieldsValue({
+        status: 1,
       });
     }
   }, [agentDetail]);
@@ -34,7 +41,7 @@ const CreateAgentForm = ({ form }) => {
       <BasicInformation form={form} />
       <MenuAuth form={form} />
       <GameAuth form={form} />
-      <GameCommission form={form} />
+      <GameCommission prefix="per" form={form} />
       <NoticeTitle optional />
       <OptionalInfo />
     </>

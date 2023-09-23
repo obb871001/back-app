@@ -1,14 +1,37 @@
 {
   "page": {
+    "sign_in": {
+      "loginSuccess": "Login Successful",
+      "welcome": "Welcome Back",
+      "pleaseConfirmAccountPassword": "Please confirm your account password",
+      "backendCms": "Backend Management",
+      "loginName": "Login Name",
+      "pleaseInputLoginName": "Please enter login name",
+      "password": "Password",
+      "pleaseInputPassword": "Please enter password"
+    },
+    "loginname": {
+      "passwordNotSame": "Passwords entered are not the same",
+      "successSetLoginName": "Login name successfully set, please log in again using the new login name",
+      "setLoginname": "Set login name",
+      "unsetLoginName": "Login name not set, please log in again",
+      "loginnameHint": "This login name will be used for future logins",
+      "pleaseEnterLoginname": "Please enter login name",
+      "passwordHint": "This password will be used for future logins",
+      "setPassword": "Set password",
+      "pleaseEnterPassword": "Please enter password",
+      "enterPasswordAgain": "Please enter password again"
+    },
     "home": {
       "title": "Information Dashboard",
+      "total_deposit_amounts": "Total Deposit Amount",
       "recentOperation": "Recent Operational Status",
       "showNumber": "Display Number",
       "validTurnover": "Valid Betting",
       "totalWinLoss": "Total Win/Loss",
       "validTurnoverOrderNumber": "Valid Betting Orders",
       "activePlayer": "Active Player",
-      "amount": "Amount (Ten Thousand)",
+      "amount": "Amount (Dollar)",
       "people": "Number of People",
       "validTurnoverOrderNumberUnit": "Order Count (Orders)",
       "everyMinuteUpdate": "Update Every Minute",
@@ -21,7 +44,7 @@
       "newPlayer": "New Players",
       "activePlayerNumber": "Active Players",
       "turnoverInformation": "Betting Information",
-      "turnover": "Betting Amount (Ten Thousand)",
+      "turnover": "Betting Amount (Dollar)",
       "winLoss": "Profit and Loss",
       "depositInformation": "Deposit Information",
       "total": "Total",
@@ -40,14 +63,18 @@
       "playerWalletLog": {
         "col": {
           "member": "Member",
-          "backend": "Backend"
+          "backend": "Backend",
+          "-": "-"
         }
       },
       "playersearch": {
         "create": "New Player",
+        "backToPlayerList": "Back to Player List",
+        "onlinePlayerListonTime": "Real-time Online Player List",
         "modal": {
           "title": "Create Player",
           "passwordHint": "Default login password is",
+          "notice": "Notes/Cautions",
           "playerAccount": "Player Account",
           "playerAgent": "Agent",
           "truename": "Real Name",
@@ -65,9 +92,10 @@
           "number": "Number",
           "agent": "Agent Line",
           "playerId": "Player ID",
-          "accountBalance": "Account Balance",
+          "accountBalance": "Player Account Balance",
           "truename": "Real Name",
           "registerDate": "Registration Date",
+          "oauthTime": "Last Login Time",
           "country": "Country",
           "action": "Action",
           "mobile": "Mobile",
@@ -95,7 +123,17 @@
           "cagentMemoEx": "Example: Abnormal player betting, backend deducted 100",
           "playerMemo": "Player Memo",
           "playerMemoHint": "This field allows players to see the remarks regarding balance changes (for players)",
-          "playerMemoEx": "Example: Due to operational anomaly, backend will retrieve 100"
+          "playerMemoEx": "Example: Due to operational anomaly, backend will retrieve 100",
+          "yourBalance": "Your Balance",
+          "submit": "Submit",
+          "confirmTitle": "Confirm Correctness",
+          "confirmOkText": "Send",
+          "confirmCancelText": "Cancel",
+          "target": "Target",
+          "targetBalance": "Target Balance",
+          "afterBalance": "Balance After Operation",
+          "amounts": "Amount",
+          "balanceNotEnough": "Your balance is insufficient, please confirm with your superior"
         }
       },
       "memberlog": {
@@ -108,7 +146,7 @@
           "device": "Device",
           "domain": "Domain",
           "ip": "IP",
-          "createTime": "Creation Time"
+          "createTime": "Login Time"
         }
       },
       "memberwalletlog": {
@@ -128,7 +166,11 @@
           "afterTransactionBalance": "Balance After Transaction",
           "amounts": "Amounts",
           "member": "Member",
-          "backend": "Backend"
+          "backend": "Backend",
+          "cagent": "Agent",
+          "agentUid": "Agent UID",
+          "executeAgent": "Operating Agent",
+          "agentMemo": "Agent Memo"
         }
       }
     },
@@ -139,6 +181,15 @@
           "resetPassword": "Reset Password"
         },
         "modal": {
+          "game_per": " Percentage",
+          "game_backwater": "Game Betting Rebate Percentage",
+          "profileInformation": "Profile Information",
+          "basicInformation": "Basic Information",
+          "editableColumns": "Editable Columns",
+          "confirm": "Edit",
+          "action": "Action",
+          "aboutPermission": "About Permissions",
+          "accountStatusHint": "Please select account status",
           "create": "Create Agent",
           "agentLine": "Parent Agent",
           "agent": "Agent",
@@ -179,17 +230,41 @@
           "createAgent": "Create Agent",
           "createChild": "Create Sub-account",
           "creditPop": {
+            "quotaResetHint": "After adjusting the quota, the agent's quota will be reset to the adjusted quota every Monday at noon.",
+            "agentLevel": "Agent Level",
+            "creditQuotaHint": "After adjusting the quota, the agent's quota will be reset to the adjusted quota every Monday at noon.",
+            "adjustQuota": "Adjust Credit Limit",
             "credit": "Credit",
             "title": "Adjust {{credit}} Balance",
             "myCredit": "My {{credit}} Balance",
             "agent": "Agent",
             "agentCreditNow": "Current {{credit}} Balance of Agent",
-            "quota": "Adjustment Amount",
-            "agentCreditAfter": "Agent's {{credit}} Balance After Adjustment",
-            "yourCreditAfter": "Your {{credit}} Balance After Adjustment",
+            "agentCredit": "Current {{credit}} Limit of Agent",
+            "quota": "Adjust Balance",
+            "creditQuota": "Adjust Credit Limit",
+            "agentCreditAfter": "Agent's Balance after Adjustment {{credit}}",
+            "yourCreditAfter": "Your Balance after Adjustment {{credit}}",
             "submit": "Submit",
-            "limitHint": "Minimum adjustment amount is 100",
-            "quotaNotEnough": "Insufficient own quota, adjustment cannot be made"
+            "limitHint": "Minimum adjustment limit is 100",
+            "quotaNotEnough": "Not enough quota for adjustment",
+            "memo": "Memo",
+            "memoEx": "Example: Agent agent001, deposit amount",
+            "playerEx": "Example: Player player001, deposit amount",
+            "action": "Action",
+            "deposit": "Deposit",
+            "withdraw": "Withdrawal",
+            "maxHint": "Maximum withdrawal limit is {{max}}",
+            "depositSuccess": "Deposit Successful",
+            "withdrawSuccess": "Withdrawal Successful",
+            "player": "Player",
+            "cagentMemo": "Agent's Memo",
+            "playerMemo": "Player's Memo",
+            "playerCreditNow": "Player's Current {{credit}} Balance",
+            "playerCredit": "Player's Current {{credit}} Limit",
+            "playerCreditAfter": "Player's Balance after Adjustment {{credit}}",
+            "playerCredit": "Player's Limit after Adjustment {{credit}}",
+            "depositWashpoints": "Deposit Washpoints",
+            "targetQuotaNotEnough": "Target quota insufficient for adjustment"
           }
         },
         "col": {
@@ -244,13 +319,24 @@
           "email": "Email",
           "ip": "IP",
           "actionType": "Action Type",
-          "memo": "Remarks"
+          "memo": "Remarks",
+          "showMore": "Show More",
+          "transactionDetail": "Transaction Detail",
+          "actionAgent": "Operating Agent",
+          "agentTarget": "Target",
+          "orderNumber": "Order Number",
+          "from": "From",
+          "to": "To",
+          "beforeBalance": "Balance Before Transaction",
+          "afterBalance": "Balance After Transaction",
+          "amounts": "Amount"
         }
       }
     },
     "reports": {
       "playerreport": {
         "treeText": "Agent Level",
+        "total": "Grand Total",
         "tabs": {
           "agentDetailData": "Agent Detailed Data",
           "playerDetailData": "Player Detailed Data"
@@ -262,14 +348,24 @@
           "nickname": "Nickname",
           "statisticalData": "Statistical Data",
           "detailData": "Detailed Data",
-          "backTop": "Return to Previous Level",
+          "backTop": "Back to Top",
           "statisticalType": "Statistical Type",
           "onlinePlayer": "Online Players",
-          "orderNumber": "Order Quantity",
+          "orderNumber": "Orders Count",
           "turnover": "Bet Amount",
           "validTurnover": "Valid Bet",
-          "winloss": "Profit/Loss",
-          "platform": "Platform"
+          "winloss": "Total Profit/Loss",
+          "winlossCommission": "Profit/Loss Percentage",
+          "settledAmount": "Total Settled Amount",
+          "backWater": "Rebate",
+          "platform": "Platform",
+          "memberWinloss": "Player's Profit/Loss",
+          "trueName": "Real Name",
+          "companyCommission": "Company Commission",
+          "companyOccupy": "Company Commission Percentage",
+          "selfCommission": "Self Commission",
+          "selfOccupy": "Self Commission Percentage",
+          "updateHint": "The financial report will be automatically updated by the system every five minutes. Please wait patiently."
         }
       },
       "winlossReports": {
@@ -283,6 +379,23 @@
         }
       },
       "gamehistory": {
+        "platform": {
+          "paigow": {
+            "rake": "Rake",
+            "gameRoundId": "Game Round ID",
+            "bankerFee": "Banker Fee",
+            "bankerPay": "Banker's Contribution",
+            "bankerWinCount": "Banker Win Count",
+            "playerBetCount": "Valid Bet Count",
+            "gameStatus": "Game Status",
+            "statusCode": {
+              "0": "Normal Gameplay",
+              "1": "Refunded",
+              "2": "Adjusted Compensation",
+              "error": "Error"
+            }
+          }
+        },
         "hint": {
           "pleaseOpenGameDetail": "Please expand the game details first",
           "transactionDetail": "Transaction detail record",
@@ -297,6 +410,7 @@
           "transactionTime": "Transaction Time",
           "orderNumber": "Bet Slip Number",
           "roundId": "Round ID",
+          "playerInGameId": "Player ID in Game",
           "validTurnover": "Valid Bet",
           "betAmounts": "Bet Amounts",
           "payout": "Payout",
@@ -317,10 +431,42 @@
           "player": "Player"
         }
       }
+    },
+    "systemsetting": {
+      "platformsetting": {
+        "switchSure": "Are you sure you want to {{type}} {{label}}?",
+        "switchAlready": "{{label}} has been {{type}}",
+        "sureNotError": "Confirmed correct",
+        "textSure": "Are you sure you want to modify {{label}}?",
+        "textFrom": "Change {{oldValue}} to {{newValue}}",
+        "textAlready": "{{label}} has been changed to {{newValue}}",
+        "col": {
+          "platformSystemInformation": "Platform System Information",
+          "platformName": "Platform Name",
+          "platformType": "Platform Type",
+          "walletType": "Wallet Type",
+          "memberRegister": "Member Registration",
+          "registerStatus": "Registration Status",
+          "smsValidate": "SMS Validation",
+          "smsValidateStatus": "SMS Validation Status",
+          "rouletteStatus": "Roulette Status",
+          "allowSubAccountModifyPlatformSetting": "Allow Sub-account to Modify Platform Settings",
+          "createPlayerFromBackend": "Default Password for Player Creation in Backend",
+          "appDownloadLink": "APP Download Link",
+          "webLink": "Domain Link",
+          "web": "Domain",
+          "communicationInformation": "Communication Software Information"
+        }
+      }
     }
   },
   "layout": {
     "searchTool": {
+      "exact": "Exact",
+      "partial": "Partial",
+      "starts": "Starts With",
+      "ends": "Ends With",
+      "searchSetting": "Search Settings",
       "timeRange": "Time Range",
       "today": "Today",
       "yesterday": "Yesterday",
@@ -328,44 +474,62 @@
       "lastWeek": "Last Week",
       "thisMonth": "This Month",
       "lastMonth": "Last Month",
-      "search": "Search"
+      "search": "Search",
+      "clear": "Clear",
+      "timeOptionalHint": "When turned off, the search will not apply the time range. When turned on, it will apply the time range.",
+      "prioritySearch": "Priority Search",
+      "priorityHint": "Priority Search will search according to the order of priority",
+      "searchCondition": "Search Conditions",
+      "collapse": "Collapse",
+      "expand": "Expand"
     },
     "header": {
       "language": "Language",
-      "currency": "Currency"
+      "currency": "Currency",
+      "balance": "Balance"
     },
     "menu": {
-      "agentlist": "Agent Inquiry",
-      "agentlog": "Agent Log",
+      "loginExpired": "Login expired, please log in again",
+      "createchild": "Create Sub-account",
+      "createplayer": "Create Player",
+      "createagent": "Create Agent",
+      "agentlist": "Agent Search",
+      "agentlog": "Agent Activity Log",
       "bankaccount": "Bank Account",
-      "cashflowstatus": "Online Payment Merchant",
-      "comission": "Commission Issuance",
+      "cashflowstatus": "Online Payment Merchants",
+      "comission": "Commission Dispatch",
       "depositlist": "Deposit Payment Dashboard",
       "eventlist": "Event List",
-      "fundinout": "Fund In/Out",
+      "fundinout": "Funds In/Out",
       "gamehistory": "Game History",
       "gamepermissions": "Game Permissions",
-      "gift": "Gift",
+      "gift": "Gift Pack",
       "home": "Home",
       "inbox": "Inbox",
       "marquee": "Marquee",
       "memberlevelsettings": "Member Level Settings",
-      "memberlog": "Member Log",
+      "memberlog": "Member Login Log",
       "memberwalletlog": "Member Wallet Log",
       "menupermissions": "Menu Permissions",
       "platformsetting": "Platform Settings",
-      "playerreport": "Statistical Report",
-      "playersearch": "Player Inquiry",
+      "playerreport": "Agent Statistics Report",
+      "playersearch": "Player Search",
       "promotion": "Promotion",
       "refercode": "Referral Code",
-      "sublist": "Sub-account Inquiry",
-      "winlossreport": "Win/Loss Report",
+      "sublist": "Sub-account Search",
+      "winlossreport": "Platform Profit and Loss Report",
       "withdrawlist": "Withdrawal Application Review",
-      "admin": "Member Management",
+      "admin": "Members & Agents",
       "agentinfomation": "Agent Management",
-      "cashflowinfomation": "Online Payment Merchant",
+      "cashflowinfomation": "Online Payment Merchants",
       "reports": "Reports",
-      "systemsetting": "System Settings"
+      "systemsetting": "System Settings",
+      "balance": "Balance",
+      "profile": "Profile",
+      "resetPassword": "Reset Password",
+      "logout": "Log Out",
+      "accountStatus": "Status",
+      "PAIGOW": "PAIGOW"
     }
   },
   "action_code": {
@@ -387,7 +551,18 @@
     "16": "Freeze Agent",
     "17": "Close Agent",
     "18": "Freeze Player",
-    "19": "Close Player"
+    "19": "Close Player",
+    "20": "Transfer into agent balance",
+    "21": "Transferred into agent balance",
+    "22": "Transfer out of agent balance",
+    "23": "Received transfer into agent balance",
+    "24": "Create Agent",
+    "25": "Modify Platform Basic Settings",
+    "26": "System Clears Credit Limit Weekly",
+    "27": "Retrieve Credit via LINE",
+    "28": "Deposit Credit via LINE",
+    "29": "Retrieve Credit via Web",
+    "30": "Deposit Credit via Web"
   },
   "expressHint": {
     "birthdayHint": "Please enter the correct date of birth format",
@@ -395,7 +570,8 @@
     "accountHint": "Must start with an English letter, subsequent characters can be English letters, numbers, or underscores",
     "nicknameHint": "Set a recognizable name",
     "passwordHint": "Cannot contain special symbols, e.g., @#$%^&*(",
-    "openHint": "When enabled, the agent can log into the backend"
+    "openHint": "When enabled, the agent can log into the backend",
+    "accountStatusHint": "Please select account status"
   },
   "commonModal": {
     "cancelText": "Cancel",
@@ -404,7 +580,14 @@
     "close": "Close",
     "create": "Create",
     "submitSuccess": "Submit Successfully",
-    "submitFail": "Submit Failed"
+    "submitFail": "Submit Failed",
+    "submit": "Submit",
+    "reset": "Reset",
+    "cancel": "Cancel",
+    "action": "Action",
+    "backToPlayerList": "Back to Player List",
+    "backToAgentList": "Back to Agent List",
+    "backToSubList": "Back to Sub-account List"
   },
   "actionCol": {
     "view": "View",
@@ -412,7 +595,8 @@
     "detail": "Detail"
   },
   "unit": {
-    "level": "Level"
+    "level": "Level",
+    "people": "People"
   },
   "commonTable": {
     "export": "Export",
@@ -422,11 +606,19 @@
     "search": "Search",
     "download": "Download",
     "pleaseSearchData": "Please search data first",
-    "totalData": "Total {{total}} records"
+    "totalData": "Total {{total}} records",
+    "searchResult": "Search Results",
+    "pleaseInputSearchCondition": "Please enter search conditions",
+    "notData": "No Data"
   },
   "ex": {
-    "export_points": "Transfer Points",
-    "ex": "Ex."
+    "export_points": "Export Points",
+    "ex": "Example:",
+    "clear": "-",
+    "pleaseInput": "Please Input",
+    "allowEmpty": "Can be Empty",
+    "timeStart": "Starts at 00:00:00",
+    "timeEnd": "Ends at 23:59:59"
   },
   "switch": {
     "open": "Open",
@@ -435,8 +627,8 @@
   "permission": {
     "commission": {
       "title": "Commission Settings",
-      "commissionHint": "Please enter commission percentage, e.g., 50%",
-      "limit": "Minimum is 0, Maximum is 100"
+      "commissionHint": "Please enter commission percentage, Minimum is 0, Maximum is {{max}}%",
+      "limit": "Minimum is 0, Maximum is {{max}}%"
     },
     "menu": {
       "view": "View",
@@ -457,10 +649,20 @@
     "3": "Advanced Closed",
     "1hint": "",
     "2hint": "(Once frozen, players cannot play but can still check their accounts)",
-    "0hint": "(Affected by batch activation)",
-    "3hint": "(Not affected by batch activation)"
+    "0hint": "(Affected by batch activation. If player01 is closed, they can't play or check account. If a higher-level activates batch for the agent, player01 is affected)",
+    "3hint": "(Not affected by upper-level activation. If player01 is advanced-closed, they can't play or check account. Even if the higher-level activates the agent, player01 isn't affected)"
   },
   "common": {
     "loading": "Loading..."
+  },
+  "cagent_level": {
+    "0": "Main Station",
+    "1": "Major Shareholder",
+    "2": "Shareholder",
+    "3": "General Agent",
+    "4": "Agent",
+    "5": "E-class Agent",
+    "6": "F-class Agent",
+    "child": "Sub-account"
   }
 }

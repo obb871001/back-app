@@ -8,6 +8,9 @@ export const filterRoutes = (routes) => {
         icon: route.icon,
         main: route.main,
         path: route.path,
+        hidden_permission: route.hidden_permission,
+        hidden_editable: route.hidden_editable,
+        level_limit: route.level_limit || 100,
       });
       filteredRoutes = filteredRoutes.concat(filterRoutes(route.routes));
     } else {
@@ -15,6 +18,9 @@ export const filterRoutes = (routes) => {
         filteredRoutes.push({
           name: route.name,
           path: route.path.replace("/", ""),
+          hidden_permission: route.hidden_permission,
+          hidden_editable: route.hidden_editable,
+          level_limit: route.level_limit || 100,
         });
       }
     }

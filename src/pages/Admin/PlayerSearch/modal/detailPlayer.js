@@ -16,8 +16,6 @@ const DetailPlayer = ({ setIsModalOpen, isModalOpen }) => {
   const { t } = useTranslation();
   const i18n = (key) => t(`page.admin.playersearch.${key}`);
 
-  const [searchParams, setSearchParams] = UseMergeableSearchParams();
-  const { tabKey = "1" } = searchParams;
   const { uid } = useParams();
 
   const dispatch = useDispatch();
@@ -25,18 +23,20 @@ const DetailPlayer = ({ setIsModalOpen, isModalOpen }) => {
 
   const navigate = useNavigate();
 
+  const [tab, setTab] = useState("1");
+
   useEffect(() => {
-    if (uid || searchParams.commonUid) {
+    if (uid) {
       getMemberList({
-        paramsData: { uid: uid || searchParams.commonUid },
+        paramsData: { uid: uid },
       }).then((res) => {
         dispatch(storeDetail(res.data.list[0]));
       });
     }
-  }, [trigger]);
+  }, [trigger, uid]);
 
   const handleTabChange = (key) => {
-    setSearchParams({ tabKey: key });
+    setTab(`${key}`);
   };
 
   const tabs = [
@@ -50,17 +50,20 @@ const DetailPlayer = ({ setIsModalOpen, isModalOpen }) => {
       label: i18n("tabs.resetPassword"),
       children: <PlayerPassword />,
     },
-    {
-      key: "3",
-      label: i18n("tabs.betLimitSettings"),
-      children: <PlayerBetLimit />,
-    },
+    // {
+    //   key: "3",
+    //   label: i18n("tabs.betLimitSettings"),
+    //   children: <PlayerBetLimit />,
+    // },
   ];
   return (
-    <CustomModal modalProps={{ title: i18n("tabs.playerDetail") }}>
+    <CustomModal
+      previousIndex={2}
+      modalProps={{ title: i18n("tabs.playerDetail") }}
+    >
       <Tabs
-        defaultActiveKey={tabKey}
-        activeKey={tabKey}
+        defaultActiveKey={tab}
+        activeKey={tab}
         onChange={handleTabChange}
         items={tabs}
       />

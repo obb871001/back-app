@@ -9,3 +9,13 @@ export const clearForm = () => {
     type: "clearForm",
   };
 };
+export const hasSearched = () => {
+  return {
+    type: "hasSearched",
+  };
+};
+export const initHasSearched = () => {
+  return {
+    type: "initHasSearched",
+  };
+};

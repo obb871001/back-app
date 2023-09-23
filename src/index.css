@@ -52,3 +52,18 @@ code {
 .custom-expand-table .ant-pro-card-body {
   padding-inline: 0px !important;
 }
+.ant-drawer-inline {
+  position: fixed !important;
+}
+.text-overflow {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ant-pro-page-container-children-container {
+  padding-inline: 0px !important;
+  padding-block: 0px !important;
+}
+.ant-menu-light.ant-menu-submenu > .ant-menu {
+  background-color: #fff !important;
+}

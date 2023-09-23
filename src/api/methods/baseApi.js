@@ -9,14 +9,14 @@ const createApi = (baseUrl) => {
     }/api/admin/${baseUrl}`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: sessionStorage.getItem("token"),
+      Authorization: Cookies.get("token"),
       Currency: Cookies.get("currency") || "TWD",
       webname: APP_NAME,
       isCredit: window.getbaseconfig?.is_credit || 0,
     },
   });
   api.interceptors.request.use((config) => {
-    config.headers.Authorization = `Bearer ${sessionStorage.getItem("token")}`;
+    config.headers.Authorization = `Bearer ${Cookies.get("token")}`;
     return config;
   });
 
@@ -34,6 +34,8 @@ export const api = createApi("");
 export const memberApi = createApi("member");
 export const agentApi = createApi("cagent");
 export const reportApi = createApi("report");
+export const systemApi = createApi("system");
+export const cagentTagApi = createApi("cagentTagsMenu");
 // export const api = axios.create({
 //   baseURL: `../api/admin/`,
 //   headers: {

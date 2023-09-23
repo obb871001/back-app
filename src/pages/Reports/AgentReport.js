@@ -8,7 +8,7 @@ import {
   getAgentReport,
   getPlayerFromAgentReport,
 } from "../../api/methods/getApi";
-import { Divider, Space, Tabs, message } from "antd";
+import { Alert, Divider, Space, Tabs, message } from "antd";
 import { ProTable } from "@ant-design/pro-components";
 import Wrapper from "../../components/layout/Wrapper";
 import TableWrapper from "../../components/layout/TableWrapper";
@@ -23,11 +23,16 @@ import { allowClick } from "../../assets/style/styleConfig";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { storeTotalRecords } from "../../redux/action/common/action";
+import AgentTree from "../Agent/components/agentTree";
+import PriorityTip from "../../components/searchTool/priorityTip";
+import QuestionHint from "../../components/hint/QuestionHint";
+import CommonPageTitle from "../../components/layout/CommonPageTitle";
 
 const AgentReport = () => {
   const { t } = useTranslation();
   const i18n = (key) => t(`page.reports.playerreport.${key}`);
   const i18n_common = (key) => t(`common.${key}`);
+  const i18n_cagent_level = (key) => t(`cagent_level.${key}`);
 
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
   const { create_ts, agentUid } = searchParams;
@@ -44,6 +49,10 @@ const AgentReport = () => {
     agent: {},
     player: {},
   });
+  const [totalStatistics, setTotalStatistics] = useState({
+    agent: {},
+    player: {},
+  });
 
   useEffect(() => {
     if (apiCalling) {
@@ -53,41 +62,32 @@ const AgentReport = () => {
       paramsData: {
         create_ts,
         ...searchParams,
-        uid: agentUid,
+        ...(agentUid && { tree_uid: agentUid }),
       },
     })
       .then((res) => {
-        setAgentList(res.list[1]);
-        setAgentTotal(res.list[0]);
+        setAgentList(res.cagent.list[1]);
+        setAgentTotal(res.cagent.list[0]);
         setAgentTree(res.tree);
-      })
-      .catch((err) => {
-        const data = err.response.data;
-      })
-      .finally(() => {});
 
-    getPlayerFromAgentReport({
-      paramsData: {
-        create_ts,
-        uid: agentUid,
-      },
-    })
-      .then((res) => {
-        setDirectPlayer(res.data.list);
+        setDirectPlayer(res.direct.list);
         setCustomPagination({
           ...customPagination,
-          player: res.data.pagination,
+          player: res.direct.pagination,
         });
-        // dispatch(storeTotalRecords(res.data.pagination));
+        setTotalStatistics({
+          agent: res.cagent.total,
+          player: res.direct.total,
+        });
       })
       .catch((err) => {
-        const data = err.response.data;
+        console.log(err);
       })
       .finally(() => {
         message.destroy();
         setApiCalling(false);
       });
-  }, [trigger, agentUid]);
+  }, [trigger, agentUid, create_ts]);
 
   const tabs = [
     {
@@ -99,19 +99,21 @@ const AgentReport = () => {
           apiCalling={apiCalling}
           agentList={agentList}
           agentTotal={agentTotal}
+          totalStatistics={totalStatistics}
         />
       ),
     },
-    // {
-    //   label: i18n("tabs.playerDetailData"),
-    //   key: "2",
-    //   children: (
-    //     <PlayerTable
-    //       customPagination={customPagination}
-    //       directPlayer={directPlayer}
-    //     />
-    //   ),
-    // },
+    {
+      label: i18n("tabs.playerDetailData"),
+      key: "2",
+      children: (
+        <PlayerTable
+          customPagination={customPagination}
+          directPlayer={directPlayer}
+          totalStatistics={totalStatistics}
+        />
+      ),
+    },
   ];
 
   const searchDate = useMemo(() => {
@@ -124,78 +126,70 @@ const AgentReport = () => {
   }, [create_ts]);
 
   return (
-    <Wrapper>
-      <SearchTool
-        columns={[
-          {
-            title: i18n("col.agent"),
-            dataIndex: "cagent",
-            key: "cagent",
-            search: true,
-            ex: "agent01",
-          },
-          {
-            title: i18n("col.nickname"),
-            dataIndex: "nick_name",
-            key: "nick_name",
-            search: true,
-            ex: "派對",
-          },
-          {
-            title: i18n("col.playerId"),
-            dataIndex: "memId",
-            key: "memId",
-            search: true,
-            ex: "player01",
-          },
-        ]}
-      />
-      <TableWrapper>
-        <Space direction="vertical">
-          <Space>
-            <Typography.Title level={3}>{i18n("col.agent")}</Typography.Title>
-            <Typography.Title className="!text-blue-500" underline level={4}>
-              {agentTotal?.cagent || "-"}
-            </Typography.Title>
-            <Typography.Title level={5} type="secondary">
-              <Space>({searchDate})</Space>
-            </Typography.Title>
-          </Space>
-          <Space>
-            <Typography.Text>{i18n("treeText")}：</Typography.Text>
-            {agentTree.length > 0 &&
-              agentTree.map((agent, index) => {
-                return (
-                  <>
-                    <Typography.Text
-                      onClick={() => {
-                        setSearchParams({ agentUid: agent.uid });
-                      }}
-                      className="!text-blue-500 cursor-pointer"
-                      underline
-                    >
-                      {agent.cagent}
-                    </Typography.Text>
-                    <Typography.Text>
-                      {agentTree.length === index + 1 || " > "}
-                    </Typography.Text>
-                  </>
-                );
-              })}
-          </Space>
-        </Space>
-        <Divider />
-        <StatisticWrapper
-          textClassName="!text-blue-900"
-          wrapperClassName="!pt-0"
-          title={
+    <>
+      <CommonPageTitle pagePath="playerreport" />
+
+      <Wrapper>
+        <SearchTool
+          columns={[
+            {
+              title: i18n("col.agent"),
+              dataIndex: "cagent",
+              key: "cagent",
+              search: true,
+              ex: "agent01",
+            },
+            {
+              title: i18n("col.nickname"),
+              dataIndex: "nick_name",
+              key: "nick_name",
+              search: true,
+              ex: "派對",
+            },
+            {
+              title: i18n("col.playerId"),
+              dataIndex: "memId",
+              key: "memId",
+              search: true,
+              ex: "player01",
+            },
+          ]}
+          priorityList={[
+            i18n("treeText"),
+            i18n("col.playerId"),
+            i18n("col.agent"),
+          ]}
+        />
+
+        <TableWrapper className="m-[10px]">
+          <Space direction="vertical">
             <Space>
-              <CheckCircleOutlined />
-              {i18n("col.statisticalData")}
+              <Typography.Title className="!mt-[0px]" level={3}>
+                {i18n_cagent_level(agentTotal.level || "0")}{" "}
+                <QuestionHint
+                  iconClassName="!text-xl"
+                  title={i18n("col.updateHint")}
+                />
+              </Typography.Title>
+
+              <Typography.Title
+                className="!text-blue-500 !mt-[0px]"
+                underline
+                level={4}
+              >
+                {agentTotal?.cagent || "-"}
+              </Typography.Title>
+              <Typography.Title
+                className="!mt-[0px]"
+                level={5}
+                type="secondary"
+              >
+                <Space>({searchDate})</Space>
+              </Typography.Title>
             </Space>
-          }
-        >
-          <section className="flex justify-end">
+          </Space>
+          <section className="flex justify-between items-center">
+            <AgentTree agentTree={agentTree} />
             {agentTree.length > 1 && (
               <p
                 className={`${allowClick} underline`}
@@ -209,23 +203,40 @@ const AgentReport = () => {
               </p>
             )}
           </section>
-          <TotalTable agentTotal={agentTotal} />
-        </StatisticWrapper>
-        <Divider />
-        <StatisticWrapper
-          textClassName="!text-blue-900"
-          wrapperClassName="!pt-0"
-          title={
-            <Space>
-              <CheckCircleOutlined />
-              {i18n("col.detailData")}
-            </Space>
-          }
-        >
-          <Tabs defaultActiveKey="1" type="card" size={`small`} items={tabs} />
-        </StatisticWrapper>
-      </TableWrapper>
-    </Wrapper>
+          <Divider />
+          <StatisticWrapper
+            textClassName="!text-blue-900"
+            wrapperClassName="md:p-[30px] p-[5px]"
+            title={
+              <Space>
+                <CheckCircleOutlined />
+                {i18n("col.statisticalData")}
+              </Space>
+            }
+          >
+            <TotalTable agentTotal={agentTotal} />
+          </StatisticWrapper>
+          <Divider />
+          <StatisticWrapper
+            textClassName="!text-blue-900"
+            wrapperClassName="md:p-[30px] p-[5px]"
+            title={
+              <Space>
+                <CheckCircleOutlined />
+                {i18n("col.detailData")}
+              </Space>
+            }
+          >
+            <Tabs
+              defaultActiveKey="1"
+              type="card"
+              size={`small`}
+              items={tabs}
+            />
+          </StatisticWrapper>
+        </TableWrapper>
+      </Wrapper>
+    </>
   );
 };
 

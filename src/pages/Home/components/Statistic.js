@@ -15,13 +15,35 @@ import {
 import StatisticWrapper from "./StatisticWrapper";
 import { demo_chart_data, demo_data } from "./demo";
 import { Col, Row, Space, Switch, Typography } from "antd";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import HtmlCanvasWrapper from "../../../components/html2canvas/htmlCanvasWrapper";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import dayjs from "dayjs";
+import { formatNumber } from "../../../utils/formatNumber";
 
 const Statistic = () => {
   const { t } = useTranslation();
   const i18n = (key) => t(`page.home.${key}`);
+
+  const statisticData = useSelector((state) => state.homepageReports);
+  const isCreditVersion = useSelector(
+    (state) => state.basicConfig.is_credit === 1
+  );
+
+  const chartData = useMemo(() => {
+    return statisticData?.statisticTable
+      ?.map((item) => {
+        return {
+          ...item,
+          total_turnover: Number(item.total_turnover),
+          total_winloss: Number(item.total_winloss),
+          total_turnover_order: Number(item.total_turnover_order),
+          name: dayjs.unix(item.timestamp).format("MM-DD"),
+        };
+      })
+      .reverse();
+  }, [statisticData]);
 
   const [showNumber, setShowNumber] = useState(true);
   const statisticArray = [
@@ -40,10 +62,10 @@ const Statistic = () => {
       color: "#28A745", // 绿色
     },
     {
-      title: i18n("validTurnoverOrderNumber"),
-      tip: i18n("validTurnoverOrderNumber"),
-      unit: i18n("validTurnoverOrderNumberUnit"),
-      keys: "total_turnover_order",
+      title: isCreditVersion ? i18n("newPlayer") : i18n("depositAmounts"),
+      tip: isCreditVersion ? i18n("newPlayer") : i18n("depositAmounts"),
+      unit: isCreditVersion ? i18n("people") : i18n("total_deposit_amounts"),
+      keys: isCreditVersion ? "new_player" : "total_turnover_order",
       color: "#FD7E14", // 橘色
     },
     {
@@ -72,42 +94,51 @@ const Statistic = () => {
         </section>
         <HtmlCanvasWrapper imageName={i18n("recentOperation")}>
           <Row>
-            {statisticArray.map((statistic) => {
-              return (
-                <Col xl={6} lg={12} sm={24}>
-                  <StatisticCard
-                    title={statistic.title}
-                    tip={statistic.tip}
-                    extra={<EllipsisOutlined />}
-                    chart={
-                      <BarChart width={350} height={300} data={demo_chart_data}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis>
-                          <Label
-                            value={statistic.unit}
-                            position="insideBottom"
-                            angle={-90}
-                            offset={20}
+            {statisticArray
+              .filter((item) => !item.isCredit)
+              .map((statistic) => {
+                return (
+                  <Col
+                    className="overflow-x-scroll"
+                    xl={6}
+                    lg={12}
+                    md={12}
+                    sm={24}
+                  >
+                    <StatisticCard
+                      title={statistic.title}
+                      tip={statistic.tip}
+                      headStyle={{ padding: "0 0 10px 0" }}
+                      bodyStyle={{ padding: "0 0 10px 0" }}
+                      chart={
+                        <BarChart width={330} height={250} data={chartData}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="name" />
+                          <YAxis>
+                            <Label
+                              value={statistic.unit}
+                              position="insideBottom"
+                              angle={-90}
+                              offset={10}
+                            />
+                          </YAxis>
+                          <Tooltip />
+                          <Legend />
+                          <Bar
+                            dataKey={statistic.keys}
+                            label={
+                              showNumber ? { fill: "", fontSize: 12 } : false
+                            }
+                            name={statistic.title}
+                            fill={statistic.color}
+                            barSize={20}
                           />
-                        </YAxis>
-                        <Tooltip />
-                        <Legend />
-                        <Bar
-                          dataKey={statistic.keys}
-                          label={
-                            showNumber ? { fill: "", fontSize: 12 } : false
-                          }
-                          name={statistic.title}
-                          fill={statistic.color}
-                          barSize={15}
-                        />
-                      </BarChart>
-                    }
-                  />
-                </Col>
-              );
-            })}
+                        </BarChart>
+                      }
+                    />
+                  </Col>
+                );
+              })}
           </Row>
         </HtmlCanvasWrapper>
       </StatisticWrapper>

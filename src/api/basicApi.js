@@ -12,7 +12,7 @@ export const BasicApi = (dispatch) => async () => {
       storeBasicConfig({
         ...window.getbaseconfig,
         currency: window.getcurrency,
-        statusCode: window.statusCode || [],
+        statusCode: window.personStatusCode || [],
         actionCode: window.actionCode || [],
       })
     );

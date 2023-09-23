@@ -11,8 +11,14 @@ const EditAuthPage = ({ children }) => {
   const previousPath = usePreviousPagePath();
 
   const editableAuth = useSelector((state) => state.agentInfo.menu_editable);
+  const agentStatusCode = useSelector((state) => state.agentInfo?.status);
 
   useEffect(() => {
+    if (agentStatusCode === 2) {
+      message.error("無編輯權限");
+      navigate(previousPath);
+      return;
+    }
     const filterKeys = filterMenuKeys(editableAuth);
     const isEditableNow = filterKeys.some((menuItem) =>
       location.pathname.includes(menuItem)

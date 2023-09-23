@@ -16,6 +16,8 @@ import { storeDetail, trigger } from "../../../../redux/action/common/action";
 import { updateMemberBasic } from "../../../../api/methods/patchApi";
 import { APP_NAME } from "../../../../constant";
 import { useTranslation } from "react-i18next";
+import BalancePop from "./settings/balancePop";
+import { ErrorMessage } from "../../../../utils/ErrorMessage";
 
 const PlayerBasic = () => {
   const { t } = useTranslation();
@@ -72,9 +74,7 @@ const PlayerBasic = () => {
       readonly: !editPlayer,
       options: statusCode?.map((code) => {
         return {
-          label: `${i18n_statusCode(`${code}`)}${i18n_statusCode(
-            `${code}hint`
-          )}`,
+          label: `${i18n_statusCode(`${code}`)}`,
           value: code,
         };
       }),
@@ -133,9 +133,10 @@ const PlayerBasic = () => {
         }, 1000);
       })
       .catch((err) => {
-        console.log(err);
+        const errorMessage = err.response.data.message;
         notification.error({
           message: i18n_commonModal("submitFail"),
+          description: ErrorMessage({ errorMessage: errorMessage }),
         });
       })
       .finally(() => {
@@ -226,7 +227,8 @@ const PlayerBasic = () => {
       <Typography.Title level={4} italic>
         {i18n("walletInformation")}
       </Typography.Title>
-      <Balance />
+      {/* <Balance /> */}
+      <BalancePop />
     </>
   );
 };

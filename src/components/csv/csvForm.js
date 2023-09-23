@@ -6,6 +6,8 @@ import { DownloadOutlined, FileSearchOutlined } from "@ant-design/icons";
 import { CSVLink } from "react-csv";
 import { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { toTimeStamp } from "../../utils/toTimeStamp";
+import dayjs from "dayjs";
 
 const CsvForm = ({ columns, csvApi, csvParams }) => {
   const { t } = useTranslation();
@@ -30,6 +32,7 @@ const CsvForm = ({ columns, csvApi, csvParams }) => {
     .map((item) => {
       return {
         ...item,
+        key: item.dataIndex,
         label: item.title,
         name: item.key,
       };
@@ -48,21 +51,49 @@ const CsvForm = ({ columns, csvApi, csvParams }) => {
   //   }, [csvData]);
 
   const handleDownloadCsv = () => {
+    const timeRegex = /^\d{4}-\d{2}-\d{2}$/;
+
     setButtonLoading(true);
     const values = form.getFieldsValue();
+    const formatValues = Object.entries(values).reduce((acc, [key, value]) => {
+      if (Array.isArray(value)) {
+        if (value.every((item) => dayjs.isDayjs(item))) {
+          acc[key] = `${toTimeStamp(value[0])},${toTimeStamp(value[1])}`;
+        } else {
+          acc[key] = value.join(",");
+        }
+      } else {
+        if (key === "filename") {
+        } else {
+          acc[key] = value;
+        }
+      }
+      return acc;
+    }, {});
     const params = {
-      ...values,
+      ...formatValues,
       ...csvParams,
       no_limit_data: 1,
     };
     csvApi({ paramsData: params })
       .then((res) => {
-        const processedData = res.data.list.map((item) => {
+        const columnsFormat = formatColumns
+          ?.filter((item) => item.csvTurn)
+          ?.reduce((acc, cur) => {
+            acc[cur.key] = {
+              render: cur.csvRender ? cur.csvRender : cur.render,
+            };
+            return acc;
+          }, {});
+
+        const processedData = res.data.list?.map((item) => {
           return Object.fromEntries(
-            Object.entries(item).map(([key, value]) => [
-              key,
-              value === null ? "-" : value,
-            ])
+            Object.entries(item).map(([key, value]) => {
+              if (columnsFormat[key]?.render) {
+                value = columnsFormat[key]?.render(value, item);
+              }
+              return [key, value === null ? "-" : value];
+            })
           );
         });
         setCsvData(processedData);

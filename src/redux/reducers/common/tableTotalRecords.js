@@ -1,3 +1,5 @@
+import { COMMON_PAGE } from "../../../constant";
+
 const PageTotalRecordsReducers = (
   state = {
     current_page: 1,
@@ -14,7 +16,7 @@ const PageTotalRecordsReducers = (
       return {
         current_page: 1,
         last_page: 1,
-        per_page: 30,
+        per_page: COMMON_PAGE,
         total_records: 0,
       };
     default:

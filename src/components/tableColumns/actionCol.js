@@ -31,12 +31,14 @@ const ActionCol = ({ callApi, apiUid, openEdit, openDetail }) => {
     <section className="flex items-center gap-[10px]">
       {openEdit && (
         <p
-          className={`${isEditable ? allowClick : notAllowClick} underline`}
+          className={`${
+            isEditable ? allowClick : notAllowClick
+          } underline my-0`}
           onClick={() => {
             if (!isEditable) return;
             callApi();
             dispatch(setPopType("edit"));
-            navigate(`edit?commonUid=${apiUid}`);
+            navigate(`edit${location.search}`);
           }}
         >
           {i18n("edit")}
@@ -44,11 +46,11 @@ const ActionCol = ({ callApi, apiUid, openEdit, openDetail }) => {
       )}
       {openDetail && (
         <p
-          className={`${allowClick} underline`}
+          className={`${allowClick} underline my-0`}
           onClick={() => {
             callApi();
             dispatch(setPopType("detail"));
-            navigate(`detail?commonUid=${apiUid}`);
+            navigate(`detail/${apiUid}${location.search}`);
           }}
         >
           {i18n("view")}

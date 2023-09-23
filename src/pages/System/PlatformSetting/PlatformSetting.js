@@ -3,51 +3,161 @@ import StatisticWrapper from "../../Home/components/StatisticWrapper";
 import { useForm } from "antd/es/form/Form";
 import CustomForm from "../../../components/form/customForm";
 import { useEffect, useMemo } from "react";
-import { useSelector } from "react-redux";
-import { APP_NAME } from "../../../constant";
+import { useDispatch, useSelector } from "react-redux";
 import useEditStatus from "../../../utils/EditStatus";
-import { Form, Modal, Space, Switch, Typography } from "antd";
-import { allowClick } from "../../../assets/style/styleConfig";
+import { Form, Modal, Space, Switch, Typography, notification } from "antd";
+import { updatePlatformConfig } from "../../../api/methods/patchApi";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
+import CommonPageTitle from "../../../components/layout/CommonPageTitle";
+import { ErrorMessage } from "../../../utils/ErrorMessage";
 
 const PlatformSetting = () => {
+  const { t } = useTranslation();
+  const i18n = (key, props) =>
+    t(`page.systemsetting.platformsetting.${key}`, { ...props });
+  const i18n_switch = (key) => t(`switch.${key}`);
+  const i18n_commonModal = (key) => t(`commonModal.${key}`);
+
   const [form] = useForm();
 
   const basicConfig = useSelector((state) => state.basicConfig);
-  const { web_name, open_registration, member_default_passwd } = basicConfig;
-  const canEdit = useEditStatus();
+  const agentInfo = useSelector((state) => state.agentInfo);
+  const {
+    web_name,
+    open_registration,
+    default_passwd,
+    sms_verification,
+    is_credit,
+    roulettes_activity,
+    zero_child_modify_configs,
+    wallet_type,
+    allow_domain_url: parsedAllowDomainUrl,
+    app_download_url: parsedAppDownloadUrl,
+    communication_url: parsedCommunicationUrl,
+  } = basicConfig;
+  const parseSomething = (value) => {
+    try {
+      return JSON.parse(value);
+    } catch (err) {
+      return null;
+    }
+  };
+  const allow_domain_url = parseSomething(parsedAllowDomainUrl);
+  const app_download_url = parseSomething(parsedAppDownloadUrl);
+  const communication_url = parseSomething(parsedCommunicationUrl);
 
+  const canEdit = useEditStatus(); // 是否有修改權限
+  const authorizationStatus = () => {
+    if (agentInfo.type === "child") {
+      // 判斷子帳號
+      if (basicConfig.zero_child_modify_configs === 1) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return canEdit;
+    }
+  };
+  const authorization = authorizationStatus();
   const switchProps = {
-    checkedChildren: "啟用",
-    unCheckedChildren: "停用",
+    checkedChildren: i18n_switch("open"),
+    unCheckedChildren: i18n_switch("close"),
   };
 
-  useEffect(() => {
-    form.setFieldsValue({
-      base_name: APP_NAME,
-    });
-  }, []);
-
-  const handleSwitchOpenConfirm = (type, label) => {
-    type = type ? "關閉" : "啟用";
+  const handleSwitchOpenConfirm = ({ type, label, props }) => {
+    const { value, key } = props;
+    type = type ? i18n_switch("close") : i18n_switch("open");
     Modal.confirm({
-      title: `確定要${type}${label}嗎？`,
-      content: "確認無誤",
-      okText: "確定",
-      cancelText: "取消",
+      title: i18n("switchSure", { type, label }),
+      content: i18n("sureNotError"),
+      okText: i18n_commonModal("submit"),
+      cancelText: i18n_commonModal("cancel"),
       onOk: () => {
-        console.log("OK");
+        updatePlatformConfig({
+          patchData: {
+            [key]: value ? 1 : 0,
+          },
+        }).then((res) => {
+          notification.success({
+            message: i18n_commonModal("submitSuccess"),
+            description: i18n("switchAlready", { type, label }),
+          });
+          window.location.reload();
+        });
       },
     });
   };
 
-  const handleTextOpenConfirm = (label, oldValue, newValue) => {
+  const handleTextOpenConfirm = ({ label, oldValue, newValue, props }) => {
+    const { value, key } = props;
     Modal.confirm({
-      title: `確定要修改${label}嗎？`,
-      content: `將 ${oldValue} 修改為 ${newValue}`,
-      okText: "確定",
-      cancelText: "取消",
+      title: i18n("textSure", { label }),
+      content: i18n("textFrom", { oldValue, newValue }),
+      okText: i18n_commonModal("submit"),
+      cancelText: i18n_commonModal("cancel"),
       onOk: () => {
         console.log("OK");
+        updatePlatformConfig({
+          patchData: {
+            [key]: value,
+          },
+        })
+          .then((res) => {
+            notification.success({
+              message: i18n_commonModal("submitSuccess"),
+              description: i18n("textAlready", { label, newValue }),
+            });
+            window.location.reload();
+          })
+          .catch((err) => {
+            const errorMessage = err.response.data.message;
+            notification.error({
+              message: i18n_commonModal("submitFail"),
+              description: ErrorMessage(errorMessage),
+            });
+          });
+      },
+    });
+  };
+
+  const handleArrayConfirm = ({
+    label,
+    oldValue,
+    newValue,
+    props,
+    baseArray,
+  }) => {
+    const { value, key } = props;
+    Modal.confirm({
+      title: i18n("textSure", { label }),
+      content: i18n("textFrom", { oldValue, newValue }),
+      okText: i18n_commonModal("submit"),
+      cancelText: i18n_commonModal("cancel"),
+      onOk: () => {
+        console.log("OK");
+        updatePlatformConfig({
+          patchData: {
+            [key]: baseArray,
+          },
+        })
+          .then((res) => {
+            notification.success({
+              message: i18n_commonModal("submitSuccess"),
+              description: i18n("textAlready", { label, newValue }),
+            });
+            window.location.reload();
+          })
+          .catch((err) => {
+            const errorMessage = err.response.data.message;
+            notification.error({
+              message: i18n_commonModal("submitFail"),
+              description: Object.values(errorMessage).map((item) => {
+                return <Typography.Text>{item}</Typography.Text>;
+              }),
+            });
+          });
       },
     });
   };
@@ -55,93 +165,190 @@ const PlatformSetting = () => {
   const basicForm = useMemo(() => {
     return [
       {
-        label: "站台名稱",
-        name: "base_name",
+        label: i18n("col.platformName"),
+        name: "web_name",
         readonly: true,
+        value: web_name,
       },
       {
-        label: "代理/經銷端站名",
-        name: "base_name",
+        label: i18n("col.platformType"),
         readonly: true,
+        value: is_credit == 1 ? "信用版" : "現金版",
       },
       {
-        label: "會員註冊",
-        name: "",
-        more: [
-          {
-            label: "註冊狀態",
-            value: "啟用",
-            component: (
-              <Form.Item className="!mb-[10px]" label="註冊狀態">
-                <Space>
-                  {canEdit ? (
-                    <Switch
-                      {...switchProps}
-                      checked={open_registration == 1}
-                      onChange={() => {
-                        handleSwitchOpenConfirm(
-                          open_registration == 1,
-                          "會員註冊"
-                        );
-                      }}
-                    />
-                  ) : (
-                    <Typography.Text>
-                      {" "}
-                      {open_registration == 1 ? "啟用" : "關閉"}
-                    </Typography.Text>
-                  )}
-                </Space>
-              </Form.Item>
-            ),
-          },
-        ],
+        label: i18n("col.walletType"),
+        readonly: true,
+        value: wallet_type == "single" ? "單一" : "轉帳",
       },
+      // {
+      //   label: i18n("col.memberRegister"),
+      //   name: "",
+      //   more: [
+      //     {
+      //       label: i18n("col.registerStatus"),
+      //       value: i18n_switch("open"),
+      //       component: (
+      //         <Form.Item
+      //           className="!mb-[10px]"
+      //           label={i18n("col.registerStatus")}
+      //         >
+      //           <Space>
+      //             {authorization ? (
+      //               <Switch
+      //                 {...switchProps}
+      //                 checked={open_registration == 1}
+      //                 onChange={(checked) => {
+      //                   handleSwitchOpenConfirm({
+      //                     type: open_registration == 1,
+      //                     label: i18n("col.memberRegister"),
+      //                     props: {
+      //                       value: checked,
+      //                       key: "open_registration",
+      //                     },
+      //                   });
+      //                 }}
+      //               />
+      //             ) : (
+      //               <Typography.Text>
+      //                 {" "}
+      //                 {open_registration == 1
+      //                   ? i18n_switch("open")
+      //                   : i18n_switch("close")}
+      //               </Typography.Text>
+      //             )}
+      //           </Space>
+      //         </Form.Item>
+      //       ),
+      //     },
+      //     {
+      //       label: i18n("col.smsValidate"),
+      //       value: i18n_switch("open"),
+      //       component: (
+      //         <Form.Item
+      //           className="!mb-[10px]"
+      //           label={i18n("col.smsValidateStatus")}
+      //         >
+      //           <Space>
+      //             {authorization ? (
+      //               <Switch
+      //                 {...switchProps}
+      //                 checked={sms_verification == 1}
+      //                 onChange={(checked) => {
+      //                   handleSwitchOpenConfirm({
+      //                     type: sms_verification == 1,
+      //                     label: i18n("col.smsValidate"),
+      //                     props: {
+      //                       value: checked,
+      //                       key: "sms_verification",
+      //                     },
+      //                   });
+      //                 }}
+      //               />
+      //             ) : (
+      //               <Typography.Text>
+      //                 {" "}
+      //                 {sms_verification == 1
+      //                   ? i18n_switch("open")
+      //                   : i18n_switch("close")}
+      //               </Typography.Text>
+      //             )}
+      //           </Space>
+      //         </Form.Item>
+      //       ),
+      //     },
+      //   ],
+      // },
+      // {
+      //   label: i18n("col.rouletteStatus"),
+      //   name: "",
+      //   component: (
+      //     <Form.Item label={i18n("col.rouletteStatus")}>
+      //       <Space>
+      //         {authorization ? (
+      //           <Switch
+      //             {...switchProps}
+      //             checked={roulettes_activity == 1}
+      //             onChange={(checked) => {
+      //               handleSwitchOpenConfirm({
+      //                 type: roulettes_activity == 1,
+      //                 label: i18n("col.rouletteStatus"),
+      //                 props: {
+      //                   value: checked,
+      //                   key: "roulettes_activity",
+      //                 },
+      //               });
+      //             }}
+      //           />
+      //         ) : (
+      //           <Typography.Text>{i18n_switch("open")}</Typography.Text>
+      //         )}
+      //       </Space>
+      //     </Form.Item>
+      //   ),
+      // },
       {
-        label: "會員手機驗證",
+        label: i18n("col.allowSubAccountModifyPlatformSetting"),
         name: "",
         component: (
-          <Form.Item label="會員手機驗證">
+          <Form.Item label={i18n("col.allowSubAccountModifyPlatformSetting")}>
             <Space>
-              {canEdit ? (
-                <Switch {...switchProps} />
+              {authorization ? (
+                <Switch
+                  {...switchProps}
+                  checked={zero_child_modify_configs == 1}
+                  onChange={(checked) => {
+                    handleSwitchOpenConfirm({
+                      type: zero_child_modify_configs == 1,
+                      label: i18n("col.allowSubAccountModifyPlatformSetting"),
+                      props: {
+                        value: checked,
+                        key: "zero_child_modify_configs",
+                      },
+                    });
+                  }}
+                />
               ) : (
-                <Typography.Text>啟用</Typography.Text>
+                <Typography.Text>{i18n_switch("open")}</Typography.Text>
               )}
             </Space>
           </Form.Item>
         ),
       },
+
+      // {
+      //   label: "會員手機驗證",
+      //   name: "",
+      //   component: (
+      //     <Form.Item label="會員手機驗證">
+      //       <Space>
+      //         {authorization ? (
+      //           <Switch {...switchProps} />
+      //         ) : (
+      //           <Typography.Text>啟用</Typography.Text>
+      //         )}
+      //       </Space>
+      //     </Form.Item>
+      //   ),
+      // },
       {
-        label: "會員前台修改銀行卡",
+        label: i18n("col.createPlayerFromBackend"),
         name: "",
         component: (
-          <Form.Item label="會員前台修改銀行卡">
+          <Form.Item label={i18n("col.createPlayerFromBackend")}>
             <Space>
-              {canEdit ? (
-                <Switch {...switchProps} />
-              ) : (
-                <Typography.Text>啟用</Typography.Text>
-              )}
-            </Space>
-          </Form.Item>
-        ),
-      },
-      {
-        label: "後台創建新玩家預設密碼",
-        name: "",
-        component: (
-          <Form.Item label="後台創建新玩家預設密碼">
-            <Space>
-              {canEdit ? (
+              {authorization ? (
                 <Typography.Title
                   editable={{
                     onChange: (v) => {
-                      handleTextOpenConfirm(
-                        "後台創建新玩家預設密碼",
-                        member_default_passwd,
-                        v
-                      );
+                      handleTextOpenConfirm({
+                        label: i18n("col.createPlayerFromBackend"),
+                        oldValue: default_passwd,
+                        newValue: v,
+                        props: {
+                          value: v,
+                          key: "default_passwd",
+                        },
+                      });
                     },
                   }}
                   level={5}
@@ -149,230 +356,177 @@ const PlatformSetting = () => {
                     margin: 0,
                   }}
                 >
-                  {basicConfig?.member_dafault_passwd}
+                  {default_passwd}
                 </Typography.Title>
               ) : (
-                <Typography.Text>
-                  {basicConfig?.member_dafault_passwd}
-                </Typography.Text>
+                <Typography.Text>{default_passwd}</Typography.Text>
               )}
             </Space>
           </Form.Item>
         ),
       },
 
+      // {
+      //   label: i18n("col.appDownloadLink"),
+      //   name: "",
+      //   readonly: true,
+      //   more:
+      //     app_download_url &&
+      //     Object?.keys(app_download_url)?.map((app) => {
+      //       return {
+      //         label: app,
+      //         value: app_download_url[app],
+      //         component: (
+      //           <Form.Item className="!mb-[10px]" label={app}>
+      //             <Space>
+      //               {authorization ? (
+      //                 <Typography.Title
+      //                   editable={{
+      //                     onChange: (v) => {
+      //                       const oldUrl = app_download_url[app];
+      //                       if (v === oldUrl) {
+      //                         return;
+      //                       }
+      //                       app_download_url[app] = v;
+      //                       handleArrayConfirm({
+      //                         label: i18n("col.appDownloadLink"),
+      //                         oldValue: oldUrl,
+      //                         newValue: v,
+      //                         props: {
+      //                           value: app_download_url,
+      //                           key: "app_download_url",
+      //                         },
+      //                         baseArray: app_download_url,
+      //                       });
+      //                     },
+      //                   }}
+      //                   level={5}
+      //                   style={{
+      //                     margin: 0,
+      //                   }}
+      //                 >
+      //                   {app_download_url[app]}
+      //                 </Typography.Title>
+      //               ) : (
+      //                 <Typography.Text>{app_download_url[app]}</Typography.Text>
+      //               )}
+      //             </Space>
+      //           </Form.Item>
+      //         ),
+      //       };
+      //     }),
+      // },
       {
-        label: "App下載連結",
+        label: i18n("col.webLink"),
         name: "",
-        more: [
-          {
-            label: "Android",
-            value: "https://www.google.com/",
-            component: (
-              <Form.Item className="!mb-[10px]" label="Android">
-                <Space>
-                  {canEdit ? (
-                    <Typography.Title
-                      editable={{
-                        onChange: (v) => {
-                          console.log(v);
-                        },
-                      }}
-                      level={5}
-                      style={{
-                        margin: 0,
-                      }}
-                    >
-                      https://www.google.com/
-                    </Typography.Title>
-                  ) : (
-                    <Typography.Text>https://www.google.com/</Typography.Text>
-                  )}
-                </Space>
-              </Form.Item>
-            ),
-          },
-          {
-            label: "IOS",
-            value: "https://www.google.com/",
-            component: (
-              <Form.Item className="!mb-[10px]" label="IOS">
-                <Space>
-                  {canEdit ? (
-                    <Typography.Title
-                      editable
-                      level={5}
-                      style={{
-                        margin: 0,
-                      }}
-                    >
-                      https://www.google.com/
-                    </Typography.Title>
-                  ) : (
-                    <Typography.Text>https://www.google.com/</Typography.Text>
-                  )}
-                </Space>
-              </Form.Item>
-            ),
-          },
-        ],
+        more:
+          allow_domain_url &&
+          allow_domain_url.map((domain, index) => {
+            return {
+              label: `${i18n("col.web")}${index + 1}`,
+              value: domain,
+              readonly: true,
+              component: (
+                <Form.Item
+                  className="!mb-[10px]"
+                  label={`${i18n("col.web")}${index + 1}`}
+                >
+                  <Space>
+                    {authorization ? (
+                      <Typography.Title
+                        editable={{
+                          onChange: (v) => {
+                            const oldUrl = allow_domain_url[index];
+                            if (v === oldUrl) {
+                              return;
+                            }
+                            allow_domain_url[index] = v;
+                            handleArrayConfirm({
+                              label: `${i18n("col.web")}${index + 1}`,
+                              oldValue: oldUrl,
+                              newValue: v,
+                              props: {
+                                value: allow_domain_url,
+                                key: "allow_domain_url",
+                              },
+                              baseArray: allow_domain_url,
+                            });
+                          },
+                        }}
+                        level={5}
+                        style={{
+                          margin: 0,
+                        }}
+                      >
+                        {domain}
+                      </Typography.Title>
+                    ) : (
+                      <Typography.Text>{domain}</Typography.Text>
+                    )}
+                  </Space>
+                </Form.Item>
+              ),
+            };
+          }),
       },
-      {
-        label: "網域名稱",
-        name: "",
-        more: [
-          {
-            label: "網域1",
-            value: "https://www.google.com/",
-            component: (
-              <Form.Item className="!mb-[10px]" label="網域1">
-                <Space>
-                  {canEdit ? (
-                    <Typography.Title
-                      editable
-                      level={5}
-                      style={{
-                        margin: 0,
-                      }}
-                    >
-                      https://www.google.com/
-                    </Typography.Title>
-                  ) : (
-                    <Typography.Text>https://www.google.com/</Typography.Text>
-                  )}
-                </Space>
-              </Form.Item>
-            ),
-          },
-          {
-            label: "網域2",
-            value: "https://www.google.com/",
-            component: (
-              <Form.Item className="!mb-[10px]" label="網域2">
-                <Space>
-                  {canEdit ? (
-                    <Typography.Title
-                      editable
-                      level={5}
-                      style={{
-                        margin: 0,
-                      }}
-                    >
-                      https://www.google.com/
-                    </Typography.Title>
-                  ) : (
-                    <Typography.Text>https://www.google.com/</Typography.Text>
-                  )}
-                </Space>
-              </Form.Item>
-            ),
-          },
-        ],
-      },
-      {
-        label: "通訊軟體資訊",
-        name: "",
-        more: [
-          {
-            label: "Youtube",
-            value: "https://www.youtube.com/",
-            component: (
-              <Form.Item className="!mb-[10px]" label="Youtube">
-                <Space>
-                  {canEdit ? (
-                    <Typography.Title
-                      editable
-                      level={5}
-                      style={{
-                        margin: 0,
-                      }}
-                    >
-                      https://www.google.com/
-                    </Typography.Title>
-                  ) : (
-                    <Typography.Text>https://www.google.com/</Typography.Text>
-                  )}
-                </Space>
-              </Form.Item>
-            ),
-          },
-          {
-            label: "Facebook",
-            value: "https://www.facebook.com/",
-            component: (
-              <Form.Item className="!mb-[10px]" label="Facebook">
-                <Space>
-                  {canEdit ? (
-                    <Typography.Title
-                      editable
-                      level={5}
-                      style={{
-                        margin: 0,
-                      }}
-                    >
-                      https://www.facebook.com/
-                    </Typography.Title>
-                  ) : (
-                    <Typography.Text>https://www.facebook.com/</Typography.Text>
-                  )}
-                </Space>
-              </Form.Item>
-            ),
-          },
-          {
-            label: "Telegram",
-            value: "https://web.telegram.org/",
-            component: (
-              <Form.Item className="!mb-[10px]" label="Telegram">
-                <Space>
-                  {canEdit ? (
-                    <Typography.Title
-                      editable
-                      level={5}
-                      style={{
-                        margin: 0,
-                      }}
-                    >
-                      https://web.telegram.org/
-                    </Typography.Title>
-                  ) : (
-                    <Typography.Text>https://web.telegram.org/</Typography.Text>
-                  )}
-                </Space>
-              </Form.Item>
-            ),
-          },
-          {
-            label: "Tiktok",
-            value: "https://www.tiktok.com/",
-            component: (
-              <Form.Item className="!mb-[10px]" label="Tiktok">
-                <Space>
-                  {canEdit ? (
-                    <Typography.Title
-                      editable
-                      level={5}
-                      style={{
-                        margin: 0,
-                      }}
-                    >
-                      https://www.tiktok.com/
-                    </Typography.Title>
-                  ) : (
-                    <Typography.Text>https://www.tiktok.com/</Typography.Text>
-                  )}
-                </Space>
-              </Form.Item>
-            ),
-          },
-        ],
-      },
+      // {
+      //   label: i18n("col.communicationInformation"),
+      //   name: "",
+      //   more:
+      //     communication_url &&
+      //     Object.keys(communication_url).map((com, index) => {
+      //       return {
+      //         label: com,
+      //         value: communication_url[com],
+      //         component: (
+      //           <Form.Item className="!mb-[10px]" label={com}>
+      //             <Space>
+      //               {authorization ? (
+      //                 <Typography.Title
+      //                   editable={{
+      //                     onChange: (v) => {
+      //                       const oldUrl = communication_url[com];
+      //                       if (v === oldUrl) {
+      //                         return;
+      //                       }
+      //                       communication_url[com] = v;
+      //                       handleArrayConfirm({
+      //                         label: i18n("col.communicationInformation"),
+      //                         oldValue: oldUrl,
+      //                         newValue: v,
+      //                         props: {
+      //                           value: communication_url,
+      //                           key: "communication_url",
+      //                         },
+      //                         baseArray: communication_url,
+      //                       });
+      //                     },
+      //                   }}
+      //                   level={5}
+      //                   style={{
+      //                     margin: 0,
+      //                   }}
+      //                 >
+      //                   {communication_url[com]}
+      //                 </Typography.Title>
+      //               ) : (
+      //                 <Typography.Text>
+      //                   {communication_url[com]}
+      //                 </Typography.Text>
+      //               )}
+      //             </Space>
+      //           </Form.Item>
+      //         ),
+      //       };
+      //     }),
+      // },
     ];
-  }, [canEdit]);
+  }, [authorization, i18next.language]);
 
   return (
     <>
-      <StatisticWrapper title="站台系統資訊">
+      <CommonPageTitle pagePath="platformsetting" />
+      <StatisticWrapper title={i18n("col.platformSystemInformation")}>
         <ProForm
           form={form}
           layout="horizontal"

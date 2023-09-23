@@ -42,9 +42,9 @@ export const getYesterday = () => {
   return yesterday;
 };
 
-export const relativeFromTime = (timeStr) => {
+export const relativeFromTime = (timeStr, { unix = false } = {}) => {
   if (!timeStr || timeStr === "-") return "-";
-  const time = dayjs(timeStr);
+  const time = unix ? dayjs.unix(timeStr) : dayjs(timeStr);
   const now = dayjs();
   return (
     <p className="my-0">

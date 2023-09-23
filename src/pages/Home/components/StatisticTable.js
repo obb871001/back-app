@@ -268,7 +268,7 @@ const StatisticTable = () => {
   return (
     <>
       <StatisticWrapper
-        tooltip={`${i18n("focusInformation")}${"everyMinuteUpdate"}`}
+        tooltip={`${i18n("focusInformation")}${i18n("everyMinuteUpdate")}`}
         wrapperClassName="!pt-[0px]"
         title={`${i18n("focusInformation")}`}
       >
@@ -276,6 +276,7 @@ const StatisticTable = () => {
           <Table
             columns={columns}
             size="small"
+            scroll={{ x: "max-content" }}
             bordered
             pagination={false}
             dataSource={data.filter((item) => !item.isCredit)}

@@ -8,13 +8,15 @@ import { betLogReport } from "../../api/methods/getApi";
 import UseMergeableSearchParams from "../../hooks/useMergeableSearchParams";
 import Wrapper from "../../components/layout/Wrapper";
 import TableWrapper from "../../components/layout/TableWrapper";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ReportDetail from "./modal/reportDetail";
 import dayjs from "dayjs";
+import CommonPageTitle from "../../components/layout/CommonPageTitle";
+import { storeTotalRecords } from "../../redux/action/common/action";
 
 const GameHistory = () => {
   const [searchParams, setSearchParams] = UseMergeableSearchParams();
-  const { create_ts } = searchParams;
+  const { create_ts, current_page, per_page } = searchParams;
 
   const { gameId } = useParams();
 
@@ -22,8 +24,12 @@ const GameHistory = () => {
 
   const trigger = useSelector((state) => state.trigger);
   const reportDetailPop = useSelector((state) => state.reportDetailPop);
+  const dispatch = useDispatch();
+
+  const [tableLoading, setTableLoading] = useState(false);
 
   useEffect(() => {
+    setTableLoading(true);
     betLogReport({
       paramsData: {
         platform: gameId,
@@ -32,26 +38,34 @@ const GameHistory = () => {
     })
       .then((data) => {
         setReportData(data.data.list);
+        dispatch(storeTotalRecords(data.data.pagination));
       })
       .catch((err) => {
         const data = err.response.data;
       })
-      .finally(() => {});
-  }, [create_ts, trigger]);
+      .finally(() => {
+        setTableLoading(false);
+      });
+  }, [create_ts, trigger, current_page, per_page]);
 
   return (
-    <Wrapper>
-      <SearchTool columns={FilterColumns(gameId)} />
-      <TableWrapper>
-        <CommonTable
-          csvApi={betLogReport}
-          csvParams={{ platform: gameId }}
-          columns={FilterColumns(gameId)}
-          dataSource={reportData}
-        />
-      </TableWrapper>
-      {reportDetailPop && <ReportDetail />}
-    </Wrapper>
+    <>
+      <CommonPageTitle pagePath={gameId} />
+
+      <Wrapper>
+        <SearchTool columns={FilterColumns(gameId)} />
+        <TableWrapper>
+          <CommonTable
+            tableLoading={tableLoading}
+            csvApi={betLogReport}
+            csvParams={{ platform: gameId }}
+            columns={FilterColumns(gameId)}
+            dataSource={reportData}
+          />
+        </TableWrapper>
+        {reportDetailPop && <ReportDetail />}
+      </Wrapper>
+    </>
   );
 };
 

@@ -33,7 +33,7 @@ const CreateChildForm = ({ form }) => {
     <>
       <NoticeTitle required />
       <BasicInformation type="child" form={form} />
-      <MenuAuth form={form} />
+      <MenuAuth form={form} isChild={true} />
       <NoticeTitle optional />
       <OptionalInfo />
     </>

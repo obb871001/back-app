@@ -15,8 +15,8 @@ const SkeletonPageLoadingHorizontal = ({ absolute }) => {
 
   return (
     <section
-      className={`flex gap-x-[10px] ${
-        absolute && "absolute-center w-full h-full bg-white z-[1000]"
+      className={`flex flex-col sm:flex-row gap-x-[10px] ${
+        absolute && "absolute-center w-full h-full bg-white z-[100]"
       }`}
     >
       <Space className="min-w-[300px]" direction="vertical">
@@ -74,7 +74,7 @@ const SkeletonPageLoadingHorizontal = ({ absolute }) => {
       </Space>
       <section className="w-full">
         <Skeleton.Button
-          className="!w-[100px] mb-[10px]"
+          className="!w-[100px] mb-[10px] hidden sm:block"
           active
           size="default"
         />

@@ -1,35 +1,40 @@
 import { ProFormGroup, ProFormText } from "@ant-design/pro-components";
 import { LOGINNAME_EXPRESSION } from "../../../regex";
+import { useTranslation } from "react-i18next";
 
 const LoginNameForm = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.loginname.${key}`);
+  const i18n_express = (key) => t(`expressHint.${key}`);
+
   return (
     <>
       <ProFormGroup>
         <ProFormText
-          tooltip="此登入名稱為之後的登入名稱"
-          label="設定登入名稱"
+          tooltip={i18n("loginnameHint")}
+          label={i18n("setLoginname")}
           name="loginname"
           rules={[
-            { required: true, message: "請輸入登入名稱" },
+            { required: true, message: i18n("pleaseEnterLoginname") },
             {
               pattern: LOGINNAME_EXPRESSION,
-              message: "输入应以字母开头，后面可接2到14个字母、数字或下划线",
+              message: i18n_express("accountHint"),
             },
           ]}
         />
       </ProFormGroup>
       <ProFormGroup>
         <ProFormText.Password
-          tooltip="此密碼為之後的登入密碼"
-          label="設定密碼"
+          tooltip={i18n("passwordHint")}
+          label={i18n("setPassword")}
           name="newPasswd"
-          rules={[{ required: true, message: "請輸入密碼" }]}
+          rules={[{ required: true, message: i18n("pleaseEnterPassword") }]}
         />
         <ProFormText.Password
           tooltip=""
-          label="再次輸入密碼"
+          label={i18n("enterPasswordAgain")}
           name="newPasswdAgain"
-          rules={[{ required: true, message: "請再次輸入密碼" }]}
+          rules={[{ required: true, message: i18n("enterPasswordAgain") }]}
         />
       </ProFormGroup>
     </>

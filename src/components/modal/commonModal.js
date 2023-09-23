@@ -48,7 +48,7 @@ const CommonModal = ({
     dispatch(clearForm());
     dispatch(clearDetail());
     dispatch(clearPopType());
-    navigate(previousPath);
+    navigate(-1);
   };
 
   const propsChildren = Children.map(children, (child) => {

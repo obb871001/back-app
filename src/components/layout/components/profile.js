@@ -1,26 +1,35 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CustomModal from "../../modal/customModal";
 import { ProForm } from "@ant-design/pro-components";
 import { useForm } from "antd/es/form/Form";
 import CustomForm from "../../form/customForm";
 import { useEffect, useState } from "react";
 import { relativeFromTime } from "../../../utils/getDay";
-import { Button, Form, Space, Typography } from "antd";
+import { Button, Form, Space, Typography, notification } from "antd";
 import { allowClick } from "../../../assets/style/styleConfig";
 import GameCommission from "../../../pages/Agent/AgentList/detail/gameCommission";
 import MenuPermission from "../../../pages/Agent/AgentList/detail/menuPermission";
 import { filterMenuKeys } from "../../../helpers/aboutAuth/filterMenuKeys";
 import GamePermissionDetail from "../../../pages/Agent/AgentList/detail/GamePermissionDetail";
+import { updateAgentBasic } from "../../../api/methods/patchApi";
+import { clearPopType, trigger } from "../../../redux/action/common/action";
+import { useTranslation } from "react-i18next";
+import { ErrorMessage } from "../../../utils/ErrorMessage";
 
 const Profile = ({ isModalOpen, setIsModalOpen }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.agentinfomation.agentlist.modal.${key}`);
+  const i18n_commonModal = (key) => t(`commonModal.${key}`);
   const [form] = useForm();
 
   const agentInfo = useSelector((state) => state.agentInfo);
+  const dispatch = useDispatch();
 
   const [modalGameCommission, setModalGameCommission] = useState(false);
   const [modalMenuPermission, setModalMenuPermission] = useState(false);
   const [modalGamePermission, setModalGamePermission] = useState(false);
   const [modifyProfile, setModifyProfile] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
 
   useEffect(() => {
     if (agentInfo) {
@@ -36,29 +45,29 @@ const Profile = ({ isModalOpen, setIsModalOpen }) => {
 
   const basicForm = [
     {
-      label: "代理帳號",
+      label: i18n("agentAccount"),
       name: "cagent",
       readonly: true,
     },
     {
-      label: "代理等級",
+      label: i18n("agentLevel"),
       name: "level",
       readonly: true,
     },
 
     {
-      label: "登入名稱",
+      label: i18n("loginname"),
       name: "login_name",
       readonly: true,
     },
 
     {
-      label: "暱稱",
+      label: i18n("nickname"),
       name: "nick_name",
       readonly: true,
     },
     {
-      label: "創建時間",
+      label: i18n("createDate"),
       name: "create_time",
       readonly: true,
     },
@@ -66,47 +75,81 @@ const Profile = ({ isModalOpen, setIsModalOpen }) => {
 
   const editorForm = [
     {
-      label: "真實姓名",
+      label: i18n("truename"),
       name: "true_name",
       readonly: !modifyProfile,
     },
     {
-      label: "電子郵件",
+      label: i18n("email"),
       name: "email",
       readonly: !modifyProfile,
     },
     {
-      label: "手機號碼",
+      label: i18n("mobile"),
       name: "mobile",
       readonly: !modifyProfile,
     },
   ];
   const aboutAuth = [
     {
-      label: "遊戲佔成狀態",
+      label: i18n("gameCommissionDetail"),
       func: () => {
         setModalGameCommission(true);
       },
+      hidden: agentInfo.type === "child",
     },
     {
-      label: "選單權限",
+      label: i18n("menuPermissionDetail"),
       func: () => {
         setModalMenuPermission(true);
       },
     },
     {
-      label: "遊戲權限",
+      label: i18n("gamePermissionDetail"),
       func: () => {
         setModalGamePermission(true);
       },
+      hidden: agentInfo.type === "child",
     },
   ];
+
+  const onFinish = (values) => {
+    setButtonLoading(true);
+    updateAgentBasic({
+      uid: agentInfo.uid,
+      patchData: {
+        true_name: values.true_name,
+        email: values.email,
+        mobile: values.mobile,
+      },
+    })
+      .then((data) => {
+        setModifyProfile(false);
+        notification.success({
+          message: i18n_commonModal("submitSuccess"),
+        });
+        dispatch(trigger());
+      })
+      .catch((err) => {
+        const errorMessage = err.response.data.message;
+        notification.error({
+          message: i18n_commonModal("submitFail"),
+          description: ErrorMessage(errorMessage),
+        });
+      })
+      .finally(() => {
+        setButtonLoading(false);
+      });
+  };
 
   return (
     <CustomModal
       isModalOpen={isModalOpen}
-      setIsModalOpen={setIsModalOpen}
-      modalProps={{ title: `個人資料`, width: 550 }}
+      setIsModalOpen={() => {
+        setIsModalOpen();
+        dispatch(clearPopType());
+      }}
+      modalProps={{ title: i18n("profileInformation"), width: 550 }}
     >
       <ProForm
         form={form}
@@ -118,14 +161,19 @@ const Profile = ({ isModalOpen, setIsModalOpen }) => {
           span: 19,
         }}
         submitter={false}
+        onFinish={(values) => {
+          onFinish(values);
+        }}
       >
-        <Typography.Title level={4}>基本資料 </Typography.Title>
+        <Typography.Title level={4}>
+          {i18n("basicInformation")}{" "}
+        </Typography.Title>
 
         {basicForm.map((item) => {
           return <CustomForm {...item} />;
         })}
         <Typography.Title level={4}>
-          可編輯欄位{" "}
+          {i18n("editableColumns")}
           <Typography.Text
             className="text-blue-500 cursor-pointer"
             underline
@@ -133,40 +181,45 @@ const Profile = ({ isModalOpen, setIsModalOpen }) => {
               setModifyProfile(!modifyProfile);
             }}
           >
-            {modifyProfile ? "取消" : "修改"}
+            {modifyProfile ? i18n("cancel") : i18n("confirm")}
           </Typography.Text>
         </Typography.Title>
         {editorForm.map((item) => {
           return <CustomForm {...item} />;
         })}
         {modifyProfile && (
-          <Form.Item label="操作">
+          <Form.Item label={i18n("action")}>
             <Space>
               <Button
+                disabled={buttonLoading}
                 htmlType="button"
                 onClick={() => {
                   setModifyProfile(false);
                 }}
               >
-                取消
+                {i18n("cancel")}
               </Button>
 
-              <Button htmlType="submit" type="primary">
-                提交
+              <Button disabled={buttonLoading} htmlType="submit" type="primary">
+                {i18n("confirm")}
               </Button>
             </Space>
           </Form.Item>
         )}
-        <Typography.Title level={4}>權限相關 </Typography.Title>
-        {aboutAuth.map((item) => {
-          return (
-            <Form.Item label={item.label}>
-              <span className={`${allowClick} underline`} onClick={item.func}>
-                查看
-              </span>
-            </Form.Item>
-          );
-        })}
+        <Typography.Title level={4}>
+          {i18n("aboutPermission")}{" "}
+        </Typography.Title>
+        {aboutAuth
+          .filter((item) => !item.hidden)
+          .map((item) => {
+            return (
+              <Form.Item label={item.label}>
+                <span className={`${allowClick} underline`} onClick={item.func}>
+                  查看
+                </span>
+              </Form.Item>
+            );
+          })}
       </ProForm>
       {modalGameCommission && (
         <GameCommission

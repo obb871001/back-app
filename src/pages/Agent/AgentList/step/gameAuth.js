@@ -11,10 +11,11 @@ const GameAuth = ({ form }) => {
   const [customSetting, setCustomSetting] = useState(false);
   return (
     <>
-      <div className="mb-[20px]">
+      <div className="mb-[10px]">
         <Typography.Title italic level={4}>
           {i18n("gamePermission")}
         </Typography.Title>{" "}
+        <Divider className="my-0" />
         <Space align="baseline">
           <ProFormGroup>
             {customSetting ? (
@@ -23,13 +24,13 @@ const GameAuth = ({ form }) => {
               <GamePermission hiddenTitle form={form} />
             )}
           </ProFormGroup>
-          <Typography.Text
+          {/* <Typography.Text
             className="cursor-pointer text-blue-500"
             onClick={() => setCustomSetting((prev) => !prev)}
             underline
           >
             {customSetting ? i18n("customize") : i18n("cancel")}
-          </Typography.Text>
+          </Typography.Text> */}
         </Space>
       </div>
     </>

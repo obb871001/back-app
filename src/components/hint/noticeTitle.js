@@ -7,7 +7,7 @@ const NoticeTitle = ({ required, optional, customTitle }) => {
   const { t } = useTranslation();
   const i18n = (key) => t(`commonModal.${key}`);
   return (
-    <div className="mb-[10px]">
+    <div className="mb-[20px]">
       <Typography.Title
         className="flex items-center gap-[5px] !text-[#082958]"
         italic

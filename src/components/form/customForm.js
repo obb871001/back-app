@@ -9,15 +9,18 @@ import {
   ProFormTextArea,
 } from "@ant-design/pro-components";
 import { AutoComplete } from "antd";
+import { useTranslation } from "react-i18next";
 
 const CustomForm = ({ type, ...props }) => {
-  const { selectProps = {} } = props;
+  const { t } = useTranslation();
+  const i18n = (key) => t(`ex.${key}`);
+  const { selectProps = {}, autoCompleteProps } = props;
   const baseRules = props?.rules || [];
   const requiredRule = props?.required
     ? [
         {
           required: true,
-          message: `請輸入${props?.label}`,
+          message: `${i18n("pleaseInput")}${props?.label}`,
         },
       ]
     : [];
@@ -28,9 +31,9 @@ const CustomForm = ({ type, ...props }) => {
           {...props}
           placeholder={
             props.allowEmpty
-              ? "留空為不限制"
+              ? i18n("allowEmpty")
               : props.ex
-              ? `例：${props.ex}`
+              ? `${i18n("ex")}${props.ex}`
               : props.placeholder
           }
           rules={[...baseRules, ...requiredRule]}
@@ -40,11 +43,12 @@ const CustomForm = ({ type, ...props }) => {
       return (
         <ProFormDigit
           {...props}
+          width={200}
           placeholder={
             props.allowEmpty
-              ? "留空為不限制"
+              ? i18n("allowEmpty")
               : props.ex
-              ? `例：${props.ex}`
+              ? `${i18n("ex")}${props.ex}`
               : props.placeholder
           }
           rules={[...baseRules, ...requiredRule]}
@@ -55,9 +59,9 @@ const CustomForm = ({ type, ...props }) => {
         <ProFormDateRangePicker
           tooltip={
             props.name === "std"
-              ? "開始為00:00:00"
+              ? i18n("timeStart")
               : props.name === "etd"
-              ? "結束為23:59:59"
+              ? i18n("timeEnd")
               : false
           }
           {...props}
@@ -71,7 +75,14 @@ const CustomForm = ({ type, ...props }) => {
     case "radio":
       return <ProFormRadio.Group {...props} />;
     case "autoComplete":
-      return <ProFormSelect showSearch width={200} {...props} />;
+      return (
+        <ProFormSelect
+          showSearch
+          width={200}
+          {...autoCompleteProps}
+          {...props}
+        />
+      );
     case "textarea":
       return <ProFormTextArea {...props} />;
     case "password":
@@ -87,9 +98,9 @@ const CustomForm = ({ type, ...props }) => {
           {...props}
           placeholder={
             props.allowEmpty
-              ? "留空為不限制"
+              ? i18n("allowEmpty")
               : props.ex
-              ? `例：${props.ex}`
+              ? `${i18n("ex")}${props.ex}`
               : props.placeholder
           }
           rules={[...baseRules, ...requiredRule]}

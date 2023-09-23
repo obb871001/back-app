@@ -15,9 +15,10 @@ import NavigatePlayer from "../../components/table/navigatePlayer";
 import RelativeTimeCol from "../../components/tableColumns/relativeTimeCol";
 import { useTranslation } from "react-i18next";
 import NumberColumns from "../../components/table/numberColumns";
-import { CURRENCY } from "../../constant";
 import NavigateDetail from "../../components/table/navigateDetail";
 import WalletDetail from "./modal/walletDetail";
+import CommonPageTitle from "../../components/layout/CommonPageTitle";
+import { formatNumber } from "../../utils/formatNumber";
 
 const PlayerWalletLog = () => {
   const { t } = useTranslation();
@@ -32,6 +33,8 @@ const PlayerWalletLog = () => {
   const nowTime = useSelector((state) => state.nowTime);
   const reportDetailPop = useSelector((state) => state.reportDetailPop);
   const basicConfig = useSelector((state) => state.basicConfig);
+  const agentNameList = useSelector((state) => state.agentNameList);
+  const CURRENCY = useSelector((state) => state.currency);
   const dispatch = useDispatch();
 
   const [tableLoading, setTableLoading] = useState(false);
@@ -58,7 +61,7 @@ const PlayerWalletLog = () => {
         dispatch(apiCalled());
         setInitialRender(false);
       });
-  }, [current_page, per_page, trigger]);
+  }, [current_page, per_page, trigger, create_ts]);
 
   const columns = [
     {
@@ -70,6 +73,21 @@ const PlayerWalletLog = () => {
       type: "number",
       ex: "1",
     },
+    {
+      title: i18n("col.executeAgent"),
+      dataIndex: "execute",
+      key: "execute",
+      width: 200,
+      search: true,
+      type: "autoComplete",
+      autoCompleteProps: {
+        options: agentNameList?.map((item) => {
+          return { value: item };
+        }),
+      },
+      ex: "agent01",
+    },
+
     {
       title: i18n("col.playerId"),
       dataIndex: "memId",
@@ -84,11 +102,11 @@ const PlayerWalletLog = () => {
     {
       title: i18n("col.transactionTime"),
       dataIndex: "create_time",
-      key: "create_time",
+      key: "create_ts",
       render: (row) => {
         return <RelativeTimeCol now={nowTime} timeStr={row} />;
       },
-      search: true,
+      search: false,
       type: "date",
     },
     {
@@ -98,6 +116,7 @@ const PlayerWalletLog = () => {
       render: (row) => {
         return i18n_actionCode(`${row}`);
       },
+      csvTurn: true,
       search: true,
       type: "select",
       selectProps: {
@@ -120,28 +139,42 @@ const PlayerWalletLog = () => {
     },
     {
       title: i18n("col.amounts"),
-      dataIndex: "mem_trans_sub",
-      key: "mem_trans_sub",
+      dataIndex: `mem_${basicConfig.wallet_type}_wallet_trans`,
+      key: `mem_${basicConfig.wallet_type}_wallet_trans`,
       render: (row) => {
         return <NumberColumns number={row} />;
       },
+      csvRender: (row) => {
+        return `${formatNumber(row)} ${CURRENCY}`;
+      },
+      csvTurn: true,
       search: true,
-      type: "number",
+      type: "rangeNumber",
       ex: "1",
-      inputProps: { addonAfter: CURRENCY },
     },
     {
       title: i18n("col.playerBalance"),
-      dataIndex: "mem_after",
-      key: "mem_after",
+      dataIndex: `mem_${basicConfig.wallet_type}_wallet_after`,
+      key: `mem_${basicConfig.wallet_type}_wallet_after`,
       render: (row) => {
         return <NumberColumns notStyle number={row} />;
       },
+      csvRender: (row) => {
+        return `${formatNumber(row)} ${CURRENCY}`;
+      },
+      csvTurn: true,
       search: true,
-      type: "number",
+      type: "rangeNumber",
       ex: "1",
-      inputProps: { addonAfter: CURRENCY },
     },
+    {
+      title: i18n("col.agentMemo"),
+      dataIndex: "cagent_memo",
+      key: "cagent_memo",
+      search: true,
+      type: "text",
+    },
+
     {
       title: "",
       key: "detail",
@@ -151,18 +184,21 @@ const PlayerWalletLog = () => {
     },
   ];
   return (
-    <Wrapper>
-      <SearchTool columns={columns} />
-      <TableWrapper>
-        <CommonTable
-          csvApi={getMemberWalletLog}
-          tableLoading={tableLoading}
-          columns={columns}
-          dataSource={playerWalletLog}
-        />
-      </TableWrapper>
-      {reportDetailPop && <WalletDetail />}
-    </Wrapper>
+    <>
+      <CommonPageTitle pagePath="memberwalletlog" />
+      <Wrapper>
+        <SearchTool columns={columns} />
+        <TableWrapper>
+          <CommonTable
+            csvApi={getMemberWalletLog}
+            tableLoading={tableLoading}
+            columns={columns}
+            dataSource={playerWalletLog}
+          />
+        </TableWrapper>
+        {reportDetailPop && <WalletDetail />}
+      </Wrapper>
+    </>
   );
 };
 
