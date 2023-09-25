@@ -14,7 +14,7 @@ const waitTime = (time = 100) => {
   });
 };
 
-const CommonForm = ({ submitFunction, children, proFormProps }) => {
+const CommonForm = ({ submitFunction, children, proFormProps, customPath }) => {
   const { t } = useTranslation();
   const i18n = (key) => t(`commonModal.${key}`);
 
@@ -93,7 +93,7 @@ const CommonForm = ({ submitFunction, children, proFormProps }) => {
                 <Button
                   loading={buttonLoading}
                   onClick={() => {
-                    navigate(-1);
+                    navigate(customPath || -1);
                   }}
                   htmlType="button"
                 >

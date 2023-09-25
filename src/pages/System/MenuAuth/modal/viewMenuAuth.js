@@ -51,7 +51,7 @@ const ViewMenuAuth = () => {
       modalTrigger={true}
     >
       <Form form={form}>
-        <MenuForm form={form} />
+        <MenuForm form={form} i18nKeyWord={`menuAuth`} />
         <MenuPermissions hiddenTitle type="detail" form={form} />
       </Form>
     </CustomModal>

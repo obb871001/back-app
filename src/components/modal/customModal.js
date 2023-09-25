@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { usePreviousPagePath } from "../../hooks/usePreviousPagePath";
 import { useDispatch } from "react-redux";
-import { clearPopType } from "../../redux/action/common/action";
+import { clearDetail, clearPopType } from "../../redux/action/common/action";
 import { useTranslation } from "react-i18next";
 
 const CustomModal = ({
@@ -29,8 +29,9 @@ const CustomModal = ({
     if (typeof setIsModalOpen === "function") {
       setIsModalOpen(false);
     } else {
-      dispatch(clearPopType());
       navigate(-1);
+      dispatch(clearPopType());
+      dispatch(clearDetail());
     }
   };
 
@@ -38,8 +39,9 @@ const CustomModal = ({
     if (typeof setIsModalOpen === "function") {
       setIsModalOpen(false);
     } else {
-      dispatch(clearPopType());
       navigate(-1);
+      dispatch(clearPopType());
+      dispatch(clearDetail());
     }
   };
 

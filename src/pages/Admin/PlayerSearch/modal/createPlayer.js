@@ -51,6 +51,7 @@ const CreatePlayer = () => {
     <>
       <CommonPageTitle pagePath="createplayer" />
       <CommonForm
+        customPath={`/admin/playersearch`}
         proFormProps={{
           layout: "horizontal",
           labelCol: {

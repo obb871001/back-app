@@ -433,6 +433,45 @@
       }
     },
     "systemsetting": {
+      "menuAuth": {
+        "title": "Menu Permission Tag",
+        "create": "Create Menu Permission",
+        "hint": "This setting allows for direct tag selection when creating agents for easier permission setting.",
+        "titleHint": "Creating menu tags can help you directly choose tags when creating agents, making permission setting more convenient.",
+        "tagName": "Menu Permission Tag Name",
+        "tagNamePlaceholder": "Example: Account Menu Permission",
+        "tagNameRule": "Please enter the menu permission tag name.",
+        "col": {
+          "number": "Number",
+          "authName": "Permission Name"
+        }
+      },
+      "gameAuth": {
+        "title": "Game Permission Tag",
+        "create": "Create Game Permission",
+        "hint": "This setting allows for direct tag selection when creating agents for easier permission setting.",
+        "titleHint": "Creating game tags can help you directly choose tags when creating agents, making permission setting more convenient.",
+        "tagName": "Game Permission Tag Name",
+        "tagNamePlaceholder": "Example: Unlock Certain Game Permissions",
+        "tagNameRule": "Please enter the game permission tag name.",
+        "col": {
+          "number": "Number",
+          "authName": "Permission Name"
+        }
+      },
+      "gameCommission": {
+        "title": "Game Commission Tag",
+        "create": "Create Game Commission",
+        "hint": "This setting allows for direct tag selection when creating agents for easier permission setting.",
+        "titleHint": "Creating game tags can help you directly choose tags when creating agents, making permission setting more convenient.",
+        "tagName": "Game Commission Tag Name",
+        "tagNamePlaceholder": "Example: 50% Game Commission",
+        "tagNameRule": "Please enter the game commission tag name.",
+        "col": {
+          "number": "Number",
+          "authName": "Permission Name"
+        }
+      },
       "platformsetting": {
         "switchSure": "Are you sure you want to {{type}} {{label}}?",
         "switchAlready": "{{label}} has been {{type}}",
@@ -497,12 +536,12 @@
       "agentlog": "Agent Activity Log",
       "bankaccount": "Bank Account",
       "cashflowstatus": "Online Payment Merchants",
-      "comission": "Commission Dispatch",
+      "comission": "Game Commission Tag",
       "depositlist": "Deposit Payment Dashboard",
       "eventlist": "Event List",
       "fundinout": "Funds In/Out",
       "gamehistory": "Game History",
-      "gamepermissions": "Game Permissions",
+      "gamepermissions": "Game Permission Tag",
       "gift": "Gift Pack",
       "home": "Home",
       "inbox": "Inbox",
@@ -510,7 +549,7 @@
       "memberlevelsettings": "Member Level Settings",
       "memberlog": "Member Login Log",
       "memberwalletlog": "Member Wallet Log",
-      "menupermissions": "Menu Permissions",
+      "menupermissions": "Menu Permission Tag",
       "platformsetting": "Platform Settings",
       "playerreport": "Agent Statistics Report",
       "playersearch": "Player Search",
@@ -587,12 +626,14 @@
     "action": "Action",
     "backToPlayerList": "Back to Player List",
     "backToAgentList": "Back to Agent List",
-    "backToSubList": "Back to Sub-account List"
+    "backToSubList": "Back to Sub-account List",
+    "deleteSuccess": "Delete Successfully"
   },
   "actionCol": {
     "view": "View",
     "edit": "Edit",
-    "detail": "Detail"
+    "detail": "Detail",
+    "delete": "Delete"
   },
   "unit": {
     "level": "Level",
@@ -653,7 +694,9 @@
     "3hint": "(Not affected by upper-level activation. If player01 is advanced-closed, they can't play or check account. Even if the higher-level activates the agent, player01 isn't affected)"
   },
   "common": {
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "pleaseSelect": "Please Select",
+    "canSetAtPermission": "You can add tags on the permission settings page to facilitate the creation of agents."
   },
   "cagent_level": {
     "0": "Main Station",

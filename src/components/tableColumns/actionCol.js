@@ -6,7 +6,14 @@ import { setPopType } from "../../redux/action/common/action";
 import { allowClick, notAllowClick } from "../../assets/style/styleConfig";
 import { useTranslation } from "react-i18next";
 
-const ActionCol = ({ callApi, apiUid, openEdit, openDetail }) => {
+const ActionCol = ({
+  callApi,
+  apiUid,
+  openEdit,
+  openDetail,
+  openDelete,
+  callDeleteApi,
+}) => {
   const { t } = useTranslation();
   const i18n = (key) => t(`actionCol.${key}`);
 
@@ -54,6 +61,16 @@ const ActionCol = ({ callApi, apiUid, openEdit, openDetail }) => {
           }}
         >
           {i18n("view")}
+        </p>
+      )}
+      {openDelete && (
+        <p
+          className={`cursor-pointer text-red-500 underline my-0`}
+          onClick={() => {
+            callDeleteApi();
+          }}
+        >
+          {i18n("delete")}
         </p>
       )}
     </section>

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import { setPopType } from "../../redux/action/common/action";
 import { useTranslation } from "react-i18next";
 
-const CreateButton = ({ type }) => {
+const CreateButton = ({ type, icon }) => {
   const { t } = useTranslation();
   const i18n = (key) => t(`commonModal.${key}`);
   //type 為 創建種類 ex:代理
@@ -21,6 +21,7 @@ const CreateButton = ({ type }) => {
       }}
       className="mb-[20px]"
       type="primary"
+      icon={icon}
     >
       {i18n("create")}
       {type}

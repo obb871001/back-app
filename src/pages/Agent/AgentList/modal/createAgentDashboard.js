@@ -60,6 +60,7 @@ const CreateAgentDashBoard = ({ setTrigger }) => {
       <CommonPageTitle pagePath="createagent" />
       <CommonForm
         submitFunction={handleSubmit}
+        customPath="/admin/agentlist"
         proFormProps={{
           buttonProps: {
             cancelText: "backToAgentList",

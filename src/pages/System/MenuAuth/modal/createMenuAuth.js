@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Divider, Typography } from "antd";
 import CommonModal from "../../../../components/modal/commonModal";
 import MenuPermissions from "../../../../components/permissionComponents/menuPermissions";
 import MenuForm from "../form/menuForm";
@@ -10,8 +10,12 @@ import { useForm } from "antd/es/form/Form";
 import CreateMenuForm from "../form/createMenuForm";
 import { trigger } from "../../../../redux/action/common/action";
 import { updateTag } from "../../../../api/methods/patchApi";
+import { useTranslation } from "react-i18next";
 
 const CreateMenuAuth = () => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.systemsetting.menuAuth.${key}`);
+
   const commonDetail = useSelector((state) => state.commonDetail);
   const popType = useSelector((state) => state.popType);
   const dispatch = useDispatch();
@@ -49,14 +53,15 @@ const CreateMenuAuth = () => {
       submitFunction={handleSubmit}
       modalProps={{
         title: (
-          <p>
+          <Typography.Title level={4} className="mt-[0px]" italic>
             <TagsOutlined />
-            新增選單權限標籤
-          </p>
+            {i18n("create")}
+          </Typography.Title>
         ),
       }}
       modalTrigger={true}
     >
+      <Divider />
       <CreateMenuForm />
     </CommonModal>
   );
