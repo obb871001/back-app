@@ -64,9 +64,10 @@ const CreateChildDashBoard = () => {
 
       <CommonForm
         submitFunction={handleSubmit}
+        customPath="/systemsetting/sublist"
         proFormProps={{
           buttonProps: {
-            cancelText: "backToChildList",
+            cancelText: "backToSubList",
           },
         }}
       >

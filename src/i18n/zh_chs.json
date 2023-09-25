@@ -445,6 +445,45 @@
       }
     },
     "systemsetting": {
+      "menuAuth": {
+        "title": "菜单权限标签",
+        "create": "创建菜单权限",
+        "hint": "此设置为创建代理时可直接选择标签来更方便的设置权限",
+        "titleHint": "创建菜单标签可以当你创建代理商时，可以直接选择标签来更方便的设置权限。",
+        "tagName": "菜单权限标签名称",
+        "tagNamePlaceholder": "例：帳務菜单权限",
+        "tagNameRule": "请输入菜单权限标签名称",
+        "col": {
+          "number": "编号",
+          "authName": "权限名称"
+        }
+      },
+      "gameAuth": {
+        "title": "游戏权限标签",
+        "create": "创建游戏权限",
+        "hint": "此设置为创建代理时可直接选择标签来更方便的设置权限",
+        "titleHint": "创建游戏标签可以当你创建代理商时，可以直接选择标签来更方便的设置权限。",
+        "tagName": "游戏权限标签名称",
+        "tagNamePlaceholder": "例：開放某些游戏权限",
+        "tagNameRule": "请输入游戏权限标签名称",
+        "col": {
+          "number": "编号",
+          "authName": "权限名称"
+        }
+      },
+      "gameCommission": {
+        "title": "游戏抽佣标签",
+        "create": "创建游戏抽佣",
+        "hint": "此设置为创建代理时可直接选择标签来更方便的设置权限",
+        "titleHint": "创建游戏标签可以当你创建代理商时，可以直接选择标签来更方便的设置权限。",
+        "tagName": "游戏抽佣标签名称",
+        "tagNamePlaceholder": "例：50%游戏抽佣",
+        "tagNameRule": "请输入游戏抽佣标签名称",
+        "col": {
+          "number": "编号",
+          "authName": "权限名称"
+        }
+      },
       "platformsetting": {
         "switchSure": "您确定要 {{type}} {{label}} 吗？",
         "switchAlready": "{{label}} 已 {{type}}",
@@ -509,12 +548,12 @@
       "agentlog": "代理商操作记录",
       "bankaccount": "银行账户",
       "cashflowstatus": "在线支付商户",
-      "comission": "佣金发送",
+      "comission": "遊戲抽佣标签",
       "depositlist": "存款支付看板",
       "eventlist": "活动列表",
       "fundinout": "资金进/出",
       "gamehistory": "游戏历史",
-      "gamepermissions": "游戏权限",
+      "gamepermissions": "游戏权限标签",
       "gift": "礼包",
       "home": "主页",
       "inbox": "站内信",
@@ -522,7 +561,7 @@
       "memberlevelsettings": "会员等级设置",
       "memberlog": "会员登入记录",
       "memberwalletlog": "会员钱包记录",
-      "menupermissions": "菜单权限",
+      "menupermissions": "菜单权限标签",
       "platformsetting": "平台设置",
       "playerreport": "代理商统计报表",
       "playersearch": "玩家查询",
@@ -599,12 +638,17 @@
     "action": "操作",
     "backToPlayerList": "返回玩家列表",
     "backToAgentList": "返回代理列表",
-    "backToSubList": "返回子帳號列表"
+    "backToSubList": "返回子帳號列表",
+    "deleteSuccess": "刪除成功",
+    "deleteConfirm": "您確定要刪除 {{title}} 嗎？",
+    "deleteConfirmContent": "刪除後無法復原",
+    "delete": "删除"
   },
   "actionCol": {
     "view": "查看",
     "edit": "编辑",
-    "detail": "详情"
+    "detail": "详情",
+    "delete": "删除"
   },
   "unit": {
     "level": "级",
@@ -638,8 +682,8 @@
   },
   "permission": {
     "commission": {
-      "title": "佣金設定",
-      "commissionHint": "請輸入佣金百分比。最小為0,最大為{{max}}%",
+      "title": "抽佣設定",
+      "commissionHint": "請輸入抽佣百分比。最小為0,最大為{{max}}%",
       "limit": "最小為0,最大為{{max}}%"
     },
     "menu": {
@@ -665,7 +709,9 @@
     "3hint": "(不受上层开启影响。例：对player01高级关闭，其无法游玩、查账。上级对代理开启，player01不受影响)"
   },
   "common": {
-    "loading": "加载中..."
+    "loading": "加载中...",
+    "pleaseSelect": "請選擇",
+    "canSetAtPermission": "可在权限设置页面设置新增标签，以便创建代理商。"
   },
   "cagent_level": {
     "0": "总站",

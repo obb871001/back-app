@@ -26,9 +26,7 @@ const CreateAgentForm = ({ form }) => {
         menu_permission: filterMenuKeys(agentDetail.menu_permission),
         menu_editable: filterMenuKeys(agentDetail.menu_editable),
       });
-      console.log("!!");
     } else {
-      console.log("!@###");
       form.setFieldsValue({
         status: 1,
       });

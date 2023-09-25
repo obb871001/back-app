@@ -73,6 +73,10 @@ import CreateChildDashBoard from "../../pages/Agent/ChildList/modal/createChildD
 import CreateMenuAuth from "../../pages/System/MenuAuth/modal/createMenuAuth";
 import ViewMenuAuth from "../../pages/System/MenuAuth/modal/viewMenuAuth";
 import CommonPageTitle from "../../components/layout/CommonPageTitle";
+import CreateGameAuth from "../../pages/System/GameAuth/modal/createGameAuth";
+import ViewGameAuth from "../../pages/System/GameAuth/modal/viewGameAuth";
+import CreateCommissionTag from "../../pages/System/Comission/modal/createCommissionTag";
+import ViewGameCommission from "../../pages/System/Comission/modal/viewGameAuth";
 
 export default {
   route: {
@@ -420,6 +424,25 @@ export default {
                 <Commission />{" "}
               </AuthPage>
             ),
+            controllSubmenu: 1,
+            routes: [
+              {
+                path: "create",
+                component: (
+                  <EditAuthPage>
+                    <CreateCommissionTag />
+                  </EditAuthPage>
+                ),
+              },
+              {
+                path: "edit",
+                component: <CreateCommissionTag />,
+              },
+              {
+                path: "detail/:uid",
+                component: <ViewGameCommission />,
+              },
+            ],
           },
           {
             path: "gamepermissions",
@@ -430,6 +453,25 @@ export default {
                 <GameAuthSettings />{" "}
               </AuthPage>
             ),
+            controllSubmenu: 1,
+            routes: [
+              {
+                path: "create",
+                component: (
+                  <EditAuthPage>
+                    <CreateGameAuth />
+                  </EditAuthPage>
+                ),
+              },
+              {
+                path: "edit",
+                component: <CreateGameAuth />,
+              },
+              {
+                path: "detail/:uid",
+                component: <ViewGameAuth />,
+              },
+            ],
           },
 
           {

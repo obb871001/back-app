@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { formatNumber } from "../../../../utils/formatNumber";
 
 export default function PaiGowColumns() {
   const { t } = useTranslation();
@@ -60,6 +61,10 @@ export default function PaiGowColumns() {
       render: (row) => {
         return <RelativeTimeCol now={nowTime} timeStr={row} unix />;
       },
+      csvRender: (row) => {
+        return unixFormat(row);
+      },
+      csvTurn: true,
       search: true,
       type: "date",
     },
@@ -87,6 +92,10 @@ export default function PaiGowColumns() {
       render: (row) => {
         return <NumberColumns notStyle number={row} />;
       },
+      csvRender: (row) => {
+        return `${CURRENCY}${formatNumber(row)}`;
+      },
+      csvTurn: true,
       search: true,
       type: "rangeNumber",
     },
@@ -97,6 +106,10 @@ export default function PaiGowColumns() {
       render: (row) => {
         return <NumberColumns notStyle number={row} />;
       },
+      csvRender: (row) => {
+        return `${CURRENCY}${formatNumber(row)}`;
+      },
+      csvTurn: true,
       search: true,
       type: "rangeNumber",
     },
@@ -108,6 +121,10 @@ export default function PaiGowColumns() {
       render: (row) => {
         return <NumberColumns number={row} />;
       },
+      csvRender: (row) => {
+        return `${CURRENCY}${formatNumber(row)}`;
+      },
+      csvTurn: true,
       search: true,
       type: "rangeNumber",
     },
@@ -118,6 +135,7 @@ export default function PaiGowColumns() {
       render: (row) => {
         return unixFormat(row);
       },
+      csvTurn: true,
       search: true,
       type: "date",
     },

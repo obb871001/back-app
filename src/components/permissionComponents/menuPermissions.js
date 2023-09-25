@@ -90,7 +90,6 @@ const MenuPermissions = ({ form, hiddenTitle, type, isChild }) => {
     checked: false,
     value: "",
   });
-  const filteredMenuLength = menu.filter((item) => !item.divider).length; //過濾divider
 
   const getCheckboxStatus = (permissionList, prefix) => {
     const filteredMenuLength = menu
@@ -114,8 +113,6 @@ const MenuPermissions = ({ form, hiddenTitle, type, isChild }) => {
         }
       }).length; //過濾divider
 
-    console.log(filteredMenuLength, permissionList.length);
-
     const length = permissionList.length;
     return {
       checkAll: length === filteredMenuLength,
@@ -128,6 +125,15 @@ const MenuPermissions = ({ form, hiddenTitle, type, isChild }) => {
       setMenuPermission({
         menu_permission: filterMenuKeys(agentDetail.menu_permission) || [],
         menu_editable: filterMenuKeys(agentDetail.menu_editable) || [],
+      });
+    }
+    if (
+      form.getFieldValue("menu_permission") ||
+      form.getFieldValue("menu_editable")
+    ) {
+      setMenuPermission({
+        menu_permission: form.getFieldValue("menu_permission") || [],
+        menu_editable: form.getFieldValue("menu_editable") || [],
       });
     }
   }, [agentDetail, popType]);
@@ -242,21 +248,21 @@ const MenuPermissions = ({ form, hiddenTitle, type, isChild }) => {
       [`menu_${prefix}`]: checkedList.length === menu.length,
     });
   };
+
   return (
     <Space align="middle">
       {menuConfig.map((config) => {
         const filteredMenuLength = menu
           .filter((item) => !item.divider)
           .filter((item) => {
-            if (config.prefix === "editable") {
-              if (editMenu.includes(item.path)) {
-                return item;
-              }
+            if (item.path === "platformsetting") {
+              return true;
+            } else if (item[`hidden_permission`]) {
+              return false;
             } else {
-              return item;
+              return true;
             }
-          })
-          .filter((item) => !item[`hidden_permission`]).length; //過濾divider
+          }).length; //算出permission長度，因為edit全選需要permission的長度
         return (
           <Form.Item
             key={config.label}

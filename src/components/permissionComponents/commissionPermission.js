@@ -5,8 +5,9 @@ import { useSelector } from "react-redux";
 import CommonTitle from "../form/commonTitle";
 import { CopyTwoTone } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 
-const CommissionPermission = ({ hiddenTitle, form, prefix }) => {
+const CommissionPermission = ({ hiddenTitle, form, prefix, type }) => {
   const { t } = useTranslation();
   const i18n = (key, props) => t(`permission.commission.${key}`, { ...props });
 
@@ -24,8 +25,10 @@ const CommissionPermission = ({ hiddenTitle, form, prefix }) => {
     form.setFieldsValue({ [`game_${prefix}`]: commissionObj });
   };
 
+  console.log(form.getFieldValue(`game_${prefix}`));
+
   return (
-    <Form.Item label={hiddenTitle || <CommonTitle title={i18n("title")} />}>
+    <Form.Item label={hiddenTitle ? "" : <CommonTitle title={i18n("title")} />}>
       <Space className="!flex" direction="vertical" size="large">
         {gameList?.map((game, index) => {
           return (
@@ -74,6 +77,7 @@ const CommissionPermission = ({ hiddenTitle, form, prefix }) => {
                   placeholder={i18n("limit", {
                     max: agentGamePercent?.[game],
                   })}
+                  readonly={type === "detail"}
                   rules={[
                     {
                       required: true,
@@ -89,16 +93,18 @@ const CommissionPermission = ({ hiddenTitle, form, prefix }) => {
                   }}
                 />
               </div>
-              <div>
-                {index === 0 && (
-                  <CopyTwoTone
-                    className="cursor-pointer ml-[10px] text-xl"
-                    onClick={() => {
-                      copyCommission();
-                    }}
-                  />
-                )}
-              </div>
+              {type !== "detail" && (
+                <div>
+                  {index === 0 && (
+                    <CopyTwoTone
+                      className="cursor-pointer ml-[10px] text-xl"
+                      onClick={() => {
+                        copyCommission();
+                      }}
+                    />
+                  )}
+                </div>
+              )}
             </section>
           );
         })}

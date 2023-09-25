@@ -29,6 +29,9 @@ const GamePermission = ({ form, hiddenTitle }) => {
     if (popType === "edit") {
       setGamePermission(filterMenuKeys(agentDetail.game_permission) || []);
     }
+    if (form.getFieldValue("game_permission")) {
+      setGamePermission(form.getFieldValue("game_permission"));
+    }
   }, [agentDetail]);
 
   useEffect(() => {

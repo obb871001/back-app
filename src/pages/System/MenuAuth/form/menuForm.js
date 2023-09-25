@@ -1,17 +1,27 @@
 import { ProFormGroup, ProFormText } from "@ant-design/pro-components";
 import { Divider } from "antd";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-const MenuForm = ({ form }) => {
+const MenuForm = ({ form, i18nKeyWord }) => {
+  const { t } = useTranslation();
+  const i18n = (key) => t(`page.systemsetting.${i18nKeyWord}.${key}`);
   const popType = useSelector((state) => state.popType);
   return (
     <>
       <ProFormGroup>
         <ProFormText
-          tooltip="此設定為創建代理時可直接選取標籤來更方便的設定權限"
-          label="選單權限標籤名稱"
+          tooltip={i18n("hint")}
+          label={i18n("tagName")}
           name="tag_name"
           readonly={popType === "detail"}
+          rules={[
+            {
+              required: true,
+              message: i18n("tagNameRule"),
+            },
+          ]}
+          placeholder={i18n("tagNamePlaceholder")}
         />
       </ProFormGroup>
     </>
