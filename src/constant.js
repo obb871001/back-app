@@ -1,3 +1,5 @@
+import i18next from "i18next";
+
 export const CURRENCY = "₱";
 export const YEAR = "2023";
 export const APP_NAME = window.getbaseconfig?.web_name || "WEBNAME";
@@ -690,3 +692,27 @@ export const fakeEditableMenu = [
 export const specialCommission = {
   PAIGOW: { companyCommission: true, percent: 5 },
 };
+
+export const commonPromotionType = [
+  {
+    label: i18next.t("page.systemsetting.promotions.modal.Deposit"),
+    value: "Deposit",
+  },
+  {
+    label: i18next.t("page.systemsetting.promotions.modal.Ranking"),
+    value: "Ranking",
+  },
+  {
+    label: i18next.t("page.systemsetting.promotions.modal.Promotion"),
+    value: "Promotion",
+  },
+  {
+    label: i18next.t("page.systemsetting.promotions.modal.Rebate"),
+    value: "Rebate",
+  },
+
+  {
+    label: i18next.t("page.systemsetting.promotions.modal.Other"),
+    value: "Others",
+  },
+];

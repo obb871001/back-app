@@ -11,18 +11,27 @@ import MenuForm from "../../MenuAuth/form/menuForm";
 import { parseSomething } from "../../../../utils/parseSomething";
 import GameCommission from "../../../Agent/AgentList/step/gameCommission";
 import CommissionPermission from "../../../../components/permissionComponents/commissionPermission";
+import { useParams } from "react-router";
+import { getFunctionTag } from "../../../../api/methods/getApi";
 
 const ViewGameCommission = () => {
   const { t } = useTranslation();
   const i18n = (key) => t(`page.systemsetting.gameCommission.${key}`);
   const [form] = useForm();
 
+  const { uid } = useParams();
+
   const commonDetail = useSelector((state) => state.commonDetail);
 
   useEffect(() => {
-    form.setFieldsValue({
-      tag_name: commonDetail.tag_name,
-      game_per: commonDetail.game_per,
+    getFunctionTag({
+      paramsData: { tag_type: "game_per" },
+      pathParams: uid,
+    }).then((data) => {
+      form.setFieldsValue({
+        tag_name: data.tag_name,
+        game_per: parseSomething(data.game_per_json),
+      });
     });
   }, []);
 

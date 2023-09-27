@@ -8,38 +8,30 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useForm } from "antd/es/form/Form";
 import CustomModal from "../../../../components/modal/customModal";
+import { useParams } from "react-router";
+import { getFunctionTag } from "../../../../api/methods/getApi";
+import { parseSomething } from "../../../../utils/parseSomething";
 
 const ViewMenuAuth = () => {
   const [form] = useForm();
 
-  const commonDetail = useSelector((state) => state.commonDetail);
+  const { uid } = useParams();
 
   useEffect(() => {
-    form.setFieldsValue({
-      tag_name: commonDetail.tag_name,
-      menu_permission: JSON.parse(commonDetail.menu_permission_json),
-      menu_editable: JSON.parse(commonDetail.menu_editable_json),
+    getFunctionTag({
+      paramsData: { tag_type: "menu" },
+      pathParams: uid,
+    }).then((data) => {
+      form.setFieldsValue({
+        tag_name: data.tag_name,
+        menu_permission: parseSomething(data.menu_permission_json),
+        menu_editable: parseSomething(data.menu_editable_json),
+      });
     });
   }, []);
 
-  const handleSubmit = async (formData) => {
-    try {
-      await createTag({
-        paramsData: {
-          tag_type: "menu",
-          tag_name: formData.tag_name,
-          menu_permission_json: formData.menu_permission,
-          menu_editable_json: formData.menu_editable,
-        },
-      });
-    } catch (err) {
-      throw err;
-    }
-  };
-
   return (
     <CustomModal
-      submitFunction={handleSubmit}
       modalProps={{
         title: (
           <p>

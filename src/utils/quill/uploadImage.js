@@ -1,9 +1,10 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { ProForm } from "@ant-design/pro-components";
 import { Button, Upload, message } from "antd";
-import React, { useState } from "react";
+import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
 
-const UploadImage = ({ name, langLabel }) => {
+const UploadImage = ({ name, langLabel, form, readOnly }) => {
   const [fileList, setFileList] = useState([]);
 
   const normFile = (e) => {
@@ -21,8 +22,9 @@ const UploadImage = ({ name, langLabel }) => {
     },
     multiple: false,
     maxCount: 1,
+    listType: "picture",
     beforeUpload: (file) => {
-      setFileList([file]);
+      // setFileList([file]);
       return false;
     },
     onRemove: () => {
@@ -31,6 +33,7 @@ const UploadImage = ({ name, langLabel }) => {
     onChange(info) {
       if (info.file.status !== "uploading") {
         console.log(info.file, info.fileList);
+        setFileList(info.fileList);
       }
       if (info.file.status === "done") {
         message.success(`${info.file.name} file uploaded successfully`);
@@ -46,9 +49,12 @@ const UploadImage = ({ name, langLabel }) => {
       valuePropName="fileList"
       label={`活動圖片${langLabel && `(${langLabel})`}`}
       name={name}
+      readOnly={readOnly}
     >
       <Upload fileList={fileList} {...props}>
-        <Button icon={<UploadOutlined />}>點擊上傳圖片</Button>
+        <Button disabled={readOnly} icon={<UploadOutlined />}>
+          點擊上傳圖片
+        </Button>
       </Upload>
     </ProForm.Item>
   );

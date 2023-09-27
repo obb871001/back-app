@@ -1,4 +1,11 @@
-import { agentApi, api, cagentTagApi, memberApi } from "./baseApi";
+import axios from "axios";
+import {
+  agentApi,
+  api,
+  cagentTagApi,
+  memberApi,
+  promotionFormDataApi,
+} from "./baseApi";
 
 export const actionSignIn = ({ account, passwd } = {}) => {
   return api.post("/login", {
@@ -79,4 +86,8 @@ export const createTag = ({ paramsData } = {}) => {
   return cagentTagApi.post("", {
     ...paramsData,
   });
+};
+
+export const createPromotion = ({ formData } = {}) => {
+  return promotionFormDataApi.post("", formData);
 };

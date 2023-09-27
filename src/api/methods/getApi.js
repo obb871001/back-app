@@ -1,5 +1,12 @@
 import { COMMON_PAGE } from "../../constant";
-import { agentApi, api, cagentTagApi, memberApi, reportApi } from "./baseApi";
+import {
+  agentApi,
+  api,
+  cagentTagApi,
+  memberApi,
+  promotionApi,
+  reportApi,
+} from "./baseApi";
 
 //README 找api請搜尋以下TAG(需全大寫)
 //MEMBER 會員 , AGENT 代理 , REPORT 報表
@@ -124,8 +131,16 @@ export const betLogReport = ({ paramsData } = {}) => {
 //REPORT//
 
 //功能標籤//
-export const getFunctionTag = ({ paramsData }) => {
-  return cagentTagApi.get("", {
+export const getFunctionTag = ({ paramsData, pathParams } = {}) => {
+  return cagentTagApi.get(`${pathParams ? `/${pathParams}` : ""}`, {
+    params: { ...paramsData },
+  });
+};
+
+//活動//
+
+export const getPromotionList = ({ paramsData, pathParams } = {}) => {
+  return promotionApi.get(`${pathParams ? `/${pathParams}` : ""}`, {
     params: { ...paramsData },
   });
 };

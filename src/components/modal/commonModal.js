@@ -75,8 +75,8 @@ const CommonModal = ({
         try {
           const successMessage = await submitFunction(values);
           notification.open({
-            message: successMessage,
-            description: i18n("submitSuccess"),
+            message: i18n("submitSuccess"),
+            description: successMessage,
             icon: <SmileOutlined className="text-green-500" />,
           });
           if (useButton) {
@@ -91,25 +91,25 @@ const CommonModal = ({
           const data = error?.response?.data?.message || error; //可以客製化error訊息喔
           if (typeof data === "string") {
             notification.error({
-              message: data,
-              description: i18n("submitFail"),
+              message: i18n("submitFail"),
+              description: data,
               icon: <MehOutlined className="text-red-500" />,
             });
           } else if (typeof data === "object") {
             const errorData = Object.values(data).flat();
             notification.error({
-              message: errorData.map((item, index) => (
+              message: i18n("submitFail"),
+              description: errorData.map((item, index) => (
                 <div>
                   {index + 1}：{item}
                 </div>
               )),
-              description: i18n("submitFail"),
               icon: <MehOutlined className="text-red-500" />,
             });
           } else {
             notification.error({
-              message: data,
-              description: i18n("submitFail"),
+              message: i18n("submitFail"),
+              description: data,
               icon: <MehOutlined className="text-red-500" />,
             });
           }

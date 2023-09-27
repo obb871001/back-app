@@ -132,7 +132,7 @@ const CommonTable = ({
           className="w-full "
           columns={columns?.filter((col) => !col.columnsHidden)}
           dataSource={dataSource}
-          headerTitle={false}
+          headerTitle={title || false}
           bordered={bordered}
           rowKey={rowKey}
           loading={tableLoading}
