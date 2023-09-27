@@ -45,7 +45,7 @@ const ActionCol = ({
             if (!isEditable) return;
             callApi();
             dispatch(setPopType("edit"));
-            navigate(`edit${location.search}`);
+            navigate(`edit/${apiUid}${location.search}`);
           }}
         >
           {i18n("edit")}
@@ -65,8 +65,11 @@ const ActionCol = ({
       )}
       {openDelete && (
         <p
-          className={`cursor-pointer text-red-500 underline my-0`}
+          className={`${
+            isEditable ? "cursor-pointer text-red-500" : notAllowClick
+          } underline my-0`}
           onClick={() => {
+            if (!isEditable) return;
             callDeleteApi();
           }}
         >

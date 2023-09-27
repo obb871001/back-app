@@ -77,6 +77,8 @@ import CreateGameAuth from "../../pages/System/GameAuth/modal/createGameAuth";
 import ViewGameAuth from "../../pages/System/GameAuth/modal/viewGameAuth";
 import CreateCommissionTag from "../../pages/System/Comission/modal/createCommissionTag";
 import ViewGameCommission from "../../pages/System/Comission/modal/viewGameAuth";
+import CreatePromotion from "../../pages/System/Promotions/modal/createPromotion";
+import ViewPromotion from "../../pages/System/Promotions/modal/viewPromotion";
 
 export default {
   route: {
@@ -148,7 +150,7 @@ export default {
             controllSubmenu: 1,
             routes: [
               {
-                path: "edit",
+                path: "edit/:uid",
                 component: (
                   <EditAuthPage>
                     <CreateAgent />
@@ -359,7 +361,7 @@ export default {
             controllSubmenu: 1,
             routes: [
               {
-                path: "edit",
+                path: "edit/:uid",
                 component: (
                   <EditAuthPage>
                     <CreateChild />
@@ -405,7 +407,7 @@ export default {
                 ),
               },
               {
-                path: "edit",
+                path: "edit/:uid",
                 component: <CreateMenuAuth />,
               },
               {
@@ -435,7 +437,7 @@ export default {
                 ),
               },
               {
-                path: "edit",
+                path: "edit/:uid",
                 component: <CreateCommissionTag />,
               },
               {
@@ -464,7 +466,7 @@ export default {
                 ),
               },
               {
-                path: "edit",
+                path: "edit/:uid",
                 component: <CreateGameAuth />,
               },
               {
@@ -536,6 +538,29 @@ export default {
             name: "促銷活動設定",
             icon: <ContactsOutlined />,
             component: <Promotions />,
+            controllSubmenu: 1,
+            routes: [
+              {
+                path: "create",
+                component: (
+                  <EditAuthPage>
+                    <CreatePromotion />
+                  </EditAuthPage>
+                ),
+              },
+              {
+                path: "edit/:uid",
+                component: (
+                  <EditAuthPage>
+                    <CreatePromotion />
+                  </EditAuthPage>
+                ),
+              },
+              {
+                path: "detail/:uid",
+                component: <ViewPromotion />,
+              },
+            ],
           },
           {
             path: "inbox",

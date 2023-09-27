@@ -9,18 +9,25 @@ import { useTranslation } from "react-i18next";
 import GamePermission from "../../../../components/permissionComponents/gamePermission";
 import MenuForm from "../../MenuAuth/form/menuForm";
 import { parseSomething } from "../../../../utils/parseSomething";
+import { useParams } from "react-router";
+import { getFunctionTag } from "../../../../api/methods/getApi";
 
 const ViewGameAuth = () => {
   const { t } = useTranslation();
   const i18n = (key) => t(`page.systemsetting.gameAuth.${key}`);
   const [form] = useForm();
 
-  const commonDetail = useSelector((state) => state.commonDetail);
+  const { uid } = useParams();
 
   useEffect(() => {
-    form.setFieldsValue({
-      tag_name: commonDetail.tag_name,
-      game_permission: parseSomething(commonDetail.game_permission_json),
+    getFunctionTag({
+      paramsData: { tag_type: "game_permission" },
+      pathParams: uid,
+    }).then((data) => {
+      form.setFieldsValue({
+        tag_name: data.tag_name,
+        game_permission: parseSomething(data.game_permission_json),
+      });
     });
   }, []);
 

@@ -433,6 +433,41 @@
       }
     },
     "systemsetting": {
+      "promotions": {
+        "title": "Promotions",
+        "create": "Create Promotion",
+        "col": {
+          "number": "Number",
+          "creator": "Creator",
+          "promotionTitle": "Promotion Title",
+          "promotionImage": "Promotion Image",
+          "viewImage": "View Image",
+          "promotionStartTime": "Promotion Start Time",
+          "promotionEndTime": "Promotion End Time",
+          "promotionType": "Promotion Type",
+          "isShowOnHomeCarousel": "Show on Home Carousel",
+          "createTime": "Creation Time"
+        },
+        "modal": {
+          "edit": "Edit",
+          "create": "Create",
+          "title": "Promotion Title",
+          "titleHint": "Please enter promotion title",
+          "start_time": "Promotion Start Time",
+          "end_time": "Promotion End Time",
+          "start_timeHint": "Please enter start time",
+          "end_timeHint": "Please enter end time",
+          "showOnHomeCarousel": "Show on Home Carousel?",
+          "promotion_type": "Promotion Type",
+          "promotion_typeHint": "Please select a promotion type",
+          "Deposit": "Deposit",
+          "Other": "Other",
+          "Ranking": "Ranking",
+          "Rebate": "Rebate",
+          "Promotion": "Promotion",
+          "promotionContent": "Promotion Content"
+        }
+      },
       "menuAuth": {
         "title": "Menu Permission Tag",
         "create": "Create Menu Permission",
@@ -601,7 +636,11 @@
     "27": "Retrieve Credit via LINE",
     "28": "Deposit Credit via LINE",
     "29": "Retrieve Credit via Web",
-    "30": "Deposit Credit via Web"
+    "30": "Deposit Credit via Web",
+    "31": "Create Promotion",
+    "31": "Create promotional event",
+    "32": "Update promotional event",
+    "33": "Delete promotional event"
   },
   "expressHint": {
     "birthdayHint": "Please enter the correct date of birth format",
@@ -696,7 +735,9 @@
   "common": {
     "loading": "Loading...",
     "pleaseSelect": "Please Select",
-    "canSetAtPermission": "You can add tags on the permission settings page to facilitate the creation of agents."
+    "canSetAtPermission": "You can add tags on the permission settings page to facilitate the creation of agents.",
+    "zhs": "Chinese",
+    "en": "English"
   },
   "cagent_level": {
     "0": "Main Station",

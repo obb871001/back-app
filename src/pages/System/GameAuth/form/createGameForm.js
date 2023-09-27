@@ -4,17 +4,24 @@ import { useSelector } from "react-redux";
 import { parseSomething } from "../../../../utils/parseSomething";
 import GamePermission from "../../../../components/permissionComponents/gamePermission";
 import MenuForm from "../../MenuAuth/form/menuForm";
+import { useParams } from "react-router";
+import { getFunctionTag } from "../../../../api/methods/getApi";
 
 const CreateGameForm = ({ form }) => {
   const commonDetail = useSelector((state) => state.commonDetail);
 
+  const { uid } = useParams();
+
   useEffect(() => {
-    if (commonDetail) {
+    getFunctionTag({
+      paramsData: { tag_type: "game_permission" },
+      pathParams: uid,
+    }).then((data) => {
       form.setFieldsValue({
-        tag_name: commonDetail.tag_name,
-        game_permission: commonDetail.game_permission,
+        tag_name: data.tag_name,
+        game_permission: parseSomething(data.game_permission_json),
       });
-    }
+    });
   }, []);
   return (
     <>

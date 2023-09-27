@@ -445,6 +445,41 @@
       }
     },
     "systemsetting": {
+      "promotions": {
+        "title": "活动",
+        "create": "创建活动",
+        "col": {
+          "number": "编号",
+          "creator": "创建者",
+          "promotionTitle": "活动标题",
+          "promotionImage": "活动图片",
+          "viewImage": "查看图片",
+          "promotionStartTime": "活动开始时间",
+          "promotionEndTime": "活动结束时间",
+          "promotionType": "活动类型",
+          "isShowOnHomeCarousel": "是否显示在首页轮播",
+          "createTime": "创建时间"
+        },
+        "modal": {
+          "edit": "编辑",
+          "create": "创建",
+          "title": "活动标题",
+          "titleHint": "请输入活动标题",
+          "start_time": "活动开始时间",
+          "end_time": "活动结束时间",
+          "start_timeHint": "请输入活动开始时间",
+          "end_timeHint": "请输入活动结束时间",
+          "showOnHomeCarousel": "是否显示在首页轮播",
+          "promotion_type": "活动类型",
+          "promotion_typeHint": "请选择活动类型",
+          "Deposit": "存款",
+          "Other": "其他",
+          "Ranking": "排行榜",
+          "Rebate": "返水",
+          "Promotion": "活动",
+          "promotionContent": "活动内容文案"
+        }
+      },
       "menuAuth": {
         "title": "菜单权限标签",
         "create": "创建菜单权限",
@@ -613,7 +648,10 @@
     "27": "LINE端取回额度",
     "28": "LINE端存入额度",
     "29": "网页端取回额度",
-    "30": "网页端存入额度"
+    "30": "网页端存入额度",
+    "31": "创建优惠活动",
+    "32": "更新优惠活动",
+    "33": "删除优惠活动"
   },
   "expressHint": {
     "birthdayHint": "请输入正确的生日格式，例：YYYY-MM-DD",
@@ -711,7 +749,9 @@
   "common": {
     "loading": "加载中...",
     "pleaseSelect": "請選擇",
-    "canSetAtPermission": "可在权限设置页面设置新增标签，以便创建代理商。"
+    "canSetAtPermission": "可在权限设置页面设置新增标签，以便创建代理商。",
+    "zhs": "简体中文",
+    "en": "英文"
   },
   "cagent_level": {
     "0": "总站",

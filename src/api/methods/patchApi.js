@@ -1,4 +1,10 @@
-import { agentApi, cagentTagApi, memberApi, systemApi } from "./baseApi";
+import {
+  agentApi,
+  cagentTagApi,
+  memberApi,
+  promotionFormDataApi,
+  systemApi,
+} from "./baseApi";
 
 export const updateMemberBasic = ({ uid, patchData } = {}) => {
   return memberApi.patch(`/${uid}`, {
@@ -22,4 +28,8 @@ export const updateTag = ({ patchData, uid } = {}) => {
   return cagentTagApi.patch(`/${uid}`, {
     ...patchData,
   });
+};
+
+export const updatePromotions = ({ formData, uid } = {}) => {
+  return promotionFormDataApi.post(`/${uid}`, formData);
 };
