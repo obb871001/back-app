@@ -58,7 +58,7 @@ function App() {
 
   useEffect(() => {
     BasicApi(dispatch)();
-    InitializeApi(dispatch, navigate)();
+    dispatch({ type: "INITIALIZE_API", navigate });
   }, []);
 
   const router = routesProps.route.routes;

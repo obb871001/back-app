@@ -11,13 +11,7 @@ import { HashRouter } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { APP_NAME } from "./constant";
 import i18next from "i18next";
-
-const store = createStore(
-  AllReducers,
-  process.env.REACT_APP_SECRET_ENV === "development" &&
-    window.__REDUX_DEVTOOLS_EXTENSION__ &&
-    window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+import store from "./redux/store";
 
 const i18n = (key) => i18next.t(`page.sign_in.${key}`);
 const root = ReactDOM.createRoot(document.getElementById("root"));

@@ -82,6 +82,7 @@ const CommonLayout = () => {
   useEffect(() => {
     if (!Cookies.get("token")) {
       window.sessionStorage.removeItem("token");
+      Cookies.remove("token");
       notification.error({
         message: i18n_menu("loginExpired"),
       });
@@ -91,10 +92,10 @@ const CommonLayout = () => {
   }, [location.pathname]);
 
   useEffect(() => {
-    updateDataPeriodically(dispatch, navigate)();
+    dispatch({ type: "UPDATE_DATA_PERIODICALLY", navigate });
 
     const apiInterval = setInterval(() => {
-      updateDataPeriodically(dispatch, navigate)();
+      dispatch({ type: "UPDATE_DATA_PERIODICALLY", navigate });
     }, API_RELOAD);
 
     return () => clearInterval(apiInterval);

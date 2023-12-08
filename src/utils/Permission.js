@@ -8,7 +8,7 @@ const Permission = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!Cookies.get("token") && !GodMod) {
+    if (!Cookies.get("token")) {
       navigate("/signin");
     }
   }, []);
