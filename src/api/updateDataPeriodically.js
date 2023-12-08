@@ -18,13 +18,13 @@ export const updateDataPeriodically = (dispatch, navigate) => async () => {
       if (homeReport) dispatch(storeHomePageReport(homeReport));
     }
   } catch (error) {
-    console.error(error);
-    window.sessionStorage.removeItem("token");
-    notification.error({
-      message: i18next.t("layout.menu.loginExpired"),
-    });
-    setTimeout(() => {
-      navigate("/signin");
-    }, 1500);
+    // console.error(error);
+    // window.sessionStorage.removeItem("token");
+    // notification.error({
+    //   message: i18next.t("layout.menu.loginExpired"),
+    // });
+    // setTimeout(() => {
+    //   navigate("/signin");
+    // }, 1500);
   }
 };

@@ -23,6 +23,7 @@ const CreatePlayer = () => {
 
   const baseConfig = useSelector((state) => state.basicConfig);
   const dispatch = useDispatch();
+
   const handleSubmit = async (formData) => {
     try {
       await createPlayer({

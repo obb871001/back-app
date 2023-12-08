@@ -16,12 +16,15 @@ import { GodMod } from "../../utils/GodMod";
 import { APP_NAME } from "../../constant";
 import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
 
 const Signin = () => {
   const { t } = useTranslation();
   const i18n = (key) => t(`page.sign_in.${key}`);
 
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const [buttonLoading, setButtonLoading] = useState(false);
 
@@ -42,15 +45,9 @@ const Signin = () => {
           description: `${i18n("welcome")} ${values.username}`,
           icon: <SmileOutlined className="text-blue-500" />,
         });
+        dispatch({ type: "INITIALIZE_API" });
       })
-      .catch((err) => {
-        const data = err.response.data;
-        notification.open({
-          message: data.message,
-          description: `${i18n("pleaseConfirmAccountPassword")}`,
-          icon: <MehOutlined className="text-red-500" />,
-        });
-      })
+      .catch((err) => {})
       .finally(() => {
         setButtonLoading(false);
       });

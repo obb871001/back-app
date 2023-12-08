@@ -73,6 +73,7 @@
         "backToPlayerList": "返回玩家列表",
         "onlinePlayerListonTime": "即時在线玩家列表",
         "modal": {
+          "vip": "VIP等級",
           "title": "创建玩家",
           "passwordHint": "登录预设密码为",
           "notice": "新增注意事項",
@@ -107,6 +108,7 @@
           "mobile": "手机",
           "email": "电子邮件",
           "cryptoAddress": "加密貨幣地址",
+          "vip": "VIP等級",
           "editPlayerBasic": "编辑玩家基本资料",
           "walletInformation": "钱包资讯",
           "editBalance": "编辑余额",

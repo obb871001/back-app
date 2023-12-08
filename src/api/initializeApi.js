@@ -25,16 +25,16 @@ export const InitializeApi = (dispatch, navigate) => async () => {
       dispatch(storeAgentNameList(agentNameListData));
     }
   } catch (error) {
-    console.error(error);
-    window.sessionStorage.removeItem("token");
-    notification.error({
-      message: i18next.t("layout.menu.loginExpired"),
-    });
-    if (navigate) {
-      setTimeout(() => {
-        navigate("/signin");
-      }, 1500);
-    }
+    // console.error(error);
+    // window.sessionStorage.removeItem("token");
+    // notification.error({
+    //   message: i18next.t("layout.menu.loginExpired"),
+    // });
+    // if (navigate) {
+    //   setTimeout(() => {
+    //     navigate("/signin");
+    //   }, 1500);
+    // }
   } finally {
     setTimeout(() => {
       dispatch(globalEndLoading());

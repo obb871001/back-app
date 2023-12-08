@@ -4,3 +4,9 @@ export const storeDetail = (detail) => {
     payload: detail,
   };
 };
+export const storeVipList = (data) => {
+  return {
+    type: "storeVipList",
+    payload: data,
+  };
+};

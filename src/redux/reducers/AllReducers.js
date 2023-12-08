@@ -18,6 +18,7 @@ import NowTimeReducers from "./common/nowTime";
 import CurrencyReducers from "./common/currency";
 import AgentNameListReducers from "./agent/agentNameList";
 import HasSearchedReducers from "./form/hasSearchedReducers";
+import StoreVipList from "./member/vipList";
 
 const AllReducers = combineReducers({
   formReducers: StoreFormReducers,
@@ -39,6 +40,7 @@ const AllReducers = combineReducers({
   CURRENCY: CurrencyReducers,
   agentNameList: AgentNameListReducers,
   hasSearched: HasSearchedReducers,
+  vipList: StoreVipList,
 });
 
 export default AllReducers;

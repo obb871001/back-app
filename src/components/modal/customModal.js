@@ -53,6 +53,7 @@ const CustomModal = ({
       onOk={handleOk}
       onCancel={handleCancel}
       okText={i18n("close")}
+      maskClosable={false}
       cancelButtonProps={{ style: { display: "none" } }}
       destroyOnClose
     >

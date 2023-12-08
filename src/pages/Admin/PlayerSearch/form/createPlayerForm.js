@@ -18,6 +18,7 @@ const CreatePlayerForm = ({ form }) => {
 
   const agentNameList = useSelector((state) => state.agentNameList);
   const basciConfig = useSelector((state) => state.basicConfig);
+  const vipList = useSelector((state) => state.vipList);
 
   useEffect(() => {
     form.setFieldsValue({
@@ -72,6 +73,17 @@ const CreatePlayerForm = ({ form }) => {
         },
       ],
       ex: "1998-10-01",
+    },
+    {
+      label: i18n("vip"),
+      name: "vip_uid",
+      type: "select",
+      options: vipList?.map((list) => {
+        return {
+          label: list?.comment,
+          value: list?.uid,
+        };
+      }),
     },
   ];
   return (

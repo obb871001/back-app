@@ -32,6 +32,7 @@ const PlayerBasic = () => {
   const triggerApi = useSelector((state) => state.trigger);
   const isCredit = useSelector((state) => state.basicConfig.is_credit === 1);
   const statusCode = useSelector((state) => state.basicConfig.statusCode);
+  const vipList = useSelector((state) => state.vipList);
   const dispatch = useDispatch();
 
   const [form] = useForm();
@@ -47,6 +48,7 @@ const PlayerBasic = () => {
       email: playerDetail.email,
       mobile: playerDetail.mobile,
       status: playerDetail.status,
+      vip_uid: playerDetail.vip_uid,
     });
   }, [playerDetail, editPlayer]);
 
@@ -105,6 +107,19 @@ const PlayerBasic = () => {
       type: "text",
       readonly: !editPlayer,
     },
+    {
+      label: i18n("vip"),
+      name: "vip_uid",
+      type: "select",
+      readonly: !editPlayer,
+      options: vipList?.map((list) => {
+        return {
+          label: list?.comment,
+          value: list?.uid,
+        };
+      }),
+    },
+
     {
       label: i18n("registerDate"),
       value: playerDetail.create_time,

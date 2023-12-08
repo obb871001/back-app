@@ -72,6 +72,7 @@
         "backToPlayerList": "Back to Player List",
         "onlinePlayerListonTime": "Real-time Online Player List",
         "modal": {
+          "vip": "VIP Level",
           "title": "Create Player",
           "passwordHint": "Default login password is",
           "notice": "Notes/Cautions",
@@ -101,6 +102,7 @@
           "mobile": "Mobile",
           "email": "Email",
           "cryptoAddress": "Cryptocurrency Address",
+          "vip": "VIP Level",
           "editPlayerBasic": "Edit Player's Basic Information",
           "walletInformation": "Wallet Information",
           "editBalance": "Edit Balance",

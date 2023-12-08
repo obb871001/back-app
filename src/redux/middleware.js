@@ -5,10 +5,12 @@ import {
   agentInfo,
   getAgentNameList,
   getHomeReports,
+  getVipList,
 } from "../api/methods/getApi";
 import { storeAgentInfo, storeAgentNameList } from "./action/agent/action";
 import { storeHomePageReport } from "./action/reports/action";
 import { notification } from "antd";
+import { storeVipList } from "./action/member/action";
 
 export const apiErrorMessage = (store) => (next) => (action) => {
   if (action.type === "API_ERROR" && action.error) {
@@ -43,16 +45,15 @@ export const initializeApi = (store) => (next) => (action) => {
       try {
         dispatch(globalStartLoading());
         if (Cookies.get("token") !== undefined) {
-          const [agentInfoData, agentNameListData] = await Promise.all([
-            agentInfo(),
-            getAgentNameList(),
-          ]);
+          const [agentInfoData, agentNameListData, vipListData] =
+            await Promise.all([agentInfo(), getAgentNameList(), getVipList()]);
           if (agentInfoData) {
             dispatch(storeAgentInfo(agentInfoData));
           }
           if (agentNameListData) {
             dispatch(storeAgentNameList(agentNameListData));
           }
+          dispatch(storeVipList(vipListData?.vipinfo));
         }
       } catch (error) {
       } finally {

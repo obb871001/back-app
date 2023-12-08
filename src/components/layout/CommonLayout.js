@@ -57,6 +57,8 @@ const CommonLayout = () => {
   const i18n_status_code = (key) => t(`status_code.${key}`);
   const i18n_cagent_level = (key) => t(`cagent_level.${key}`);
 
+  const [firstRender, setFirstRender] = useState(true);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -92,6 +94,10 @@ const CommonLayout = () => {
   }, [location.pathname]);
 
   useEffect(() => {
+    if (firstRender) {
+      setFirstRender(false);
+      return;
+    }
     dispatch({ type: "UPDATE_DATA_PERIODICALLY", navigate });
 
     const apiInterval = setInterval(() => {

@@ -137,6 +137,10 @@ export const getFunctionTag = ({ paramsData, pathParams } = {}) => {
   });
 };
 
+export const getVipList = () => {
+  return api.get("/vip");
+};
+
 //活動//
 
 export const getPromotionList = ({ paramsData, pathParams } = {}) => {
