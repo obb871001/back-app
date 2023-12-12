@@ -521,6 +521,47 @@
           "authName": "权限名称"
         }
       },
+      "vipList": {
+        "title": "Vip等级设置",
+        "form": {
+          "platform": "平台",
+          "rebatePercent": "返水%数",
+          "rebatePeriod": "返水周期",
+          "betMinLimit": "下注最小值",
+          "betMaxLimit": "下注最大值",
+          "betLimit": "赢注上限",
+          "vipName": "VIP名称",
+          "vipNameDescprition": "VIP名称描述",
+          "vipContentDescprition": "VIP内容描述",
+          "rebateTypeName": "返水类型名称",
+          "rebateTypeDescrition": "返水类型描述",
+          "betLimitName": "限红名称",
+          "betLimitDescrition": "限红描述",
+          "basicSetting": "基本设置",
+          "rebateSetting": "返水设置",
+          "betLimitSetting": "限红设置",
+          "rebateDetail": "返水详细设置",
+          "execute": "几天执行返水一次",
+          "betLimitDetail": "限红详细设置",
+          "betLimit": "限红"
+        },
+        "hint": {
+          "vipName": "0等于普通会员/预设，请输入整数，例如：5 为VIP5",
+          "vipNameDescprition": "尊荣级",
+          "vipContentDescprition": "此为加入三个月的玩家",
+          "rebateTypeName": "40%返水",
+          "rebateTypeDescrition": "全部游戏设置40%返水",
+          "betLimitName": "100~1000限红设置",
+          "betLimitDescrition": "XX游戏限红为100~1000"
+        },
+        "col": {
+          "number": "编号",
+          "name": "VIP名称",
+          "level": "等级",
+          "TableLimitGroupName": "限红名称",
+          "RebateGroupName": "返水名称"
+        }
+      },
       "platformsetting": {
         "switchSure": "您确定要 {{type}} {{label}} 吗？",
         "switchAlready": "{{label}} 已 {{type}}",
@@ -577,6 +618,7 @@
       "balance": "余额"
     },
     "menu": {
+      "createvip": "VIP等級設置",
       "loginExpired": "登入逾時，請重新登入",
       "createchild": "创建子账号",
       "createplayer": "创建玩家",
@@ -665,6 +707,7 @@
     "accountStatusHint": "請選擇帳號狀態"
   },
   "commonModal": {
+    "okText": "提交",
     "cancelText": "取消",
     "requiredCol": "必填栏位",
     "optionalCol": "选填栏位",
@@ -692,7 +735,8 @@
   },
   "unit": {
     "level": "级",
-    "people": "人"
+    "people": "人",
+    "day": "天"
   },
   "commonTable": {
     "export": "导出",

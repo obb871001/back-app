@@ -657,6 +657,7 @@ export const fakeMenu = [
   "createplayer",
   "createagent",
   "createchild",
+  "createvip",
 ];
 export const fakeEditableMenu = [
   "home",

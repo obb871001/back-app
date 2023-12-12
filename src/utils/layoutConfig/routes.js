@@ -8,6 +8,7 @@ import {
   ChromeFilled,
   ContactsOutlined,
   CrownFilled,
+  CrownOutlined,
   DatabaseOutlined,
   DollarCircleOutlined,
   DollarOutlined,
@@ -79,6 +80,8 @@ import CreateCommissionTag from "../../pages/System/Comission/modal/createCommis
 import ViewGameCommission from "../../pages/System/Comission/modal/viewGameAuth";
 import CreatePromotion from "../../pages/System/Promotions/modal/createPromotion";
 import ViewPromotion from "../../pages/System/Promotions/modal/viewPromotion";
+import Vip from "../../pages/System/Vip/Vip";
+import CreateVipStepForm from "../../pages/System/Vip/modal/createVipStepForm";
 
 export default {
   route: {
@@ -573,6 +576,32 @@ export default {
             name: "銀行帳戶設定",
             icon: <BankOutlined />,
             component: "銀行帳戶設定",
+          },
+          {
+            path: "createvip",
+            name: "VIP等級設置",
+            icon: <CrownOutlined />,
+            component: <Vip />,
+            controllSubmenu: 1,
+            routes: [
+              {
+                path: "create",
+                component: (
+                  <EditAuthPage>
+                    {/* <CreateVip /> */}
+                    <CreateVipStepForm />
+                  </EditAuthPage>
+                ),
+              },
+              {
+                path: "edit/:uid",
+                component: (
+                  <EditAuthPage>
+                    <CreateVipStepForm />
+                  </EditAuthPage>
+                ),
+              },
+            ],
           },
           {
             path: "platformsetting",

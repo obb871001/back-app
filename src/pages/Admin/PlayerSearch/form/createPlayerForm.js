@@ -18,7 +18,7 @@ const CreatePlayerForm = ({ form }) => {
 
   const agentNameList = useSelector((state) => state.agentNameList);
   const basciConfig = useSelector((state) => state.basicConfig);
-  const vipList = useSelector((state) => state.vipList);
+  const vipList = useSelector((state) => state.vipList?.vipinfo);
 
   useEffect(() => {
     form.setFieldsValue({

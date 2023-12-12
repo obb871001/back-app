@@ -6,6 +6,7 @@ import {
   memberApi,
   promotionApi,
   reportApi,
+  vipApi,
 } from "./baseApi";
 
 //README 找api請搜尋以下TAG(需全大寫)
@@ -137,8 +138,10 @@ export const getFunctionTag = ({ paramsData, pathParams } = {}) => {
   });
 };
 
-export const getVipList = () => {
-  return api.get("/vip");
+export const getVipList = ({ paramsData, pathParams } = {}) => {
+  return vipApi.get(`${pathParams ? `/${pathParams}` : ""}`, {
+    params: { ...paramsData },
+  });
 };
 
 //活動//
@@ -147,4 +150,12 @@ export const getPromotionList = ({ paramsData, pathParams } = {}) => {
   return promotionApi.get(`${pathParams ? `/${pathParams}` : ""}`, {
     params: { ...paramsData },
   });
+};
+
+export const getVipTableLimitGroup = () => {
+  return vipApi.get("/tablelimitgroup");
+};
+
+export const getVipGameRebateGroup = () => {
+  return vipApi.get("/gamerebategroup");
 };

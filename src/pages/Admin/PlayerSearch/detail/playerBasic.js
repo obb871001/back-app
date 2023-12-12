@@ -32,7 +32,7 @@ const PlayerBasic = () => {
   const triggerApi = useSelector((state) => state.trigger);
   const isCredit = useSelector((state) => state.basicConfig.is_credit === 1);
   const statusCode = useSelector((state) => state.basicConfig.statusCode);
-  const vipList = useSelector((state) => state.vipList);
+  const vipList = useSelector((state) => state.vipList?.vipinfo);
   const dispatch = useDispatch();
 
   const [form] = useForm();

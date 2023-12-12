@@ -1,4 +1,4 @@
-const StoreVipList = (state = [], action) => {
+const StoreVipList = (state = {}, action) => {
   switch (action.type) {
     case "storeVipList":
       return action.payload;

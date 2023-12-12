@@ -4,6 +4,7 @@ import {
   memberApi,
   promotionFormDataApi,
   systemApi,
+  vipApi,
 } from "./baseApi";
 
 export const updateMemberBasic = ({ uid, patchData } = {}) => {
@@ -32,4 +33,8 @@ export const updateTag = ({ patchData, uid } = {}) => {
 
 export const updatePromotions = ({ formData, uid } = {}) => {
   return promotionFormDataApi.post(`/${uid}`, formData);
+};
+
+export const updateVipLevel = ({ formData, uid } = {}) => {
+  return vipApi.patch(`/${uid}`, formData);
 };

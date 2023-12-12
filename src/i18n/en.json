@@ -509,6 +509,47 @@
           "authName": "Permission Name"
         }
       },
+      "vipList": {
+        "title": "VIP Level Settings",
+        "form": {
+          "platform": "Platform",
+          "rebatePercent": "Rebate Percentage",
+          "rebatePeriod": "Rebate Period",
+          "betMinLimit": "Minimum Bet",
+          "betMaxLimit": "Maximum Bet",
+          "betLimit": "Winning Bet Limit",
+          "vipName": "VIP Name",
+          "vipNameDescprition": "VIP Name Description",
+          "vipContentDescprition": "VIP Content Description",
+          "rebateTypeName": "Rebate Type Name",
+          "rebateTypeDescrition": "Rebate Type Description",
+          "betLimitName": "Bet Limit Name",
+          "betLimitDescrition": "Bet Limit Description",
+          "basicSetting": "Basic Settings",
+          "rebateSetting": "Rebate Settings",
+          "betLimitSetting": "Bet Limit Settings",
+          "rebateDetail": "Rebate Detailed Settings",
+          "execute": "Days to Execute Rebate",
+          "betLimitDetail": "Bet Limit Detailed Settings",
+          "betLimit": "Bet Limit"
+        },
+        "hint": {
+          "vipName": "0 equals Normal Member / Default, please enter an integer, e.g., 5 for VIP5",
+          "vipNameDescprition": "Honorable Level",
+          "vipContentDescprition": "This is for players who have been members for three months",
+          "rebateTypeName": "40% Rebate",
+          "rebateTypeDescrition": "Set 40% rebate for all games",
+          "betLimitName": "100~1000 Bet Limit Setting",
+          "betLimitDescrition": "Bet limit for XX game is 100~1000"
+        },
+        "col": {
+          "number": "Number",
+          "name": "VIP Name",
+          "level": "Level",
+          "TableLimitGroupName": "Bet Limit Name",
+          "RebateGroupName": "Rebate Name"
+        }
+      },
       "platformsetting": {
         "switchSure": "Are you sure you want to {{type}} {{label}}?",
         "switchAlready": "{{label}} has been {{type}}",
@@ -565,6 +606,7 @@
       "balance": "Balance"
     },
     "menu": {
+      "createvip": "VIP Level Settings",
       "loginExpired": "Login expired, please log in again",
       "createchild": "Create Sub-account",
       "createplayer": "Create Player",
@@ -654,6 +696,7 @@
     "accountStatusHint": "Please select account status"
   },
   "commonModal": {
+    "okText": "SUBMIT",
     "cancelText": "Cancel",
     "requiredCol": "Required Field",
     "optionalCol": "Optional Field",
@@ -678,7 +721,8 @@
   },
   "unit": {
     "level": "Level",
-    "people": "People"
+    "people": "People",
+    "day": "Day"
   },
   "commonTable": {
     "export": "Export",

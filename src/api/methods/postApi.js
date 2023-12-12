@@ -5,6 +5,7 @@ import {
   cagentTagApi,
   memberApi,
   promotionFormDataApi,
+  vipApi,
 } from "./baseApi";
 
 export const actionSignIn = ({ account, passwd } = {}) => {
@@ -90,4 +91,8 @@ export const createTag = ({ paramsData } = {}) => {
 
 export const createPromotion = ({ formData } = {}) => {
   return promotionFormDataApi.post("", formData);
+};
+
+export const createVipLevel = ({ formData } = {}) => {
+  return vipApi.post("", formData);
 };
